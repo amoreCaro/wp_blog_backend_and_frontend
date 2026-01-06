@@ -1,26 +1,24 @@
 <?php
-if (!defined('ABSPATH')) {
-    exit;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-add_action('wp_enqueue_scripts', function () {
+define('_S_VERSION', '1.0.0');
+define('PATH', get_template_directory());
+define('PATH_URL', esc_url( get_template_directory_uri()));
+define('THEME', 'test-theme');
 
-    $theme_uri = get_template_directory_uri();
+require PATH . '/inc/enqueues.php';
+require PATH . '/inc/helper.php';
 
-    // CSS
-    wp_enqueue_style( 'theme-style', $theme_uri . '/assets/dist/main.css', [], null );
 
-    // JS
-    wp_enqueue_script( 'theme-script', $theme_uri . '/assets/dist/main.js', [], null, true );
-});
-
-if (!function_exists('app_dd')) {
-    /**
-     * Dump any variable inside <pre> tags
-     */
-    function app_dd($data) {
-        echo '<pre>';
-        var_dump($data);
-        echo '</pre>';
+add_filter('template_include', function($template) {
+    if (is_page('ui-kit')) { 
+        $new_template = locate_template(['page-ui-kit.php']);
+        if (!empty($new_template)) {
+            return $new_template;
+        }
     }
-}
+    return $template;
+});
