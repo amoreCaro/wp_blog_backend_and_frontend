@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 $social_icons = get_field('acf_social_icons');
 
 if ($social_icons) : ?>
-    <div class="flex flex-col gap-[30px] absolute top-0 left-0">
+    <div class="flex flex-col gap-[30px] absolute top-1/4 -translate-y-1/4">
         <?php foreach ($social_icons as $icon) : 
             $image_id  = $icon['acf_social_icon'] ?? 0;
             $image_url = $image_id ? wp_get_attachment_url($image_id) : '';

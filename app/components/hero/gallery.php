@@ -13,7 +13,7 @@ $has_gallery = !empty($gallery_ids);
 // Set layout classes
 $main_col_class   = $has_gallery ? 'md:w-1/2' : 'md:w-full';
 $container_height = $has_gallery
-    ? 'md:h-[60vh]'
+    ? 'md:h-[50vh]'
     : 'h-[50vh] md:h-auto';
 
 // Fallback image from Gutenberg content if no featured image
