@@ -4,14 +4,18 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
   mode: 'development',
+
   entry: {
-    'main': '/src/js/main.js',
+    main: './src/js/main.js',       // JS entry
+    main_css: './src/css/main.css', // CSS entry
   },
+
   output: {
-    path: path.resolve(__dirname, 'assets/dist'),
-    filename: 'js/[name].js',
-    clean: false,
+    path: path.resolve(__dirname, 'dist'), // dist всередині assets/
+    filename: 'js/[name].js',              // JS файли
+    clean: true,
   },
+
   module: {
     rules: [
       {
@@ -19,15 +23,19 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'postcss-loader', 
+          'postcss-loader',
         ],
       },
     ],
   },
+
   plugins: [
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: (pathData) => {
+        // CSS entry зберігаємо як main.css
+        return pathData.chunk.name === 'main_css' ? 'css/main.css' : 'js/[name].js';
+      },
     }),
   ],
 };

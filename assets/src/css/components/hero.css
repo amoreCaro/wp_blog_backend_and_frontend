@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 @layer components {
-    /* Hero Section */
+
+    /* =========================
+       Hero Section
+    ========================== */
+
     .hero {
         @apply w-full bg-black;
     }
@@ -17,47 +21,67 @@
     }
 
     .hero__inner {
-        @apply mx-auto flex w-full max-w-[800px] flex-col justify-center text-left px-10 sm:px-0 gap-10;
+        @apply mx-auto flex w-full max-w-[800px] flex-col justify-center
+               text-left px-10 sm:px-0 gap-10;
     }
 
-    /* Typography */
+    /* =========================
+       Typography
+    ========================== */
+
     .hero__title {
-        @apply font-roboto font-normal text-white text-[56px] leading-[64px];
+        @apply font-roboto font-normal text-white
+               text-[56px] leading-[64px];
     }
 
     .hero__date {
-        @apply font-roboto font-normal text-white text-base leading-4;
+        @apply font-roboto font-normal text-white
+               text-base leading-4;
     }
 
-    /* Read More Block */
+    /* =========================
+       Read More Block
+    ========================== */
+
     .read-more-block {
         @apply flex flex-col gap-2;
     }
 
     .read-more-block__content-wrapper {
-        @apply relative overflow-hidden transition-all duration-500 ease-in-out max-h-[160px];
+        @apply relative overflow-hidden
+               transition-all duration-500 ease-in-out
+               max-h-[160px];
     }
 
     .read-more-block__text {
-        @apply font-roboto font-light text-gray-400 text-[18px] leading-[36px];
+        @apply font-roboto font-light text-gray-400
+               text-[18px] leading-[36px];
     }
 
     .read-more-block__overlay {
-        @apply absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-t from-black to-transparent pointer-events-none transition-opacity duration-500 opacity-100;
+        @apply absolute bottom-0 left-0 w-full h-[60px]
+               bg-gradient-to-t from-black to-transparent
+               pointer-events-none transition-opacity
+               duration-500 opacity-100;
     }
 
     .read-more-block__btn {
-        @apply w-fit bg-transparent border-none cursor-pointer p-0 text-gray-400 underline font-light uppercase tracking-wider text-[14px] transition-all duration-300 hover:text-white;
+        @apply w-fit bg-transparent border-none cursor-pointer p-0
+               text-gray-400 underline font-light uppercase
+               tracking-wider text-[14px]
+               transition-all duration-300 hover:text-white;
     }
 
-    /* --- Модифікатори станів (для використання з JS) --- */
+    /* =========================
+       State Modifiers (JS)
+    ========================== */
 
-    /* Коли розгорнуто */
+    /* Expanded state */
     .read-more-block--expanded .read-more-block__overlay {
         @apply opacity-0;
     }
 
-    /* Якщо контент малий (вимикаємо функціонал) */
+    /* Disabled state */
     .read-more-block--disabled .read-more-block__btn,
     .read-more-block--disabled .read-more-block__overlay {
         @apply hidden;
@@ -67,7 +91,10 @@
         @apply max-h-none;
     }
 
-    /* Gallery */
+    /* =========================
+       Gallery
+    ========================== */
+
     .hero__gallery {
         @apply flex w-full h-auto min-h-[50vh];
     }

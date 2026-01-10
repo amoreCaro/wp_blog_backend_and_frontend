@@ -4,8 +4,8 @@ module.exports = {
     "./*.php",                         // Файли типу index.php, functions.php у корені
     "./app/**/*.php",                  // Всі файли в папці app (hero.php, gallery.php тощо)
     "./inc/**/*.php",                  // Файли в папці inc
-    "./assets/src/js/**/*.js",         // Ваші JS скрипти
-    "./assets/src/css/**/*.css",       // CSS файли (якщо там є класи)
+    "./src/js/**/*.js",         // Ваші JS скрипти
+    "./src/css/**/*.css",       // CSS файли (якщо там є класи)
   ],
   theme: {
     extend: {
