@@ -1,30 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./*.php",                         // Файли типу index.php, functions.php у корені
-    "./app/**/*.php",                  // Всі файли в папці app (hero.php, gallery.php тощо)
-    "./inc/**/*.php",                  // Файли в папці inc
-    "./src/js/**/*.js",         // Ваші JS скрипти
-    "./src/css/**/*.css",       // CSS файли (якщо там є класи)
+    "./*.php",            // PHP у корені
+    "./app/**/*.php",      // PHP компоненти
+    "../**/*.php",      // PHP інклуди
+    "./src/js/**/*.js",    // JS файли
+    "./src/css/**/*.css"   // CSS файли
   ],
   theme: {
     extend: {
       colors: {
-        // Основні акценти
-        'brand-indigo': '#6366F1',
-        // Поверхні та межі
-        'surface-dark': '#111114',
-        'surface-hover': '#18181b',
-        'border-light': '#1f1f22',
-        'border-medium': '#262629',
-        'border-hover': '#222226',
-        // Текст
-        'content-white': '#FFFFFF',
-        'content-gray': '#CECECE',
-        'content-muted': '#E6E6E6',
-        'content-dimmed': '#4D4D50', 
-        'content-ghost': '#333336', 
-        'content-heading': '#F3F4F6',
+        // тут можеш додати кастомні кольори
       },
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],

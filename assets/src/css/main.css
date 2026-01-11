@@ -2,4 +2,4 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "./components/hero.css"; 
+@import "./components/article.css";
