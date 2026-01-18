@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./*.php",            // PHP у корені
+    "../*.php",            // PHP у корені
     "./app/**/*.php",      // PHP компоненти
     "../**/*.php",      // PHP інклуди
     "./src/js/**/*.js",    // JS файли
@@ -10,7 +10,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // тут можеш додати кастомні кольори
+        'accent': '#00F5D4', 
+        'gray': '#cecece',
+        'dark-gray': '#c5c5c5'
+      },
+      screens: {
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1440px',
+        '2xl': '1920px',
+        '3xl': '2560px',
       },
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],

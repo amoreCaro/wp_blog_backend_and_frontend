@@ -3,110 +3,85 @@
 @tailwind utilities;
 
 .article {
-  & h1 {
-    font-weight: bold;
-    font-size: 48px;
-    line-height: 52px;
-    color: white;
-    margin-bottom: 8px;
-    & span {
-      color: $accent-color;
+  h1 {
+    @apply font-bold text-[48px] leading-[52px] text-white mb-2;
+
+    span {
+      @apply text-accent;
     }
   }
 
-  & h2 {
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 43px;
-    color: white;
-    margin: 60px 0px;
-    & span {
-      color: $accent-color;
+  h2 {
+    @apply font-bold text-[40px] leading-[43px] text-white my-[60px];
+
+    span {
+      @apply text-accent;
     }
   }
 
-  & h3 {
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 36px;
-    color: white;
-    margin: 12px 0px;
-    & span {
-      color: $accent-color;
-    }
-  }
-  & p {
-    font-size: 24px;
-    line-height: 42px;
-    color: white;
-    & b {
-      color: $accent-color;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 24px;
-    }
-    & i {
-      font-style: italic;
+  h3 {
+    @apply font-bold text-[32px] leading-[36px] text-white my-3;
+
+    span {
+      @apply text-accent;
     }
   }
 
-  & a {
-    color: $accent-color;
-    text-decoration: underline;
-    font-size: 24px;
-    line-height: 42px;
+  p {
+    @apply text-[18px] leading-[29px] font-light text-white my-5;
+
+    b {
+      @apply text-accent font-bold text-[16px] leading-[24px];
+    }
+
+    i {
+      @apply italic;
+    }
+  }
+
+  a {
+    @apply text-accent underline text-[24px] leading-[42px];
+
     &:hover {
-      text-decoration: none;
+      @apply no-underline;
     }
   }
-  & figure {
-    margin-bottom: 16px;
-    & picture {
-      display: block;
-      width: 100%;
-      & img {
-        display: block;
-        width: 100%;
-        transition: 0.5s;
-      }
+
+  figure {
+    @apply mb-4;
+
+    picture {
+      @apply block w-full;
+    }
+
+    img {
+      @apply block w-full transition-all duration-500;
     }
   }
-  & ul, ol {
-    margin: 32px 0px;
+
+  ul,
+  ol {
+    @apply my-8;
   }
-  & li {
-    gap: 12px;
-    color: $text-color;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 24px;
-    margin: 32px 0px;
+
+  li {
+    @apply gap-3 text-white font-normal text-[24px] leading-[24px] my-8;
+
     &::marker {
-      color: $accent-color;
+      @apply text-accent;
     }
   }
 
-  & blockquote {
-    & p {
-      font-weight: 400;
-      font-style: italic;
-      font-size: 24px;
-      line-height: 42px;
-      color: $accent-color;
-      margin: 32px 0px;
+  blockquote {
+    p {
+      @apply font-normal italic text-[24px] leading-[42px] text-accent my-8;
     }
-    & span {
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 24px;
-      color: $text-color;
 
-      & a {
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
-        text-decoration: underline;
-        color: $text-color;
+    span {
+      @apply font-normal text-[16px] leading-[24px] text-white;
+
+      a {
+        @apply font-normal text-[16px] leading-[24px] underline text-white;
       }
     }
   }
