@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-black;
+}
 .wrapper {
   @apply mx-auto
          3xl:max-w-[1920px] 3xl:px-[0px];
