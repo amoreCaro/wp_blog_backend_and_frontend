@@ -6,108 +6,92 @@ if (!defined('ABSPATH')) {
 $disclaimer = wp_strip_all_tags(get_field("acf_footer_disclaimer", "option"));
 $copyrights = get_field("acf_copyrights", "option");
 
+$footer_links = get_field('acf_footer_links', 'option');  
 $pre_text = $copyrights['acf_footer_link_pre'] ?? '';
 $link      = $copyrights['acf_footer_copyright_link'] ?? [];
 $post_text = $copyrights['acf_footer_text_after_link'] ?? '';
 $current_year = date('Y');
 $before_year = $copyrights['acf_footer_before_year'] ?? '';
+
 ?>
 
-        <footer class="footer py-[100px] flex items-center bg-black justify-center border-t border-[rgb(26,26,26)]">
-            <div class="container mx-auto flex flex-col items-center gap-5 text-center">
-                <!-- Content -->
-            <?php if ( !empty($disclaimer) ) : ?> 
-                <div class="text-[14px] leading-[28px] text-[#bebebe] font-normal max-w-[912px] mx-auto text-center">
-                    <?php echo $disclaimer; ?>
-                </div>
-            <?php endif; ?>
-                
-                <!-- Navigation -->
-                <nav class="min-h-[46px] flex items-center">
-                    <ul class="flex justify-center">
-                        <li>
-                            <a
-                                href="#"
-                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
-                            >
-                                Privacy Policy
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
-                            >
-                                Terms of use
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
-                            >
-                                Marketing
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#"
-                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
-                            >
-                                Impresum
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- Social Icons -->
-                <div class="flex items-center gap-4">
-                    <a href="#facebook" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
-                        </svg>
-                    </a>
-
-                    <a href="#instagram" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                    </a>
-
-                    <a href="#youtube" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="YouTube">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                        </svg>
-                    </a>
-                </div>
-                <!-- Copyright -->
-                <span class="text-[14px] leading-[28px] text-[#d5d5d5] font-normal">
-                    Copyrights  2025 – Powered By
-                    <a href="#" class="underline">Spacebox Agency</a>. All Rights Reserved.
-                </span>
-                <span class="text-[14px] leading-[28px] text-[#d5d5d5] font-normal">
-                    <?php 
-                        // 1. Текст перед роком + Рік
-                        echo esc_html($before_year) . ' ' . $current_year; 
-                    ?>
-                    
-                    <?php if (!empty($link)): ?>
-                        <?php 
-                            echo $pre_text;
-                        ?>
-                        <a href="<?php echo esc_url($link['url']); ?>" 
-                        class="underline" 
-                        <?php echo !empty($link['target']) ? 'target="'.esc_attr($link['target']).'"' : ''; ?>>
-                            <?php echo esc_html($link['title']); ?>
-                        </a>
-                    <?php endif; ?>
-
-                    <?php 
-                        // 3. Текст після посилання (напр. ". All Rights Reserved.")
-                        echo esc_html($post_text); 
-                    ?> 
-                </span>
+    <footer class="footer py-[100px] flex items-center bg-black justify-center border-t border-[rgb(26,26,26)]">
+        <div class="container mx-auto flex flex-col items-center gap-5 text-center">
+            <!-- Content -->
+        <?php if ( !empty($disclaimer) ) : ?> 
+            <div class="text-[14px] leading-[28px] text-[#bebebe] font-normal max-w-[912px] mx-auto text-center">
+                <?php echo $disclaimer; ?>
             </div>
-        </footer>
+        <?php endif; ?>
+
+        <?php if (!empty($footer_links)) : ?>
+            <nav class="min-h-[46px] flex items-center">
+                <ul class="flex justify-center flex-wrap">
+                    <?php foreach ($footer_links as $item) : 
+                        $text = $item['acf_footer_links_text'] ?? '';
+                        $url  = $item['acf_footer_links_url'] ?? '';
+
+                        if (!$text) continue;
+                    ?>
+                        <li>
+                            <a
+                                href="<?php echo esc_url($url); ?>"
+                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
+                            >
+                                <?php echo esc_html($text); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+        <?php endif; ?>
+
+        <?php require PATH . "/components/socials/component.php"; ?> 
+            <!-- Social Icons -->
+            <div class="flex items-center gap-4">
+                <a href="#facebook" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                    </svg>
+                </a>
+
+                <a href="#instagram" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+
+                <a href="#youtube" class="flex items-center justify-center w-[50px] h-[50px] text-white hover:text-blue-400 transition-colors duration-300" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                    </svg>
+                </a>
+            </div>
+            <!-- Copyright -->
+            <span class="text-[14px] leading-[28px] text-[#d5d5d5] font-normal">
+                <?php 
+                    // 1. Текст перед роком + Рік
+                    echo esc_html($before_year) . ' ' . $current_year; 
+                ?>
+                
+                <?php if (!empty($link)): ?>
+                    <?php 
+                        echo $pre_text;
+                    ?>
+                    <a href="<?php echo esc_url($link['url']); ?>" 
+                    class="underline" 
+                    <?php echo !empty($link['target']) ? 'target="'.esc_attr($link['target']).'"' : ''; ?>>
+                        <?php echo esc_html($link['title']); ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php 
+                    // 3. Текст після посилання (напр. ". All Rights Reserved.")
+                    echo esc_html($post_text); 
+                ?> 
+            </span>
+        </div>
+    </footer>
 
 </div>
 <?php wp_footer(); ?>

@@ -40,7 +40,9 @@ $share_title = urlencode(get_the_title());
 
 
 <div class="post__author-share items-center flex gap-3">
-    <span class="text-white text-[16px] leading-[26px] font-semibold">Share</span>
+    <span class="text-white text-[16px] leading-[26px] font-semibold">
+        <?php echo esc_html__( "Share", THEME ); ?>
+    </span>
     <div class="flex gap-2 text-white items-center">
         
         <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url; ?>" 
@@ -66,7 +68,6 @@ $share_title = urlencode(get_the_title());
                 <path d="M4.56602 18.0003H0.882679V6.40866H4.56602V18.0003ZM2.72435 4.78366C1.53268 4.78366 0.666016 3.91699 0.666016 2.72533C0.666016 1.53366 1.64102 0.666992 2.72435 0.666992C3.91602 0.666992 4.78269 1.53366 4.78269 2.72533C4.78269 3.91699 3.91602 4.78366 2.72435 4.78366ZM17.9993 18.0003H14.316V11.717C14.316 9.87533 13.5577 9.33366 12.4743 9.33366C11.391 9.33366 10.3077 10.2003 10.3077 11.8253V18.0003H6.62435V6.40866H10.091V8.03366C10.416 7.27533 11.716 6.08366 13.5577 6.08366C15.616 6.08366 17.7827 7.27533 17.7827 10.8503V18.0003H17.9993Z" fill="white"></path>
             </svg>
         </a>
-        
     </div>
 </div>
 </div>

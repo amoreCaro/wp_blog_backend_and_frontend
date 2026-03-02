@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$socials = get_field("acf_social_icons");
+$socials = get_field("acf_social_icons", "option");
 
 if ( isset( $socials ) && ! empty( $socials ) ) : ?> 
     <div class="socials flex gap-2 text-white items-center">

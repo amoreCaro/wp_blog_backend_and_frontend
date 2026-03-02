@@ -57,12 +57,20 @@ add_action( 'after_setup_theme', 'theme_setup' );
 if( function_exists('acf_add_options_page') ) {
     
     acf_add_options_page(array(
-        'page_title'    => 'Global Settings', // Заголовок сторінки
-        'menu_title'    => 'Global Settings', // Назва в меню
-        'menu_slug'     => 'global-settings', // Ваш унікальний slug
+        'page_title'    => 'Global Settings', 
+        'menu_title'    => 'Global Settings', 
+        'menu_slug'     => 'global-settings', 
         'capability'    => 'manage_options',
-        'icon_url'      => 'dashicons-admin-generic', // Ваша іконка
-        'position'      => 2,                         // Позиція в меню
-        'redirect'      => false                      // Не перенаправляти на підсторінки
+        'icon_url'      => 'dashicons-admin-generic', 
+        'position'      => 2,                         
+        'redirect'      => false                     
     ));
 }
+
+
+function theme_register_menus() {
+    register_nav_menus([
+        'header_menu' => __( 'Header Menu', 'theme' ),
+    ]);
+}
+add_action('after_setup_theme', 'theme_register_menus');

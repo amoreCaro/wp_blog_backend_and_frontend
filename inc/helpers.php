@@ -15,7 +15,7 @@ if (!function_exists('dd')) {
 }
 
 
-if (!function_exists('get_post_main_image')) {
+if (!function_exists('get_post_main_image')) {  
     function get_post_main_image($post_id) {
         $main_type     = get_field('acf_main_media_type', $post_id);
         $main_image_id = get_field('acf_main_image', $post_id);
@@ -84,5 +84,49 @@ if (!function_exists('render_gallery_image')) {
         echo '<div class="'.esc_attr($wrapper_class).'">';
         echo '<img data-src="'.esc_url($url).'" src="'.esc_url($url).'" alt="'.esc_attr($alt).'" class="lazy-img '.esc_attr($img_class).'">';
         echo '</div>';
+    }
+}
+
+
+if (!function_exists('render_decor_image')) {
+    function render_decor_image($images, $index) {
+        if (empty($images[$index])) return;
+
+        $img = $images[$index];
+
+        // Додаткова перевірка, чи є src
+        if (empty($img['sizes']['medium'])) return;
+        ?>
+        <img
+            src="<?php echo esc_url($img['sizes']['medium']); ?>"
+            data-src="<?php echo esc_url($img['sizes']['medium']); ?>"
+            alt="<?php echo esc_attr($img['alt'] ?? ''); ?>"
+            class="lazy-img object-cover w-full h-full"
+            loading="lazy"
+        >
+        <?php
+    }
+}
+
+
+if (!function_exists('get_post_image_url')) {
+    // Функція для отримання зображення поста
+    function get_post_image_url($post_id, $placeholder) {
+        // 1. Перевірка thumbnail
+        if ( has_post_thumbnail( $post_id ) ) {
+            return get_the_post_thumbnail_url( $post_id, 'large' );
+        }
+
+        // 2. Перевірка repeater галереї ACF
+        $gallery = get_field('acf_gallery', $post_id);
+        if ( ! empty($gallery) && is_array($gallery) ) {
+            $first_image_id = $gallery[0]['acf_image'] ?? null;
+            if ( $first_image_id ) {
+                return wp_get_attachment_image_url( $first_image_id, 'large' );
+            }
+        }
+
+        // 3. Placeholder
+        return esc_url($placeholder);
     }
 }

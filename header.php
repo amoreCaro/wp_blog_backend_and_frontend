@@ -6,61 +6,82 @@
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-<?php wp_body_open(); ?>
+<?php wp_body_open();
+
+$logo = get_field ( "acf_header_logo", "option" );
+$buttons = get_field("acf_header_buttons", "option");
+
+?>
 <div class="l-wrapper">
     <header class="header-default fixed top-0 left-0 z-[100] w-full bg-black px-5 xl:px-10 h-[80px] flex items-center text-white">
         <div class="container flex items-center justify-between">
-            
-            <a class="text-xl font-semibold tracking-tight text-white transition-opacity no-underline flex-shrink-0" href="#logo">
-                Travel Guider
-            </a>
-            <nav class="navigation	 hidden flex-1 justify-center lg:flex">
-                <ul class="flex space-x-3">
-                    
-                    <li class="list-none">
-                        <a href="#" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1-.553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>
-                            </svg>
-                            <span class="text-xs font-medium leading-[16px]">Where to Go</span>
-                        </a>
-                    </li>
-
-                    <li class="list-none">
-                        <a href="#" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m16 2 2 2-4 4 4 4-2 2-6-6-2 2-4-4-2 2-2-2 4-4 2-2 2 2 6 6Z"/><path d="m2 22 10-10"/><path d="m22 2-5 5"/>
-                            </svg>
-                            <span class="text-xs font-medium leading-[16px]">Where to Eat</span>
-                        </a>
-                    </li>
-
-                    <li class="list-none">
-                        <a href="#" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>
-                            </svg>
-                            <span class="text-xs font-medium leading-[16px]">Places to Stay</span>
-                        </a>
-                    </li>
-
-                    <li class="list-none">
-                        <a href="#" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="8"/><path d="m12 10 2 4h-4l2-4Z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
-                            </svg>
-                            <span class="text-xs font-medium leading-[16px]">What to Do</span>
-                        </a>
-                    </li>
-
-                </ul>
+            <?php 
+            if ( ! empty( $logo ) ) :
+                $logo_text   = $logo['acf_header_logo_txt'] ?? '';
+                $logo_img_id = $logo['acf_header_logo_img'] ?? '';
+            ?>
+                <a href="#logo" class="flex items-center flex-shrink-0 no-underline text-white transition-opacity">
+                    <?php 
+                    if ( ! empty( $logo_img_id ) ) {
+                        // 🔹 Логотип-картинка з max-width
+                        echo wp_get_attachment_image(
+                            $logo_img_id,
+                            'full',
+                            false,
+                            [
+                                'alt'   => esc_attr( $logo_text ),
+                                'class' => 'w-full max-w-[130px] h-10 object-contain'
+                            ]
+                        );
+                    } elseif ( ! empty( $logo_text ) ) {
+                        // 🔹 Текстовий логотип без обмежень
+                        echo '<span class="text-xl font-semibold tracking-tight">'
+                            . esc_html( $logo_text ) .
+                        '</span>';
+                    }
+                    ?>
+                </a>
+            <?php endif; ?>
+            <nav class="navigation hidden flex-1 justify-center lg:flex">
+                <?php
+                wp_nav_menu([
+                    'theme_location' => 'header_menu',  
+                    'container'      => false,
+                    'menu_class'     => 'flex space-x-3',
+                    'fallback_cb'    => false,
+                    'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+                    'link_before'    => '',
+                    'link_after'     => '',
+                    'walker'         => new class extends Walker_Nav_Menu {
+                        function start_el(&$output, $item, $depth = 0, $args = [], $id = 0) {
+                            $classes = implode(' ', $item->classes);
+                            $output .= '<li class="list-none">';
+                            $output .= '<a href="' . esc_url($item->url) . '" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">';
+                            $output .= esc_html($item->title);
+                            $output .= '</a>';
+                            $output .= '</li>';
+                        }
+                    }
+                ]);
+                ?>
             </nav>
 
             <div class="flex items-center gap-4 md:gap-6 text-sm flex-shrink-0">
+            <?php if ( ! empty( $buttons ) ) : ?>
                 <div class="hidden lg:flex items-center gap-6">
-                    <a href="#" class="transition-colors hover:text-blue-400">Login</a>
-                    <a href="#" class="transition-colors hover:text-blue-400">Contact</a>
+                    <?php foreach ( $buttons as $button ) : 
+                        $button_text = $button['acf_header_button_text'] ?? '';
+                        $button_link = $button['acf_header_button_link'] ?? '#';
+                    ?>
+                        <a 
+                            href="<?php echo esc_url( $button_link ); ?>" 
+                            class="transition-colors hover:text-blue-400"
+                        >
+                            <?php echo esc_html( $button_text ); ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
+            <?php endif; ?>
 
                 <label for="theme-toggle" class="inline-flex items-center group relative cursor-pointer">
                     <input type="checkbox" id="theme-toggle" class="sr-only peer">
