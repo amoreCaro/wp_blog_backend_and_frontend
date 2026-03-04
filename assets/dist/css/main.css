@@ -1040,6 +1040,9 @@ video {
 .min-h-screen{
   min-height: 100vh;
 }
+.w-10{
+  width: 2.5rem;
+}
 .w-12{
   width: 3rem;
 }
@@ -2452,6 +2455,9 @@ video {
 .post__video.is-paused .post__video-play-button{
   pointer-events: auto;
   opacity: 1;
+}
+.first-letter\:uppercase::first-letter{
+  text-transform: uppercase;
 }
 .selection\:bg-blue-500\/30 *::-moz-selection{
   background-color: rgb(59 130 246 / 0.3);

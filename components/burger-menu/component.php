@@ -2,6 +2,8 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$socials = get_field("acf_social_icons", "option");
 ?>
 
 <div id="burgerMenu" class="fixed inset-0 z-[1000] flex items-center justify-center opacity-0 pointer-events-none -translate-x-full transition-all duration-300 ease-out">
@@ -77,8 +79,10 @@ if (!defined('ABSPATH')) {
                 </ul>
             </nav>
         </div>
+        
         <?php if ( ! empty( $socials ) ) : ?>
             <div class="w-full border-t border-white/10 my-8"></div>
+            
             <?php
             // Socials
             require PATH . '/components/socials/component.php';

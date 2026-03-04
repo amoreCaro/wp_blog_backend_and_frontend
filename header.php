@@ -11,6 +11,17 @@
 $logo = get_field ( "acf_header_logo", "option" );
 $buttons = get_field("acf_header_buttons", "option");
 
+$nav_menu = get_nav_menu_locations();
+$menu_items = [];
+
+
+if (isset($nav_menu['header_menu'])) {
+    $menu_id = $nav_menu['header_menu'];
+    $menu_items = wp_get_nav_menu_items($menu_id);
+}
+
+
+
 ?>
 <div class="l-wrapper">
     <header class="header-default fixed top-0 left-0 z-[100] w-full bg-black px-5 xl:px-10 h-[80px] flex items-center text-white">
@@ -42,29 +53,33 @@ $buttons = get_field("acf_header_buttons", "option");
                     ?>
                 </a>
             <?php endif; ?>
+            <?php if (!empty($menu_items)) : ?>
             <nav class="navigation hidden flex-1 justify-center lg:flex">
-                <?php
-                wp_nav_menu([
-                    'theme_location' => 'header_menu',  
-                    'container'      => false,
-                    'menu_class'     => 'flex space-x-3',
-                    'fallback_cb'    => false,
-                    'items_wrap'     => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-                    'link_before'    => '',
-                    'link_after'     => '',
-                    'walker'         => new class extends Walker_Nav_Menu {
-                        function start_el(&$output, $item, $depth = 0, $args = [], $id = 0) {
-                            $classes = implode(' ', $item->classes);
-                            $output .= '<li class="list-none">';
-                            $output .= '<a href="' . esc_url($item->url) . '" class="flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white hover:bg-white hover:text-black transition-all">';
-                            $output .= esc_html($item->title);
-                            $output .= '</a>';
-                            $output .= '</li>';
-                        }
-                    }
-                ]);
-                ?>
-            </nav>
+                <ul class="flex space-x-3">
+                        <?php foreach ($menu_items as $item) : 
+                            $icon_svg = get_inline_svg_from_acf($item->ID);
+                            $is_active = in_array('current-menu-item', $item->classes, true);
+                        ?>
+                            <li class="list-none">
+                                <a
+                                    href="<?= esc_url($item->url); ?>"
+                                    class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white transition-all hover:bg-white hover:text-black <?= $is_active ? 'bg-white text-black' : ''; ?> "
+                                >
+                                    <?php if ($icon_svg) : ?>
+                                        <span class="menu-icon">
+                                            <?= $icon_svg; ?>
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <span class="menu-text">
+                                        <?= esc_html($item->title); ?>
+                                    </span>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </nav>
+                <?php endif; ?>
 
             <div class="flex items-center gap-4 md:gap-6 text-sm flex-shrink-0">
             <?php if ( ! empty( $buttons ) ) : ?>

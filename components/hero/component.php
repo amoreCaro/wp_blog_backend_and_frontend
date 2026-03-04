@@ -4,10 +4,11 @@ if (!defined('ABSPATH')) {
 }
 $terms = get_the_terms( get_the_ID(), 'location' );
 
-$locations = new WP_Query([
-    'post_type'      => 'location',
-    'posts_per_page' => -1,
-    'post_status'    => 'publish',
+$title = get_field("acf_hero_title");
+$search_placeholder = get_field("acf_hero_seach_placeholder");
+$locations = get_terms([
+    'taxonomy'   => 'locations',
+    'hide_empty' => false, 
 ]);
 
 $decor_images_left = get_field('acf_decor_images_left');
@@ -94,11 +95,14 @@ $decor_images_right = get_field('acf_decor_images_right');
 </div>
 <?php endif; ?>
     <div class="z-10 text-center max-w-3xl w-full px-4">
+        <?php if (! empty ( $title ) ) : ?>
         <h1 class="text-5xl sm:text-7xl md:text-8xl font-medium text-[#1a1a1a] mb-6 md:mb-10 tracking-tight">
-            <?php echo esc_html__( "Where Next?", THEME ); ?>
+            <?php echo esc_html__( $title ); ?>
         </h1>
+        <?php endif; ?>
         
         <div class="relative max-w-2xl mx-auto group cursor-pointer">
+            <?php if (! empty ( $search_placeholder ) ) : ?>
             <span class="absolute inset-y-0 left-5 sm:left-6 flex items-center text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -106,15 +110,18 @@ $decor_images_right = get_field('acf_decor_images_right');
             </span>
             <input 
                 type="text" 
-                placeholder="Search for the hotel, restaurant..." 
+                placeholder="<?php echo esc_attr( $search_placeholder ); ?>"
                 class="w-full py-4 sm:py-6 pl-12 sm:pl-16 pr-6 bg-white border border-gray-500 rounded-full shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300 transition-all text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
             >
         </div>
-
-        <?php if ( $locations->have_posts() ) : ?>
+        <?php endif; ?>
+        <?php
+        if ( ! empty($locations) && ! is_wp_error($locations) ) : ?>
+            
             <div class="mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-4 text-[14px] sm:text-[15px] text-gray font-medium">
-                <?php while ( $locations->have_posts() ) : $locations->the_post(); ?>
-                    <a href="<?php the_permalink(); ?>"
+
+                <?php foreach ( $locations as $location ) : ?>
+                    <a href="<?php echo esc_url( get_term_link( $location ) ); ?>"
                     class="flex items-center gap-2 bg-[#F5F5F5] px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-gray-200 hover:text-black transition-all text-sm sm:text-base leading-snug whitespace-nowrap">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -131,12 +138,12 @@ $decor_images_right = get_field('acf_decor_images_right');
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
 
-                        <?php echo esc_html( get_the_title() ); ?>
+                        <?php echo esc_html( $location->name ); ?>
                     </a>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
+
             </div>
 
-            <?php wp_reset_postdata(); ?>
         <?php endif; ?>
     </div>
 <?php if ( ! empty($decor_images_right) ) : ?>

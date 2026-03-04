@@ -6,13 +6,19 @@ if (!defined('ABSPATH')) {
 $disclaimer = wp_strip_all_tags(get_field("acf_footer_disclaimer", "option"));
 $copyrights = get_field("acf_copyrights", "option");
 
-$footer_links = get_field('acf_footer_links', 'option');  
 $pre_text = $copyrights['acf_footer_link_pre'] ?? '';
 $link      = $copyrights['acf_footer_copyright_link'] ?? [];
 $post_text = $copyrights['acf_footer_text_after_link'] ?? '';
 $current_year = date('Y');
 $before_year = $copyrights['acf_footer_before_year'] ?? '';
 
+$nav_menu = get_nav_menu_locations();
+$footer_items = [];
+
+if (isset($nav_menu['footer_menu'])) {
+    $menu_id = $nav_menu['footer_menu'];
+    $footer_items = wp_get_nav_menu_items($menu_id);
+}
 ?>
 
     <footer class="footer py-[100px] flex items-center bg-black justify-center border-t border-[rgb(26,26,26)]">
@@ -24,27 +30,29 @@ $before_year = $copyrights['acf_footer_before_year'] ?? '';
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($footer_links)) : ?>
-            <nav class="min-h-[46px] flex items-center">
-                <ul class="flex justify-center flex-wrap">
-                    <?php foreach ($footer_links as $item) : 
-                        $text = $item['acf_footer_links_text'] ?? '';
-                        $url  = $item['acf_footer_links_url'] ?? '';
+        <?php if (!empty($footer_items)) : ?>
+        <nav class="min-h-[46px] flex items-center">
+            <ul class="flex justify-center flex-wrap">
+                <?php foreach ($footer_items as $item) : 
+                    // У стандартному об'єкті WP заголовок — це $item->title, а посилання — $item->url
+                    $text = $item->title ?? '';
+                    $url  = $item->url ?? '';
 
-                        if (!$text) continue;
-                    ?>
-                        <li>
-                            <a
-                                href="<?php echo esc_url($url); ?>"
-                                class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
-                            >
-                                <?php echo esc_html($text); ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </nav>
+                    if (!$text) continue;
+                ?>
+                    <li>
+                        <a
+                            href="<?php echo esc_url($url); ?>"
+                            class="text-[14px] leading-[20px] font-medium text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400"
+                        >
+                            <?php echo esc_html($text); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
         <?php endif; ?>
+        
 
         <?php require PATH . "/components/socials/component.php"; ?> 
             <!-- Social Icons -->

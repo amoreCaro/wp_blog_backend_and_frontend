@@ -130,3 +130,33 @@ if (!function_exists('get_post_image_url')) {
         return esc_url($placeholder);
     }
 }
+
+if (!function_exists('get_inline_svg_from_acf')) {
+    function get_inline_svg_from_acf($menu_item_id, $field = 'acf_navigation_icon') {
+        $icon = get_field($field, $menu_item_id);
+        if (!$icon) return '';
+
+        $icon_url = is_array($icon) ? ($icon['url'] ?? '') : $icon;
+        if (!$icon_url) return '';
+
+        $attachment_id = attachment_url_to_postid($icon_url);
+        $svg_path = $attachment_id ? get_attached_file($attachment_id) : '';
+
+        if (
+            $svg_path &&
+            file_exists($svg_path) &&
+            pathinfo($svg_path, PATHINFO_EXTENSION) === 'svg'
+        ) {
+            $svg = file_get_contents($svg_path);
+
+            return preg_replace(
+                '/<svg([^>]*)>/',
+                '<svg$1 class="w-4 h-4 fill-current">',
+                $svg,
+                1
+            );
+        }
+
+        return '';
+    }
+}

@@ -1,10 +1,16 @@
 <?php
-if ( ! defined('ABSPATH') ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
 // Placeholder image
 $placeholder = get_template_directory_uri() . '/assets/src/images/placeholder.png';
+
+// Функція для отримання зображення поста або placeholder
+function theme_get_post_image($post_id, $size = 'medium', $placeholder = '') {
+    $thumbnail = get_the_post_thumbnail_url($post_id, $size);
+    return $thumbnail ? $thumbnail : $placeholder;
+}
 
 // Отримати всі категорії
 $categories = get_categories([
@@ -12,22 +18,31 @@ $categories = get_categories([
     'order'   => 'ASC',
 ]);
 
-if ( empty( $categories ) ) return;
+if (empty($categories)) return;
 
-// Беремо першу категорію
-$cat = $categories[0];
-$category_bg_color = get_field('acf_category_bg', 'category_' . $cat->term_id);
-$category_bg_color = esc_attr($category_bg_color);
+// Знаходимо першу категорію, яка має пости
+$cat = null;
+$cat_posts = [];
+foreach ($categories as $category) {
+    $posts = get_posts([
+        'category'       => $category->term_id,
+        'posts_per_page' => 6,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
 
-// Отримати пости категорії
-$cat_posts = get_posts([
-    'category'       => $cat->term_id,
-    'posts_per_page' => 6,
-    'orderby'        => 'date',
-    'order'          => 'DESC',
-]);
+    if (!empty($posts)) {
+        $cat = $category;
+        $cat_posts = $posts;
+        break; // знайшли першу категорію з постами — виходимо з циклу
+    }
+}
 
-if ( empty( $cat_posts ) ) return;
+// Якщо немає жодної категорії з постами, виходимо
+if (!$cat || empty($cat_posts)) return;
+
+// Перевірка кольору категорії
+$category_bg_color = esc_attr(get_field('acf_category_bg', 'category_' . $cat->term_id));
 
 // ACF category icon
 $cat_icon = get_field('acf_category_icon', 'category_' . $cat->term_id);
@@ -37,70 +52,74 @@ $cat_icon = get_field('acf_category_icon', 'category_' . $cat->term_id);
 
     <!-- Title -->
     <div class="flex items-center gap-4 mb-12 container">
-        <h1 class="text-black text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-semibold tracking-tight">
-            <?php echo esc_html__( "Editor's Choice", THEME ); ?>
+        <h1 class="text-black text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-semibold tracking-tight first-letter:uppercase">
+            <?php echo isset($cat->name) ? esc_html($cat->name) : ''; ?>
         </h1>
 
-        <div class="-translate-y-1/2 w-14 h-14 flex items-center justify-center bg-[#E8E5EB] rounded-t-full rounded-br-full shadow-sm">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 5.33C16 12.67 10 16 10 16C10 16 16 19.33 16 26.67C16 19.33 22 16 22 16C22 16 16 12.67 16 5.33Z" stroke="black" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M28 9.33C28 12.67 25.33 14 25.33 14C25.33 14 28 15.33 28 18.67C28 15.33 30.67 14 30.67 14C30.67 14 28 12.67 28 9.33Z" fill="black"/>
-            <path d="M29.33 22.67C29.33 27.33 26 29.33 26 29.33C26 29.33 29.33 31.33 29.33 36C29.33 31.33 32.67 29.33 32.67 29.33C32.67 29.33 29.33 27.33 29.33 22.67Z" fill="black"/>
-            </svg>
+        <?php if (!empty($category_bg_color)) : ?>
+        <div
+            class="-translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full shadow-sm"
+            style="background-color: <?php echo esc_attr($category_bg_color); ?>"
+        >
+            <?php
+                if (!empty($cat_icon)) {
+                    echo wp_get_attachment_image($cat_icon, 'thumbnail', false, ['class' => 'w-10 h-10 object-contain']);
+                }
+            ?>
         </div>
+        <?php endif; ?>
     </div>
 
     <div class="space-y-12 container">
 
         <!-- FIRST TWO POSTS -->
-        <?php if ( count( $cat_posts ) >= 2 ) : ?>
+        <?php if (!empty($cat_posts) && count($cat_posts) >= 2) : ?>
         <div class="reverse grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-10">
 
-            <?php foreach ( array_slice( $cat_posts, 0, 2 ) as $index => $post ) : setup_postdata( $post ); ?>
+            <?php foreach (array_slice($cat_posts, 0, 2) as $index => $post) : setup_postdata($post); ?>
+                <?php $post_image = theme_get_post_image(get_the_ID(), 'large', $placeholder); ?>
 
-                <?php if ( $index === 0 ) : ?>
+                <?php if ($index === 0) : ?>
                 <!-- SMALL CARD -->
-                <a href="<?php echo esc_url( get_permalink() ); ?>"
+                <a href="<?php echo esc_url(get_permalink()); ?>"
                    class="group flex flex-col bg-white rounded-[24px] shadow-sm overflow-hidden min-h-[450px]">
 
                     <div class="h-[200px] md:h-[285px] overflow-hidden">
-                        <img src="<?php echo get_post_image_url(get_the_ID(), $placeholder); ?>"
+                        <img src="<?php echo esc_url($post_image); ?>"
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                             alt="<?php echo esc_attr( get_the_title() ); ?>">
+                             alt="<?php echo esc_attr(get_the_title()); ?>">
                     </div>
 
                     <div class="p-6 md:p-8 flex flex-col flex-grow">
                         <span
-                        class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4"
-                        style="background-color: <?php echo esc_attr($category_bg_color); ?>"
+                            class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4"
+                            style="background-color: <?php echo esc_attr($category_bg_color); ?>"
                         >
                             <?php
-                                if ( $cat_icon ) {
-                                    echo wp_get_attachment_image( esc_attr($cat_icon), 'thumbnail', false, [
-                                        'class' => 'w-5 h-5'
-                                    ]);
+                                if (!empty($cat_icon)) {
+                                    echo wp_get_attachment_image($cat_icon, 'thumbnail', false, ['class' => 'w-5 h-5']);
                                 }
-                                echo esc_html($cat->name);
+                                echo isset($cat->name) ? esc_html($cat->name) : '';
                             ?>
                         </span>
 
-                        <h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html( get_the_title() ); ?></h4>
+                        <h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html(get_the_title()); ?></h4>
                         <p class="text-[#373A39] text-sm lg:text-lg mb-4 line-clamp-3">
-                            <?php echo esc_html( wp_trim_words(get_the_excerpt(), 25) ); ?>
+                            <?php echo esc_html(wp_trim_words(get_the_excerpt(), 25)); ?>
                         </p>
-                        <time class="text-black text-xs font-bold mt-auto"><?php echo esc_html( get_the_date() ); ?></time>
+                        <time class="text-black text-xs font-bold mt-auto"><?php echo esc_html(get_the_date()); ?></time>
                     </div>
                 </a>
 
                 <?php else : ?>
                 <!-- BIG CARD -->
-                <a href="<?php echo esc_url( get_permalink() ); ?>"
+                <a href="<?php echo esc_url(get_permalink()); ?>"
                    class="group lg:col-span-3 bg-neutral-950 rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row min-h-[680px]">
 
                     <div class="lg:w-[55%] h-[300px] sm:h-[400px] lg:h-auto overflow-hidden relative">
-                        <img src="<?php echo get_post_image_url(get_the_ID(), $placeholder); ?>"
+                        <img src="<?php echo esc_url($post_image); ?>"
                              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                             alt="<?php echo esc_attr( get_the_title() ); ?>">
+                             alt="<?php echo esc_attr(get_the_title()); ?>">
 
                         <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-black/80 to-transparent"></div>
                     </div>
@@ -108,18 +127,18 @@ $cat_icon = get_field('acf_category_icon', 'category_' . $cat->term_id);
                     <div class="lg:w-[45%] p-8 md:p-12 flex flex-col text-white">
                         <span class="border border-white/40 flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-6">
                             <?php
-                                if ( $cat_icon ) {
-                                    echo wp_get_attachment_image( esc_attr($cat_icon), 'thumbnail', false, ['class' => 'w-5 h-5']);
+                                if (!empty($cat_icon)) {
+                                    echo wp_get_attachment_image($cat_icon, 'thumbnail', false, ['class' => 'w-5 h-5']);
                                 }
-                                echo esc_html($cat->name);
+                                echo isset($cat->name) ? esc_html($cat->name) : '';
                             ?>
                         </span>
 
-                        <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium mb-6"><?php echo esc_html( get_the_title() ); ?></h4>
+                        <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium mb-6"><?php echo esc_html(get_the_title()); ?></h4>
                         <p class="text-[#C4C4C4] text-base md:text-lg mb-10">
-                            <?php echo esc_html( wp_trim_words(get_the_excerpt(), 35) ); ?>
+                            <?php echo esc_html(wp_trim_words(get_the_excerpt(), 35)); ?>
                         </p>
-                        <time class="text-gray-400 text-sm font-bold mt-auto"><?php echo esc_html( get_the_date() ); ?></time>
+                        <time class="text-gray-400 text-sm font-bold mt-auto"><?php echo esc_html(get_the_date()); ?></time>
                     </div>
                 </a>
                 <?php endif; ?>
@@ -129,41 +148,41 @@ $cat_icon = get_field('acf_category_icon', 'category_' . $cat->term_id);
         <?php endif; ?>
 
         <!-- OTHER POSTS -->
-        <?php if ( count( $cat_posts ) > 2 ) : ?>
+        <?php if (!empty($cat_posts) && count($cat_posts) > 2) : ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10">
 
-            <?php foreach ( array_slice( $cat_posts, 2 ) as $post ) : setup_postdata( $post ); ?>
-            <a href="<?php echo esc_url( get_permalink() ); ?>"
-               class="group flex flex-col bg-white rounded-[24px] shadow-sm overflow-hidden min-h-[450px]">
+            <?php foreach (array_slice($cat_posts, 2) as $post) : setup_postdata($post); ?>
+                <?php $post_image = theme_get_post_image(get_the_ID(), 'medium', $placeholder); ?>
 
-                <div class="h-[200px] md:h-[285px] overflow-hidden">
-                    <img src="<?php echo get_post_image_url(get_the_ID(), $placeholder); ?>"
-                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                         alt="<?php echo esc_attr( get_the_title() ); ?>">
-                </div>
+                <a href="<?php echo esc_url(get_permalink()); ?>"
+                   class="group flex flex-col bg-white rounded-[24px] shadow-sm overflow-hidden min-h-[450px]">
 
-                <div class="p-6 md:p-8 flex flex-col flex-grow">
-                    <span
-                        class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4"
-                        style="background-color: <?php echo esc_attr($category_bg_color); ?>"
-                    >
-                        <?php
-                            if ( $cat_icon ) {
-                                echo wp_get_attachment_image( esc_attr($cat_icon), 'thumbnail', false, [
-                                    'class' => 'w-5 h-5'
-                                ]);
-                            }
-                            echo esc_html($cat->name);
-                        ?>
-                    </span>
+                    <div class="h-[200px] md:h-[285px] overflow-hidden">
+                        <img src="<?php echo esc_url($post_image); ?>"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                             alt="<?php echo esc_attr(get_the_title()); ?>">
+                    </div>
 
-                    <h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html( get_the_title() ); ?></h4>
-                    <p class="text-[#373A39] text-sm lg:text-lg mb-4 line-clamp-3">
-                        <?php echo esc_html( wp_trim_words(get_the_excerpt(), 25) ); ?>
-                    </p>
-                    <time class="text-black text-xs font-bold mt-auto"><?php echo esc_html( get_the_date() ); ?></time>
-                </div>
-            </a>
+                    <div class="p-6 md:p-8 flex flex-col flex-grow">
+                        <span
+                            class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4"
+                            style="background-color: <?php echo esc_attr($category_bg_color); ?>"
+                        >
+                            <?php
+                                if (!empty($cat_icon)) {
+                                    echo wp_get_attachment_image($cat_icon, 'thumbnail', false, ['class' => 'w-5 h-5']);
+                                }
+                                echo isset($cat->name) ? esc_html($cat->name) : '';
+                            ?>
+                        </span>
+
+                        <h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html(get_the_title()); ?></h4>
+                        <p class="text-[#373A39] text-sm lg:text-lg mb-4 line-clamp-3">
+                            <?php echo esc_html(wp_trim_words(get_the_excerpt(), 25)); ?>
+                        </p>
+                        <time class="text-black text-xs font-bold mt-auto"><?php echo esc_html(get_the_date()); ?></time>
+                    </div>
+                </a>
             <?php endforeach; wp_reset_postdata(); ?>
         </div>
         <?php endif; ?>

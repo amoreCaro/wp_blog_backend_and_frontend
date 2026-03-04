@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Placeholder image
+$thumbnail_url = get_the_post_thumbnail_url($post->ID, 'medium');
 $placeholder = get_template_directory_uri() . '/assets/dist/images/placeholder.png';
 
 // Отримуємо пов'язані пости
@@ -27,20 +28,9 @@ if (empty($related_posts)) return;
 
             <?php foreach ($related_posts as $index => $post) : setup_postdata($post); ?>
                 <?php
-                // Беремо thumbnail або перший attachment як fallback
-                $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'medium');
-
-                if (!$thumbnail_url) {
-                    // Спроба взяти перше зображення з галереї/прикріплень
-                    $attachments = get_attached_media('image', $post->ID);
-                    if (!empty($attachments)) {
-                        $first_attachment = reset($attachments);
-                        $thumbnail_url = wp_get_attachment_image_url($first_attachment->ID, 'medium');
-                    } else {
-                        // Якщо нічого немає — placeholder
+                    if (!$thumbnail_url) {
                         $thumbnail_url = $placeholder;
                     }
-                }
                 ?>
 
                 <!-- CARD -->
