@@ -4,7 +4,6 @@ if (!defined('ABSPATH')) {
 }
 
 // Placeholder image
-$thumbnail_url = get_the_post_thumbnail_url($post->ID, 'medium');
 $placeholder = get_template_directory_uri() . '/assets/dist/images/placeholder.png';
 
 // Отримуємо пов'язані пости
@@ -26,8 +25,11 @@ if (empty($related_posts)) return;
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
 
-            <?php foreach ($related_posts as $index => $post) : setup_postdata($post); ?>
+            <?php foreach ($related_posts as $post) : setup_postdata($post); ?>
+                
                 <?php
+                    // Отримуємо thumbnail посту, або placeholder, якщо немає
+                    $thumbnail_url = get_the_post_thumbnail_url($post->ID, 'medium');
                     if (!$thumbnail_url) {
                         $thumbnail_url = $placeholder;
                     }
