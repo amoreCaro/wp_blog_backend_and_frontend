@@ -160,3 +160,13 @@ if (!function_exists('get_inline_svg_from_acf')) {
         return '';
     }
 }
+
+
+if (!function_exists('cq_limit_accessory_items')) {
+    function cq_limit_accessory_items($items, $max_count = 6) {
+        if (empty($items) || !is_array($items)) {
+            return [];
+        }
+        return array_slice($items, 0, $max_count);
+    }
+}
