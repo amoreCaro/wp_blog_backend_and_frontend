@@ -53,10 +53,6 @@ $container_class = "container mx-auto flex flex-col px-[20px] xl:px-[40px] 2xl:p
 $main_media_class = "overflow-hidden h-[250px] md:h-[400px] lg:h-[642px]"
     . ($show_split_layout ? " lg:basis-1/2" : " w-full");
 
-// --------------------
-// Helper function
-// --------------------
-
 ?>
 
 <div class="<?= esc_attr($container_class) ?>">

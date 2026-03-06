@@ -5,84 +5,44 @@ if (!defined('ABSPATH')) {
 
 $placeholder = get_template_directory_uri() . '/assets/src/images/placeholder.png';
 
-$category = null;
+$category = null; // для категорій
+$tag      = null; // для тегів
 $cat_posts = [];
-$chunks = [];
+$chunks    = [];
+$category_name = '';
+$category_bg_color = '';
+$cat_icon = '';
 
 if (is_category()) {
     $category = get_queried_object();
     $cat_posts = get_posts([
-        'category'       => $category->term_id,
-        'posts_per_page' => 12, 
-        'orderby'        => 'date',
-        'order'          => 'DESC',
+        'category' => $category->term_id,
+        'posts_per_page' => 12,
+        'orderby' => 'date',
+        'order' => 'DESC',
     ]);
+
     $chunks = array_chunk($cat_posts, 6);
-} else if (is_page('blog')) {
 
-    $categories = get_categories([
-        'orderby' => 'name',
-        'order'   => 'ASC'
-    ]);
+    $category_name = $category->name;
+    $category_bg_color = esc_attr(get_field('acf_category_bg', 'category_' . $category->term_id));
+    $cat_icon = get_field('acf_category_icon', 'category_' . $category->term_id);
 
-    foreach ($categories as $cat) {
-
-        $posts = get_posts([
-            'category__in'   => [$cat->term_id],
-            'posts_per_page' => 6,
-            'orderby'        => 'date',
-            'order'          => 'DESC'
-        ]);
-
-        if (!empty($posts)) {
-
-            $all_categories_posts[] = [
-                'category' => $cat,
-                'chunks'   => array_chunk($posts, 6)
-            ];
-        }
-    }
-}
-else if ( is_tag() ) {
-    $tag = get_queried_object(); 
+} elseif (is_tag()) {
+    $tag = get_queried_object();
     $cat_posts = get_posts([
-        'tag_id'        => $tag->term_id,
-        'posts_per_page'=> 12,
-        'orderby'       => 'date',
-        'order'         => 'DESC',
+        'tag_id' => $tag->term_id,
+        'posts_per_page' => 12,
+        'orderby' => 'date',
+        'order' => 'DESC',
     ]);
 
-    $category = $tag;
     $chunks = array_chunk($cat_posts, 6);
+
+    $category_name = $tag->name;
 }
 
-else {
-    $categories = get_categories([
-        'orderby' => 'name',
-        'order'   => 'ASC',
-    ]);
-
-    foreach ($categories as $cat) {
-        $posts = get_posts([
-            'category'       => $cat->term_id,
-            'posts_per_page' => 6, 
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-        ]);
-
-        if (!empty($posts)) {
-            $category = $cat;
-            $cat_posts = $posts;
-            $chunks = array_chunk($cat_posts, 6);
-            break;
-        }
-    }
-}
-
-if (!$category || empty($cat_posts)) return;
-
-$category_bg_color = esc_attr(get_field('acf_category_bg', 'category_' . $category->term_id));
-$cat_icon          = get_field('acf_category_icon', 'category_' . $category->term_id);
+if (empty($cat_posts)) return;
 ?>
 
 <section class="bento-grid bg-[#F6F5F8] mx-auto lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
@@ -90,7 +50,7 @@ $cat_icon          = get_field('acf_category_icon', 'category_' . $category->ter
     <!-- Title -->
     <div class="flex items-center gap-4 mb-12 container">
         <h1 class="text-black text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-semibold tracking-tight first-letter:uppercase">
-           <?php echo esc_html($category->name); ?>
+            <?php echo esc_html($category_name); ?> 
         </h1>
 
         <?php if (!empty($category_bg_color) && !empty($cat_icon)) : ?>
@@ -134,7 +94,7 @@ $cat_icon          = get_field('acf_category_icon', 'category_' . $category->ter
                                 >
                                     <?php
                                         echo wp_get_attachment_image($cat_icon, 'thumbnail', false, ['class' => 'w-5 h-5']);
-                                        echo esc_html($category->name); 
+                                 echo esc_html($category_name); 
                                     ?>
                                 </span>
 
