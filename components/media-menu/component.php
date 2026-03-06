@@ -2,6 +2,9 @@
 if (!defined('ABSPATH')) exit;
 
 $categories = get_categories();
+$current_category = get_queried_object();
+$current_category_id = $current_category->term_id ?? null;
+
 $tags = get_tags([
     'hide_empty' => true
 ]);
@@ -27,19 +30,23 @@ $tags = get_tags([
                 <ul class="flex items-center gap-8 whitespace-nowrap">
 
                     <li>
-                        <a href="<?php echo esc_url( home_url('/category/') ); ?>"
+                        <a href="<?php echo esc_url( home_url('/blog/') ); ?>"
                         class="media-menu__tab uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
                             All News
                         </a>
                     </li>
 
-                    <?php foreach ($categories as $category) : ?>
-                        <li>
-                            <a href="<?php echo esc_url( get_category_link($category->term_id) ); ?>"
-                            class="media-menu__tab uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
-                                <?php echo esc_html($category->name); ?>
-                            </a>
-                        </li>
+                    <?php foreach ($categories as $category) : 
+                        $is_active = ($current_category_id === $category->term_id) ? 'active' : '';
+                    ?>
+                    <li>
+                        <a 
+                            href="<?php echo esc_url(get_category_link($category->term_id)); ?>"
+                            class="media-menu__tab <?php echo esc_attr($is_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black"
+                        >
+                            <?php echo esc_html($category->name); ?>
+                        </a>
+                    </li>
                     <?php endforeach; ?>
 
                 </ul>

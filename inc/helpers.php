@@ -161,12 +161,9 @@ if (!function_exists('get_inline_svg_from_acf')) {
     }
 }
 
-
-if (!function_exists('cq_limit_accessory_items')) {
-    function cq_limit_accessory_items($items, $max_count = 6) {
-        if (empty($items) || !is_array($items)) {
-            return [];
-        }
-        return array_slice($items, 0, $max_count);
+if (!function_exists('theme_get_post_image')) {
+    function theme_get_post_image($post_id, $size = 'medium', $placeholder = '') {
+        $thumbnail = get_the_post_thumbnail_url($post_id, $size);
+        return $thumbnail ? $thumbnail : $placeholder;
     }
 }

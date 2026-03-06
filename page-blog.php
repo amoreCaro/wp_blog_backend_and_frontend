@@ -1,10 +1,13 @@
-<?php
+<?php 
 if (!defined('ABSPATH')) exit;
 
-get_header(); 
-?>
+$categories = get_categories();
 
-<div class="archive-page">
+get_header();
+
+?>  
+
+<div class="blog-page">
     <div class="lg:pt-[46px] pt-[92px] lg:pb-[100px] pb-[50px] bg-white">
     <?php 
         require PATH . "/components/media-menu/component.php";

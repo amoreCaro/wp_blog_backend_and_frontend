@@ -3,24 +3,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Placeholder image
 $placeholder = get_template_directory_uri() . '/assets/src/images/placeholder.png';
 
-// Функція для отримання зображення поста або placeholder
-function theme_get_post_image($post_id, $size = 'medium', $placeholder = '') {
-    $thumbnail = get_the_post_thumbnail_url($post_id, $size);
-    return $thumbnail ? $thumbnail : $placeholder;
-}
-
-// =======================
-// Отримуємо категорію та пости
-// =======================
 $category = null;
 $cat_posts = [];
 $chunks = [];
 
 if (is_category()) {
-    // Якщо на архіві категорії
     $category = get_queried_object();
     $cat_posts = get_posts([
         'category'       => $category->term_id,
@@ -29,8 +18,45 @@ if (is_category()) {
         'order'          => 'DESC',
     ]);
     $chunks = array_chunk($cat_posts, 6);
-} else {
-    // Для головної сторінки беремо першу категорію з постами
+} else if (is_page('blog')) {
+
+    $categories = get_categories([
+        'orderby' => 'name',
+        'order'   => 'ASC'
+    ]);
+
+    foreach ($categories as $cat) {
+
+        $posts = get_posts([
+            'category__in'   => [$cat->term_id],
+            'posts_per_page' => 6,
+            'orderby'        => 'date',
+            'order'          => 'DESC'
+        ]);
+
+        if (!empty($posts)) {
+
+            $all_categories_posts[] = [
+                'category' => $cat,
+                'chunks'   => array_chunk($posts, 6)
+            ];
+        }
+    }
+}
+else if ( is_tag() ) {
+    $tag = get_queried_object(); 
+    $cat_posts = get_posts([
+        'tag_id'        => $tag->term_id,
+        'posts_per_page'=> 12,
+        'orderby'       => 'date',
+        'order'         => 'DESC',
+    ]);
+
+    $category = $tag;
+    $chunks = array_chunk($cat_posts, 6);
+}
+
+else {
     $categories = get_categories([
         'orderby' => 'name',
         'order'   => 'ASC',
@@ -39,7 +65,7 @@ if (is_category()) {
     foreach ($categories as $cat) {
         $posts = get_posts([
             'category'       => $cat->term_id,
-            'posts_per_page' => 6, // беремо 12, щоб повторити блок
+            'posts_per_page' => 6, 
             'orderby'        => 'date',
             'order'          => 'DESC',
         ]);
@@ -55,9 +81,6 @@ if (is_category()) {
 
 if (!$category || empty($cat_posts)) return;
 
-// =======================
-// Дані для відображення
-// =======================
 $category_bg_color = esc_attr(get_field('acf_category_bg', 'category_' . $category->term_id));
 $cat_icon          = get_field('acf_category_icon', 'category_' . $category->term_id);
 ?>

@@ -1,17 +1,19 @@
-<?php
+<?php 
 if (!defined('ABSPATH')) exit;
 
-get_header(); 
+$tags = get_tags([
+    'hide_empty' => true
+]);
+
+get_header();
 ?>
 
-<div class="archive-page">
-    <div class="lg:pt-[46px] pt-[92px] lg:pb-[100px] pb-[50px] bg-white">
+<div class="tags">
     <?php 
         require PATH . "/components/media-menu/component.php";
         require PATH . "/components/bento/component.php";
         require PATH . "/components/pagination/component.php";
     ?>
-    </div>
 </div>
 
 <?php get_footer(); ?>
