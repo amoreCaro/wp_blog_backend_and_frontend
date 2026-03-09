@@ -6,10 +6,8 @@ $terms = get_the_terms( get_the_ID(), 'location' );
 
 $title = get_field("acf_hero_title");
 $search_placeholder = get_field("acf_hero_seach_placeholder");
-$locations = get_terms([
-    'taxonomy'   => 'locations',
-    'hide_empty' => false, 
-]);
+
+$locations = get_field("acf_hero_locations");
 
 $decor_images_left = get_field('acf_decor_images_left');
 $decor_images_right = get_field('acf_decor_images_right');

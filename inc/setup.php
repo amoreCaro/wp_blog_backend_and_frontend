@@ -102,3 +102,52 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
     }
 }
 add_action('init', 'theme_register_locations_taxonomy');
+
+add_filter('acf/fields/taxonomy/query/name=acf_select_category', function($args) {
+    $args['hide_empty'] = true;
+    $args['orderby'] = 'count';
+    $args['order'] = 'DESC';
+
+    return $args;
+});
+
+
+add_action('acf/save_post', 'theme_listing_category_svg_save', 20);
+
+if ( ! function_exists('theme_listing_category_svg_save') ) {
+    function theme_listing_category_svg_save($post_id) {
+
+        if ( is_admin() && isset($_GET['taxonomy']) && $_GET['taxonomy'] === 'category' ){
+            return;
+        }
+
+        $file_field = 'acf_category_icon';
+
+        $file_id = get_field($file_field, $post_id);
+
+        if (!$file_id) {
+            return;
+        }
+
+        $file_path = get_attached_file($file_id);
+
+
+        if (!$file_path || !file_exists($file_path)) {
+            return;
+        }
+
+        if (pathinfo($file_path, PATHINFO_EXTENSION) !== 'svg') {
+            return;
+        }
+
+        $svg_content = file_get_contents($file_path);
+
+        if (!$svg_content) {
+            return;
+        }
+
+        $term_id = str_replace('term_', '', $post_id);
+
+        update_term_meta($term_id, 'category_icon_svg', $svg_content);
+    }
+}

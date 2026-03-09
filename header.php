@@ -31,10 +31,9 @@ if (isset($nav_menu['header_menu'])) {
                 $logo_text   = $logo['acf_header_logo_txt'] ?? '';
                 $logo_img_id = $logo['acf_header_logo_img'] ?? '';
             ?>
-                <a href="#logo" class="flex items-center flex-shrink-0 no-underline text-white transition-opacity">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center flex-shrink-0 no-underline text-white transition-opacity">
                     <?php 
                     if ( ! empty( $logo_img_id ) ) {
-                        // 🔹 Логотип-картинка з max-width
                         echo wp_get_attachment_image(
                             $logo_img_id,
                             'full',
@@ -45,7 +44,6 @@ if (isset($nav_menu['header_menu'])) {
                             ]
                         );
                     } elseif ( ! empty( $logo_text ) ) {
-                        // 🔹 Текстовий логотип без обмежень
                         echo '<span class="text-xl font-semibold tracking-tight">'
                             . esc_html( $logo_text ) .
                         '</span>';

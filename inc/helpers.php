@@ -167,3 +167,33 @@ if (!function_exists('theme_get_post_image')) {
         return $thumbnail ? $thumbnail : $placeholder;
     }
 }
+
+function theme_get_category_meta($category_id) {
+	return [
+		'category_bg_color' => get_field('acf_category_bg', 'category_' . $category_id),
+		'cat_icon' => get_field('acf_category_icon', 'category_' . $category_id),
+	];
+}
+
+function theme_build_section($category, $posts, $extra = []) {
+	if (!$category || empty($posts)) return null;
+	$meta = theme_get_category_meta($category->term_id);
+	return array_merge([
+		'posts' => $posts,
+		'category_name' => $category->name,
+		'category_link' => get_category_link($category->term_id),
+		'category_bg_color' => $meta['category_bg_color'],
+		'cat_icon' => $meta['cat_icon'],
+		'is_tag' => false,
+		'first_category_name' => '',
+	], $extra);
+}
+
+function theme_get_posts($args) {
+	$default = [
+		'post_type' => 'post',
+		'orderby' => 'date',
+		'order' => 'DESC',
+	];
+	return get_posts(array_merge($default, $args));
+}
