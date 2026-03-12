@@ -11,10 +11,11 @@ if (!isset($category_id) || empty($category_id)) return;
  */
 $posts_in_cat = get_posts([
     'cat' => (int) $category_id,
-    'posts_per_page' => 1,
+    'posts_per_page' => 6,
     'orderby' => 'date',
     'order' => 'DESC'
 ]);
+
 
 if (empty($posts_in_cat) || !isset($posts_in_cat[0])) return;
 

@@ -1,6 +1,41 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+if (!isset($category_id) || empty($category_id)) return;
+
+/**
+ * Отримуємо останній пост у категорії
+ */
+$posts_in_cat = get_posts([
+    'cat' => (int) $category_id,
+    'posts_per_page' => 5,
+    'orderby' => 'date',
+    'order' => 'DESC'
+]);
+
+
+$post = $posts_in_cat[0];
+setup_postdata($post);
+
+// Post data
+$post_id = get_the_ID();
+
+$placeholder = get_template_directory_uri() . '/assets/src/images/placeholder.png';
+
+$title = get_the_title($post_id);
+$link = get_permalink($post_id);
+
+$thumbnail = get_the_post_thumbnail_url($post_id, 'large');
+$thumbnail = $thumbnail ? $thumbnail : $placeholder;
+
+$excerpt = get_the_excerpt($post_id);
+$date = get_the_date('', $post_id);
+
+/**
+ * Category data
+ */
+$category_svg = get_term_meta($category_id, 'category_icon_svg', true);
+$category_name = get_cat_name($category_id);
 ?>
 <a href="#" class="order-1 group flex flex-col bg-white overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]">
     <div class="h-[200px] md:h-[285px] overflow-hidden">
@@ -19,7 +54,7 @@ if (!defined('ABSPATH')) exit;
         </span>
 
         <h4 class="text-black text-lg md:text-2xl xl:text-[27px] font-semibold leading-snug mb-3">
-            10 amazing restaurants in San Francisco for serious foodies
+            <?php echo $title; ?>
         </h4>
 
         <p class="text-[#373A39] text-sm lg:text-lg lg:leading-[29.3px] mb-4 line-clamp-3">
