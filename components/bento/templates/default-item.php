@@ -1,0 +1,31 @@
+<?php
+if (!defined('ABSPATH')) exit;
+
+?>
+<a href="#" class="order-1 group flex flex-col bg-white overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]">
+    <div class="h-[200px] md:h-[285px] overflow-hidden">
+        <picture class="block w-full h-full">
+            <img src="./images/pasta.jpg" alt="Food" loading="lazy"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+        </picture>
+    </div>
+    
+    <div class="p-6 md:p-8 flex flex-col flex-grow">
+        <span class="bg-[#FDF0D0] flex items-center gap-2 text-black text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+            </svg>
+            Where to eat
+        </span>
+
+        <h4 class="text-black text-lg md:text-2xl xl:text-[27px] font-semibold leading-snug mb-3">
+            10 amazing restaurants in San Francisco for serious foodies
+        </h4>
+
+        <p class="text-[#373A39] text-sm lg:text-lg lg:leading-[29.3px] mb-4 line-clamp-3">
+            Calling all foodies! Explore the ultimate dining hotspots in San Francisco, handpicked for serious culinary enthusiasts who crave authentic flavors.
+        </p>
+
+        <time class="text-black text-xs mt-auto font-bold" datetime="2024-03-08">Mar 8, 2024</time>
+    </div>
+</a>

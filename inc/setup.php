@@ -103,7 +103,7 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
 }
 add_action('init', 'theme_register_locations_taxonomy');
 
-add_filter('acf/fields/taxonomy/query/name=acf_select_category', function($args) {
+add_filter('acf/fields/taxonomy/query/name=bento_category', function($args) {
     $args['hide_empty'] = true;
     $args['orderby'] = 'count';
     $args['order'] = 'DESC';

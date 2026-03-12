@@ -31,6 +31,7 @@ if (!function_exists('get_post_main_image')) {
     }
 }
 
+
 if (!function_exists('limit_gallery_items')) {
     function limit_gallery_items($items, $max_count = 4) {
         if (empty($items) || !is_array($items)) {
@@ -39,6 +40,7 @@ if (!function_exists('limit_gallery_items')) {
         return array_slice($items, 0, $max_count);
     }
 }
+
 
 if (!function_exists('get_attachment_image_no_srcset')) {
     /**
@@ -51,6 +53,7 @@ if (!function_exists('get_attachment_image_no_srcset')) {
         return $html;
     }
 }
+
 
 if (!function_exists('get_image')) {
     /**
@@ -131,6 +134,7 @@ if (!function_exists('get_post_image_url')) {
     }
 }
 
+
 if (!function_exists('get_inline_svg_from_acf')) {
     function get_inline_svg_from_acf($menu_item_id, $field = 'acf_navigation_icon') {
         $icon = get_field($field, $menu_item_id);
@@ -161,6 +165,7 @@ if (!function_exists('get_inline_svg_from_acf')) {
     }
 }
 
+
 if (!function_exists('theme_get_post_image')) {
     function theme_get_post_image($post_id, $size = 'medium', $placeholder = '') {
         $thumbnail = get_the_post_thumbnail_url($post_id, $size);
@@ -168,12 +173,14 @@ if (!function_exists('theme_get_post_image')) {
     }
 }
 
+
 function theme_get_category_meta($category_id) {
 	return [
 		'category_bg_color' => get_field('acf_category_bg', 'category_' . $category_id),
 		'cat_icon' => get_field('acf_category_icon', 'category_' . $category_id),
 	];
 }
+
 
 function theme_build_section($category, $posts, $extra = []) {
 	if (!$category || empty($posts)) return null;
@@ -189,6 +196,7 @@ function theme_build_section($category, $posts, $extra = []) {
 	], $extra);
 }
 
+
 function theme_get_posts($args) {
 	$default = [
 		'post_type' => 'post',
@@ -197,3 +205,17 @@ function theme_get_posts($args) {
 	];
 	return get_posts(array_merge($default, $args));
 }
+
+
+function get_all_categories_object() {
+    // Отримуємо всі категорії, включаючи порожні
+    $categories = get_categories(array(
+        'hide_empty' => false,
+    ));
+
+    return $categories;
+}
+
+
+$all_categories = get_all_categories_object();
+?>

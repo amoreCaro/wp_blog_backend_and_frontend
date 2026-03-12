@@ -97,21 +97,28 @@ if (!empty($all_sections)) :
 				</h1>
 			<?php endif; ?>
 			<?php if ($category_bg_color && $cat_icon): ?>
-				<div class="decor -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full shadow-sm p-2"
+				<div class="decor -translate-y-1/2 w-14 h-14  flex items-center justify-center rounded-t-full rounded-br-full shadow-sm p-[12px]"
 					style="background-color: <?php echo esc_attr($category_bg_color); ?>">
 
-					<?php
-					$file_id = get_term_meta($category->term_id, 'acf_category_icon', true);
+								<?php
+								$file_id = get_term_meta($category->term_id, 'acf_category_icon', true);
 
-					if ($file_id) {
+								if ($file_id) {
+									$file_path = get_attached_file($file_id);
 
-						$file_path = get_attached_file($file_id);
+									if ($file_path && file_exists($file_path)) {
+										$svg_content = file_get_contents($file_path);
+										
+										// Додаємо клас для розміру
+										$svg_content = str_replace('<svg', '<svg', $svg_content);
 
-						if ($file_path && file_exists($file_path)) {
-							echo file_get_contents($file_path);
-						}
-					}
-					?>
+										// Змінюємо всі fill на currentColor
+										$svg_content = preg_replace('/fill="[^"]*"/i', 'fill="currentColor"', $svg_content);
+
+										echo $svg_content;
+									}
+								}
+								?>
 
 				</div>
 			<?php endif; ?>
@@ -139,9 +146,31 @@ if (!empty($all_sections)) :
 							<img src="<?php echo esc_url($post_image); ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="<?php echo esc_attr(get_the_title($post->ID)); ?>">
 						</div>
 						<div class="p-6 md:p-8 flex flex-col flex-grow">
-							<span class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4" <?php if($category_bg_color) echo 'style="background-color: '.$category_bg_color.';"'; ?>>
-								<?php if($cat_icon) echo wp_get_attachment_image($cat_icon,'thumbnail',false,['class'=>'w-5 h-5']); ?>
-								<?php echo $is_tag ? esc_html($section['first_category_name']) : $category_name; ?>
+							<span class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4"
+							<?php if($category_bg_color) echo 'style="background-color: '.$category_bg_color.';"'; ?>>
+
+								<?php
+								$file_id = get_term_meta($category->term_id, 'acf_category_icon', true);
+
+								if ($file_id) {
+									$file_path = get_attached_file($file_id);
+
+									if ($file_path && file_exists($file_path)) {
+										$svg_content = file_get_contents($file_path);
+										
+										// Додаємо клас для розміру
+										$svg_content = str_replace('<svg', '<svg class="w-4 h-4"', $svg_content);
+
+										// Змінюємо всі fill на currentColor
+										$svg_content = preg_replace('/fill="[^"]*"/i', 'fill="currentColor"', $svg_content);
+
+										echo $svg_content;
+									}
+								}
+								?>
+
+							<?php echo $is_tag ? esc_html($section['first_category_name']) : $category_name; ?>
+
 							</span>
 							<h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html(get_the_title($post->ID)); ?></h4>
 							<p class="text-[#373A39] text-sm lg:text-lg mb-4 line-clamp-3"><?php echo esc_html(wp_trim_words(get_the_excerpt($post->ID),25)); ?></p>
@@ -156,7 +185,31 @@ if (!empty($all_sections)) :
 							<div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-black/80 to-transparent"></div>
 						</div>
 						<div class="lg:w-[45%] p-8 md:p-12 flex flex-col text-white">
-							<span class="border border-white/40 flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-6"><?php if(!$is_tag && $cat_icon) echo wp_get_attachment_image($cat_icon,'thumbnail',false,['class'=>'w-5 h-5']); ?><?php echo !$is_tag ? esc_html($category_name) : ''; ?></span>
+							<span class="border border-white/40 flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-6">
+
+								<?php
+								$file_id = get_term_meta($category->term_id, 'acf_category_icon', true);
+
+								if ($file_id) {
+									$file_path = get_attached_file($file_id);
+
+									if ($file_path && file_exists($file_path)) {
+										$svg_content = file_get_contents($file_path);
+										
+										// Додаємо клас для розміру
+										$svg_content = str_replace('<svg', '<svg class="w-4 h-4"', $svg_content);
+
+										// Змінюємо всі fill на currentColor
+										$svg_content = preg_replace('/fill="[^"]*"/i', 'fill="currentColor"', $svg_content);
+
+										echo $svg_content;
+									}
+								}
+								?>
+
+								<?php echo $is_tag ? esc_html($section['first_category_name']) : $category_name; ?>
+
+							</span>
 							<h4 class="text-2xl md:text-4xl lg:text-5xl font-medium mb-6"><?php echo esc_html(get_the_title($post->ID)); ?></h4>
 							<p class="text-[#C4C4C4] text-base md:text-lg mb-10"><?php echo esc_html(wp_trim_words(get_the_excerpt($post->ID),35)); ?></p>
 							<time class="text-gray-400 text-sm font-bold mt-auto"><?php echo esc_html(get_the_date('', $post->ID)); ?></time>
@@ -170,7 +223,27 @@ if (!empty($all_sections)) :
 						</div>
 						<div class="p-6 md:p-8 flex flex-col flex-grow">
 							<span class="flex items-center gap-2 text-[14px] font-medium px-5 py-1 rounded-full w-fit mb-4" <?php if(!$is_tag && $category_bg_color) echo 'style="background-color: '.$category_bg_color.';"'; ?>>
-								<?php if(!$is_tag && $cat_icon) echo wp_get_attachment_image($cat_icon,'thumbnail',false,['class'=>'w-5 h-5']); ?><?php echo !$is_tag ? esc_html($category_name) : ''; ?>
+								<?php
+								$file_id = get_term_meta($category->term_id, 'acf_category_icon', true);
+
+								if ($file_id) {
+									$file_path = get_attached_file($file_id);
+
+									if ($file_path && file_exists($file_path)) {
+										$svg_content = file_get_contents($file_path);
+										
+										// Додаємо клас для розміру
+										$svg_content = str_replace('<svg', '<svg class="w-4 h-4"', $svg_content);
+
+										// Змінюємо всі fill на currentColor
+										$svg_content = preg_replace('/fill="[^"]*"/i', 'fill="currentColor"', $svg_content);
+
+										echo $svg_content;
+									}
+								}
+								?>
+
+							<?php echo $is_tag ? esc_html($section['first_category_name']) : $category_name; ?>
 							</span>
 							<h4 class="text-black text-lg md:text-2xl font-semibold mb-3"><?php echo esc_html(get_the_title($post->ID)); ?></h4>
 							<p class="text-[#373A39] text-sm lg:text-lg mb-4 line-clamp-3"><?php echo esc_html(wp_trim_words(get_the_excerpt($post->ID),25)); ?></p>

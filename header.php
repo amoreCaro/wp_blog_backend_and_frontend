@@ -52,9 +52,10 @@ if (isset($nav_menu['header_menu'])) {
                 </a>
             <?php endif; ?>
             <?php if (!empty($menu_items)) : ?>
-            <nav class="navigation hidden flex-1 justify-center lg:flex">
-                <ul class="flex space-x-3">
+                <nav class="navigation hidden flex-1 justify-center lg:flex">
+                    <ul class="flex space-x-3">
                         <?php foreach ($menu_items as $item) : 
+                            // Виклик нашої функції для отримання SVG з ACF
                             $icon_svg = get_inline_svg_from_acf($item->ID);
                             $is_active = in_array('current-menu-item', $item->classes, true);
                         ?>
@@ -77,7 +78,7 @@ if (isset($nav_menu['header_menu'])) {
                         <?php endforeach; ?>
                     </ul>
                 </nav>
-                <?php endif; ?>
+            <?php endif; ?>
 
             <div class="flex items-center gap-4 md:gap-6 text-sm flex-shrink-0">
             <?php if ( ! empty( $buttons ) ) : ?>
