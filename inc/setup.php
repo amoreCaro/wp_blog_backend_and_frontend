@@ -70,7 +70,6 @@ if ( function_exists('acf_add_options_page') ) {
 /* -------------------------------------------------
  * Locations taxonomy
  * ------------------------------------------------- */
-
 if ( ! function_exists('theme_register_locations_taxonomy') ) {
     function theme_register_locations_taxonomy() {
         $labels = [
@@ -90,11 +89,11 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
         $args = [
             'labels'            => $labels,
             'public'            => true,
-            'hierarchical'      => true, // Працює як категорії (checkboxes)
+            'hierarchical'      => true,
             'show_ui'           => true,
             'show_admin_column' => true,
             'show_in_nav_menus' => true,
-            'show_in_rest'      => true, // Обов'язково для Gutenberg
+            'show_in_rest'      => true, 
             'rewrite'           => ['slug' => 'location'],
         ];
 
@@ -121,7 +120,7 @@ if ( ! function_exists('theme_listing_category_svg_save') ) {
             return;
         }
 
-        $file_field = 'acf_category_icon';
+        $file_field = 'category_icon';
 
         $file_id = get_field($file_field, $post_id);
 
@@ -151,3 +150,13 @@ if ( ! function_exists('theme_listing_category_svg_save') ) {
         update_term_meta($term_id, 'category_icon_svg', $svg_content);
     }
 }
+
+add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
+
+    // Фільтруємо тільки категорії
+    if($field['taxonomy'] === 'category' || $field['taxonomy'] === 'post_tag') {
+        $args['hide_empty'] = true;
+    }
+
+    return $args;
+}, 10, 3);

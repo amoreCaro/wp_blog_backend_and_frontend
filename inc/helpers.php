@@ -163,6 +163,44 @@ if (!function_exists('get_inline_svg_from_acf')) {
 
         return '';
     }
+
+}
+
+if (!function_exists('get_inline_svg_category_from_acf')) {
+    function get_inline_svg_category_from_acf($term_id, $field = 'category_icon', $width = 50, $height = 50) {
+
+        // Отримуємо ID SVG з ACF поля
+        $icon_id = get_field($field, 'category_' . $term_id);
+        if (!$icon_id) return '';
+
+        // Шлях до файлу SVG
+        $svg_path = get_attached_file($icon_id);
+
+        if (
+            $svg_path &&
+            file_exists($svg_path) &&
+            pathinfo($svg_path, PATHINFO_EXTENSION) === 'svg'
+        ) {
+
+            $svg = file_get_contents($svg_path);
+
+            // Замінюємо fill та stroke на currentColor
+            $svg = preg_replace('/fill=".*?"/', 'fill="currentColor"', $svg);
+            $svg = preg_replace('/stroke=".*?"/', 'stroke="currentColor"', $svg);
+
+            // Додаємо width та height, якщо їх ще немає
+            if (!preg_match('/width="/', $svg)) {
+                $svg = preg_replace('/<svg([^>]*)>/', '<svg$1 width="' . esc_attr($width) . '" height="' . esc_attr($height) . '" class="fill-current">', $svg, 1);
+            } else {
+                // Якщо width/height вже є, додаємо тільки клас
+                $svg = preg_replace('/<svg([^>]*)>/', '<svg$1 class="fill-current">', $svg, 1);
+            }
+
+            return $svg;
+        }
+
+        return '';
+    }
 }
 
 
@@ -174,48 +212,46 @@ if (!function_exists('theme_get_post_image')) {
 }
 
 
-function theme_get_category_meta($category_id) {
-	return [
-		'category_bg_color' => get_field('acf_category_bg', 'category_' . $category_id),
-		'cat_icon' => get_field('acf_category_icon', 'category_' . $category_id),
-	];
+/*
+|--------------------------------------------------------------------------
+| Get posts from one category
+|--------------------------------------------------------------------------
+*/
+
+function get_posts_from_category(int $category_id, int $limit = 6): array
+{
+    return get_posts([
+        'cat'            => $category_id,
+        'posts_per_page' => $limit,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+        'post_type'      => 'post',
+    ]) ?: [];
 }
 
+/*
+|--------------------------------------------------------------------------
+| Get posts from multiple categories
+|--------------------------------------------------------------------------
+*/
 
-function theme_build_section($category, $posts, $extra = []) {
-	if (!$category || empty($posts)) return null;
-	$meta = theme_get_category_meta($category->term_id);
-	return array_merge([
-		'posts' => $posts,
-		'category_name' => $category->name,
-		'category_link' => get_category_link($category->term_id),
-		'category_bg_color' => $meta['category_bg_color'],
-		'cat_icon' => $meta['cat_icon'],
-		'is_tag' => false,
-		'first_category_name' => '',
-	], $extra);
+function get_posts_from_categories(array $categories, int $limit = 6): array
+{
+    $result = [];
+
+    foreach ($categories as $category_item) {
+
+        $category = $category_item['bento_category'] ?? null;
+
+        if (!($category instanceof WP_Term)) {
+            continue;
+        }
+
+        $result[$category->term_id] = get_posts_from_category(
+            $category->term_id,
+            $limit
+        );
+    }
+
+    return $result;
 }
-
-
-function theme_get_posts($args) {
-	$default = [
-		'post_type' => 'post',
-		'orderby' => 'date',
-		'order' => 'DESC',
-	];
-	return get_posts(array_merge($default, $args));
-}
-
-
-function get_all_categories_object() {
-    // Отримуємо всі категорії, включаючи порожні
-    $categories = get_categories(array(
-        'hide_empty' => false,
-    ));
-
-    return $categories;
-}
-
-
-$all_categories = get_all_categories_object();
-?>
