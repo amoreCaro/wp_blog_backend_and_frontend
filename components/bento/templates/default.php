@@ -52,7 +52,7 @@ if (!defined('ABSPATH')) exit;
     <div class="space-y-8 md:space-y-12 container">
 
         <!-- Two -->
-        <div class="<?= esc_attr($bento_design); ?> grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
 
         <?php
         foreach ($posts_in_cat as $index => $post) {

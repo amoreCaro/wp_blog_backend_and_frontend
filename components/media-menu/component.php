@@ -2,9 +2,18 @@
 if (!defined('ABSPATH')) exit;
 
 /**
- * ACF fields
+ * Blog page ID (джерело ACF)
  */
-$media_menu = get_field('media_menu');
+$blog_page = get_page_by_path('blog');
+$blog_page_id = $blog_page ? $blog_page->ID : null;
+
+$media_menu = get_field('media_menu', $blog_page_id) ?? [];
+
+/**
+ * ACF fields (завжди з Blog page)
+ */
+$media_menu = get_field('media_menu', $blog_page_id) ?? [];
+
 
 $acf_categories = $media_menu['media_menu_select_categories'] ?? [];
 $acf_tags_ids   = $media_menu['media_menu_select_tags'] ?? [];
@@ -17,17 +26,32 @@ $categories = !empty($acf_categories) ? $acf_categories : [];
 /**
  * Tags
  */
-$tags = !empty($acf_tags_ids) ? get_terms([
-    'taxonomy' => 'post_tag',
-    'include' => $acf_tags_ids,
-    'hide_empty' => true
-]) : [];
+$tags = !empty($acf_tags_ids)
+    ? get_terms([
+        'taxonomy' => 'post_tag',
+        'include' => $acf_tags_ids,
+        'hide_empty' => true
+    ])
+    : [];
 
 /**
- * Current category
+ * Current queried object
  */
-$current_category = get_queried_object();
-$current_category_id = $current_category->term_id ?? null;
+$current_object = get_queried_object();
+
+$current_category_id = null;
+$current_tag_id = null;
+
+if ($current_object instanceof WP_Term) {
+
+    if ($current_object->taxonomy === 'category') {
+        $current_category_id = $current_object->term_id;
+    }
+
+    if ($current_object->taxonomy === 'post_tag') {
+        $current_tag_id = $current_object->term_id;
+    }
+}
 ?>
 
 <div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] flex flex-col py-2">
@@ -54,7 +78,7 @@ $current_category_id = $current_category->term_id ?? null;
                 <ul class="flex items-center gap-8 whitespace-nowrap">
                     <?php
                     // "All News" завжди
-                    $all_news_active = (is_home() || is_page('blog')) ? 'active' : '';
+                    $all_news_active = ( is_page('blog')) ? 'active' : '';
                     ?>
                     <li>
                         <a href="<?php echo esc_url(home_url('/blog/')); ?>"

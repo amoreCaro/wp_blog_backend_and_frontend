@@ -52,30 +52,6 @@ elseif (is_category()) {
 }
 
 /* TAG PAGE */
-elseif (is_tag()) {
-	$tag = get_queried_object();
-	$posts = theme_get_posts([
-		'tag_id' => $tag->term_id,
-		'posts_per_page' => 12,
-		'paged' => $paged
-	]);
-	if (!empty($posts)) {
-		$first_post = $posts[0];
-		$post_categories = get_the_category($first_post->ID);
-		$first_category = $post_categories[0] ?? null;
-		$section = theme_build_section(
-			$tag,
-			$posts,
-			[
-				'is_tag' => true,
-				'first_category_name' => $first_category ? $first_category->name : '',
-				'category_bg_color' => $first_category ? get_field('acf_category_bg', 'category_' . $first_category->term_id) : '',
-				'cat_icon' => $first_category ? get_field('acf_category_icon', 'category_' . $first_category->term_id) : '',
-			]
-		);
-		if ($section) $all_sections[] = $section;
-	}
-}
 
 /* RENDER */
 if (!empty($all_sections)) :
