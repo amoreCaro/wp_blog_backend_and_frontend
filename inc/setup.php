@@ -70,7 +70,6 @@ if ( function_exists('acf_add_options_page') ) {
 /* -------------------------------------------------
  * Locations taxonomy
  * ------------------------------------------------- */
-
 if ( ! function_exists('theme_register_locations_taxonomy') ) {
     function theme_register_locations_taxonomy() {
         $labels = [
@@ -90,11 +89,11 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
         $args = [
             'labels'            => $labels,
             'public'            => true,
-            'hierarchical'      => true, // Працює як категорії (checkboxes)
+            'hierarchical'      => true,
             'show_ui'           => true,
             'show_admin_column' => true,
             'show_in_nav_menus' => true,
-            'show_in_rest'      => true, // Обов'язково для Gutenberg
+            'show_in_rest'      => true, 
             'rewrite'           => ['slug' => 'location'],
         ];
 
@@ -102,3 +101,62 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
     }
 }
 add_action('init', 'theme_register_locations_taxonomy');
+
+add_filter('acf/fields/taxonomy/query/name=bento_category', function($args) {
+    $args['hide_empty'] = true;
+    $args['orderby'] = 'count';
+    $args['order'] = 'DESC';
+
+    return $args;
+});
+
+
+add_action('acf/save_post', 'theme_listing_category_svg_save', 20);
+
+if ( ! function_exists('theme_listing_category_svg_save') ) {
+    function theme_listing_category_svg_save($post_id) {
+
+        if ( is_admin() && isset($_GET['taxonomy']) && $_GET['taxonomy'] === 'category' ){
+            return;
+        }
+
+        $file_field = 'category_icon';
+
+        $file_id = get_field($file_field, $post_id);
+
+        if (!$file_id) {
+            return;
+        }
+
+        $file_path = get_attached_file($file_id);
+
+
+        if (!$file_path || !file_exists($file_path)) {
+            return;
+        }
+
+        if (pathinfo($file_path, PATHINFO_EXTENSION) !== 'svg') {
+            return;
+        }
+
+        $svg_content = file_get_contents($file_path);
+
+        if (!$svg_content) {
+            return;
+        }
+
+        $term_id = str_replace('term_', '', $post_id);
+
+        update_term_meta($term_id, 'category_icon_svg', $svg_content);
+    }
+}
+
+add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
+
+    // Фільтруємо тільки категорії
+    if($field['taxonomy'] === 'category' || $field['taxonomy'] === 'post_tag') {
+        $args['hide_empty'] = true;
+    }
+
+    return $args;
+}, 10, 3);
