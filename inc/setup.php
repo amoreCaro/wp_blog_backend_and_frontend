@@ -35,6 +35,14 @@ if ( ! function_exists('theme_setup') ) {
 }
 add_action('after_setup_theme', 'theme_setup');
 
+if ( ! function_exists('theme_add_svg_upload') ) {
+    function theme_add_svg_upload($mimes) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+    }
+    add_filter('upload_mimes', 'theme_add_svg_upload');
+}
+
 
 /* -------------------------------------------------
  * Navigation menus
@@ -55,16 +63,24 @@ add_action('after_setup_theme', 'theme_register_menus');
  * ACF Options Page
  * ------------------------------------------------- */
 
-if ( function_exists('acf_add_options_page') ) {
-    acf_add_options_page([
-        'page_title' => 'Global Settings',
-        'menu_title' => 'Global Settings',
-        'menu_slug'  => 'global-settings',
-        'capability' => 'manage_options',
-        'icon_url'   => 'dashicons-admin-generic',
-        'position'   => 2,
-        'redirect'   => false,
-    ]);
+add_action('acf/init', 'theme_add_global_settings');
+
+function theme_add_global_settings() {
+
+    if (function_exists('acf_add_options_page')) {
+
+        acf_add_options_page([
+            'page_title'  => 'Global Settings',
+            'menu_title'  => 'Global Settings',
+            'menu_slug'   => 'global-settings',
+            'capability'  => 'manage_options',
+            'redirect'    => false,
+            'position'    => 2,
+            'icon_url'    => 'dashicons-admin-generic'
+        ]);
+
+    }
+
 }
 
 /* -------------------------------------------------

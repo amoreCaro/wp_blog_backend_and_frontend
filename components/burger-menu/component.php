@@ -13,7 +13,7 @@ if (isset($nav_menu['header_menu'])) {
 $socials = get_field("acf_social_icons", "option");
 ?>
 
-<div id="burgerMenu" class="fixed inset-0 z-[1000] flex items-center justify-center opacity-0 pointer-events-none -translate-x-full transition-all duration-300 ease-out">
+<div id="burgerMenu" class="fixed inset-0 z-[1000] flex items-center pointer-events-none justify-center opacity-0 pointer-events-none -translate-x-full transition-all duration-300 ease-out">
 
     <div id="burgerOverlay" class="absolute inset-0 bg-zinc-950/90 backdrop-blur-2xl"></div>
 
@@ -38,34 +38,34 @@ $socials = get_field("acf_social_icons", "option");
                     class="w-full bg-white/5 border border-white/20 rounded-full py-4 pl-14 pr-6 text-white text-lg placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/10 transition-all duration-300"
                 >
             </div>
-<nav class="w-full max-w-md md:max-w-xl lg:max-w-2xl flex flex-col gap-6 sm:gap-8">
-    <ul class="flex flex-col gap-3 sm:gap-4 w-full">
-        <?php if (!empty($menu_items)) : ?>
-            <?php foreach ($menu_items as $item) :
-                $icon_svg = get_inline_svg_from_acf($item->ID);
-                $is_active = in_array('current-menu-item', $item->classes, true);
-            ?>
-                <li class="list-none">
-                    <a
-                        href="<?= esc_url($item->url); ?>"
-                        class="group w-full flex items-center justify-between p-4 sm:p-5 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-300 <?= $is_active ? 'bg-white text-black' : ''; ?>"
-                    >
-                        <div class="flex items-center gap-3 sm:gap-4">
-                            <?php if ($icon_svg) : ?>
-                                <span class="menu-icon">
-                                    <?= $icon_svg; ?>
-                                </span>
-                            <?php endif; ?>
-                            <span class="text-lg sm:text-xl font-medium">
-                                <?= esc_html($item->title); ?>
-                            </span>
-                        </div>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </ul>
-</nav>
+            <nav class="w-full max-w-md md:max-w-xl lg:max-w-2xl flex flex-col gap-6 sm:gap-8">
+                <ul class="flex flex-col gap-3 sm:gap-4 w-full">
+                    <?php if (!empty($menu_items)) : ?>
+                        <?php foreach ($menu_items as $item) :
+                            $icon_svg = get_inline_svg_from_acf($item->ID);
+                            $is_active = in_array('current-menu-item', $item->classes, true);
+                        ?>
+                            <li class="list-none">
+                                <a
+                                    href="<?= esc_url($item->url); ?>"
+                                    class="group w-full flex items-center justify-between p-4 sm:p-5 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-300 <?= $is_active ? 'bg-white text-black' : ''; ?>"
+                                >
+                                    <div class="flex items-center gap-3 sm:gap-4">
+                                        <?php if ($icon_svg) : ?>
+                                            <span class="menu-icon">
+                                                <?= $icon_svg; ?>
+                                            </span>
+                                        <?php endif; ?>
+                                        <span class="text-lg sm:text-xl font-medium">
+                                            <?= esc_html($item->title); ?>
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
         
         <?php if ( ! empty( $socials ) ) : ?>

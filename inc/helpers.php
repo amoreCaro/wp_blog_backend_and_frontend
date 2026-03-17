@@ -204,6 +204,45 @@ if (!function_exists('get_inline_svg_category_from_acf')) {
 }
 
 
+if (!function_exists('get_inline_svg_social_icons_from_acf')) {
+
+    function get_inline_svg_social_icons_from_acf($icon_id, $width = 32, $height = 32) {
+
+        if (!$icon_id) return '';
+
+        $svg_path = get_attached_file($icon_id);
+
+        if (
+            $svg_path &&
+            file_exists($svg_path) &&
+            pathinfo($svg_path, PATHINFO_EXTENSION) === 'svg'
+        ) {
+
+            $svg = file_get_contents($svg_path);
+
+            // Заміна кольорів
+            $svg = preg_replace('/fill=".*?"/', 'fill="currentColor"', $svg);
+            $svg = preg_replace('/stroke=".*?"/', 'stroke="currentColor"', $svg);
+
+            // ❗ ВИДАЛЯЄМО старі width/height
+            $svg = preg_replace('/\swidth=".*?"/', '', $svg);
+            $svg = preg_replace('/\sheight=".*?"/', '', $svg);
+
+            // ❗ ДОДАЄМО свої
+            $svg = preg_replace(
+                '/<svg([^>]*)>/',
+                '<svg$1 width="' . esc_attr($width) . '" height="' . esc_attr($height) . '" class="fill-current">',
+                $svg,
+                1
+            );
+
+            return $svg;
+        }
+
+        return '';
+    }
+}
+
 if (!function_exists('theme_get_post_image')) {
     function theme_get_post_image($post_id, $size = 'medium', $placeholder = '') {
         $thumbnail = get_the_post_thumbnail_url($post_id, $size);

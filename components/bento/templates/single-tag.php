@@ -1,6 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
-if (empty($posts_in_cat)) return;
+if (empty($posts_in_tag)) return;
 ?>
 
 <section class="bento-grid mx-auto bg-[#F6F5F8] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
@@ -13,30 +13,21 @@ if (empty($posts_in_cat)) return;
                     <?= esc_html($category_name); ?>
                 </h2>
             <?php endif; ?>
-
-            <?php if (!empty($category_svg)) : ?>
-                <div class="decor <?= esc_attr($category_decor_type); ?> -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full shadow-sm p-2"
-                    style="
-                        <?= $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
-                        <?= $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
-                    ">
-                    <?= $category_svg; ?>
-                </div>
-            <?php endif; ?>
         </div>
     </div>
 
     <div class="space-y-8 md:space-y-12 container">
 
         <?php
-        $total_posts = count($posts_in_cat);
+        // Розбиваємо на блоки по 6 постів
+        $total_posts = count($posts_in_tag);
 
         for ($i = 0; $i < $total_posts; $i += 6) :
-            $block_posts = array_slice($posts_in_cat, $i, 6);
+            $block_posts = array_slice($posts_in_tag, $i, 6);
         ?>
 
-            <!-- FIRST TWO (BIG + SMALL) -->
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
+            <!-- Перші два (великий + маленький) -->
+            <div class="reverse grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
                 <?php foreach ($block_posts as $index => $post) :
                     setup_postdata($post);
                     if ($index > 1) continue;
@@ -46,11 +37,10 @@ if (empty($posts_in_cat)) return;
                     } else {
                         include PATH . '/components/bento/templates/default-item.php';
                     }
-
                 endforeach; ?>
             </div>
 
-            <!-- NEXT FOUR IN GRID -->
+            <!-- Решта чотири у сітці -->
             <?php if (count($block_posts) > 2) : ?>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10 mt-6">
                     <?php foreach ($block_posts as $index => $post) :
