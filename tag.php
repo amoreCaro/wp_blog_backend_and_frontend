@@ -8,12 +8,19 @@ $tags = get_tags([
 get_header();
 ?>
 
-<div class="tags">
+<main class="main">
+    <div class="tag-page bg-white">
+        <div class="lg:pt-[46px] pt-[92px]">
+            <?php 
+                require PATH . "/components/media-menu/component.php";
+                require PATH . "/components/bento/component-new.php";
+                require PATH . "/components/pagination/component.php";
+            ?>
+        </div>
+    </div>
     <?php 
-        require PATH . "/components/media-menu/component.php";
-        require PATH . "/components/bento/component.php";
-        require PATH . "/components/pagination/component.php";
+        require PATH . "/components/burger-menu/component.php";
     ?>
-</div>
+</main>
 
 <?php get_footer(); ?>
