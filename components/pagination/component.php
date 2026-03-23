@@ -41,14 +41,25 @@ if (is_array($links)) {
 <div class="pagination flex items-center justify-center py-4">
     <ul class="flex items-center gap-2">
         <?php foreach ($links as $link) : 
+            // Визначаємо, чи це поточна сторінка
             $is_current = strpos($link, 'current') !== false;
-            $classes = $is_current
-                ? 'flex items-center justify-center w-12 h-12 border-2 border-blue-600 text-blue-600 font-bold rounded'
-                : 'flex items-center justify-center w-12 h-12 border border-gray-400 text-gray-400 hover:border-blue-600 hover:text-blue-600 rounded';
+
+            // Додаємо класи безпосередньо до <a>
+            if ($is_current) {
+                $link = str_replace(
+                    'current',
+                    'current flex items-center justify-center w-12 h-12 border-2 border-blue-600 text-blue-600 font-bold rounded',
+                    $link
+                );
+            } else {
+                $link = str_replace(
+                    'page-numbers',
+                    'page-numbers flex items-center justify-center w-12 h-12 border border-gray-400 text-gray-400 hover:border-blue-600 hover:text-blue-600 rounded',
+                    $link
+                );
+            }
         ?>
-            <li class="<?php echo $classes; ?>">
-                <?php echo $link; ?>
-            </li>
+            <li><?php echo $link; ?></li>
         <?php endforeach; ?>
     </ul>
 </div>

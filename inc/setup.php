@@ -181,6 +181,6 @@ add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
 
 add_action('pre_get_posts', function($query) {
     if (!is_admin() && $query->is_main_query() && is_archive()) {
-        $query->set('posts_per_page', 3);
+        $query->set('posts_per_page', 12);
     }
 });
