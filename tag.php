@@ -12,14 +12,14 @@ get_header();
     <div class="tag-page bg-white">
         <div class="lg:pt-[46px] pt-[92px]">
             <?php 
-                require PATH . "/components/media-menu/component.php";
-                require PATH . "/components/bento/component-new.php";
-                require PATH . "/components/pagination/component.php";
+                include PATH . "/components/media-menu/component.php";
+                include PATH . '/components/bento/templates/tag.php';
+                include PATH . "/components/pagination/component.php";
             ?>
         </div>
     </div>
     <?php 
-        require PATH . "/components/burger-menu/component.php";
+        include PATH . "/components/burger-menu/component.php";
     ?>
 </main>
 

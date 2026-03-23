@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) exit;
 <section class="bento-grid mx-auto bg-[#F6F5F8] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
 
     <!-- HEADER -->
+    <?php if ($category_name || $bento_button) : ?>
     <div class="flex items-center mb-12 justify-between container">
 
         <div class="flex items-center gap-4">
@@ -48,6 +49,7 @@ if (!defined('ABSPATH')) exit;
         <?php endif; ?>
 
     </div>
+    <?php endif; ?>
 
     <div class="space-y-8 md:space-y-12 container">
 
@@ -61,12 +63,12 @@ if (!defined('ABSPATH')) exit;
 
                 case 0:
                     $item_index = 0;
-                    include PATH . '/components/bento/templates/large-item.php';
+                    include PATH . '/components/bento/elements/large-item.php';
                     break;
 
                 case 1:
                     $item_index = 1;
-                    include PATH . '/components/bento/templates/default-item.php';
+                    include PATH . '/components/bento/elements/default-item.php';
                     break;
 
             }
@@ -77,7 +79,7 @@ if (!defined('ABSPATH')) exit;
         </div>
 
         <!-- GRID -->
-        <?php if (count($posts_in_cat) > 2) : ?>
+        <?php if (!empty($posts_in_cat) && is_array($posts_in_cat) && count($posts_in_cat) > 2) : ?>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10">
 
@@ -87,7 +89,7 @@ if (!defined('ABSPATH')) exit;
 
                     <?php
                     $item_index = $post_index;
-                    include PATH . '/components/bento/templates/default-item.php';
+                    include PATH . '/components/bento/elements/default-item.php';
                     ?>
 
                 <?php endforeach; ?>
