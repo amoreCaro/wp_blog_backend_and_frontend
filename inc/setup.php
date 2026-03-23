@@ -167,6 +167,7 @@ if ( ! function_exists('theme_listing_category_svg_save') ) {
     }
 }
 
+
 add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
 
     // Фільтруємо тільки категорії
@@ -176,3 +177,10 @@ add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
 
     return $args;
 }, 10, 3);
+
+
+add_action('pre_get_posts', function($query) {
+    if (!is_admin() && $query->is_main_query() && is_archive()) {
+        $query->set('posts_per_page', 3);
+    }
+});

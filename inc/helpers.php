@@ -250,47 +250,14 @@ if (!function_exists('theme_get_post_image')) {
     }
 }
 
+function theme_query_posts($args = []) {
 
-/*
-|--------------------------------------------------------------------------
-| Get posts from one category
-|--------------------------------------------------------------------------
-*/
+    $default = [
+        'post_type' => 'post',
+        'post_status' => 'publish',
+    ];
 
-function get_posts_from_category(int $category_id, int $limit = 6): array
-{
-    return get_posts([
-        'cat'            => $category_id,
-        'posts_per_page' => $limit,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
-        'post_type'      => 'post',
-    ]) ?: [];
-}
+    $args = array_merge($default, $args);
 
-/*
-|--------------------------------------------------------------------------
-| Get posts from multiple categories
-|--------------------------------------------------------------------------
-*/
-
-function get_posts_from_categories(array $categories, int $limit = 6): array
-{
-    $result = [];
-
-    foreach ($categories as $category_item) {
-
-        $category = $category_item['bento_category'] ?? null;
-
-        if (!($category instanceof WP_Term)) {
-            continue;
-        }
-
-        $result[$category->term_id] = get_posts_from_category(
-            $category->term_id,
-            $limit
-        );
-    }
-
-    return $result;
+    return new WP_Query($args);
 }
