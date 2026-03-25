@@ -1,7 +1,15 @@
 <?php
+/**
+* Template Name: Home Page Template
+*
+* @package WordPress
+* @subpackage Twenty_Fourteen
+* @since Twenty Fourteen 1.0
+*/
+
 if (!defined('ABSPATH')) exit;
 
-get_header(); // підключає header.php з усіма стилями
+get_header(); 
 ?>
 
 <div class="main-page">

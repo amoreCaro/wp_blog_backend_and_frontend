@@ -1,4 +1,13 @@
 <?php 
+
+/**
+* Template Name: Blog Page Template
+*
+* @package WordPress
+* @subpackage Twenty_Fourteen
+* @since Twenty Fourteen 1.0
+*/
+
 if (!defined('ABSPATH')) exit;
 
 $categories = get_categories();
