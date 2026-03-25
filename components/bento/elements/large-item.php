@@ -21,7 +21,7 @@ $category_name = get_cat_name($category_id);
 ?>
 
 <a href="<?= esc_url($link); ?>" 
-   class="group lg:col-span-3 bg-neutral-950 rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[680px]">
+   class="group lg:col-span-3 bg-neutral-950 rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
 
     <div class="h-[300px] sm:h-[400px] lg:h-auto lg:w-[55%] overflow-hidden relative">
         <picture class="block w-full h-full">

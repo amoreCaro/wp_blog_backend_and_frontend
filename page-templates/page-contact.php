@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) exit;
 get_header(); 
 ?>
 
-<div class="main-page bg-white">
+<div class="contact-page bg-white">
     <div class=" lg:pb-[100px] pb-[50px]">
     <h1>
         <?php
