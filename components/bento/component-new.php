@@ -21,6 +21,7 @@ foreach ($repeaters as $item) {
     $category_bg_color   = get_field('category_bg', $category_obj) ?: '';
     $category_text_color = get_field('category_text_color', $category_obj) ?: '';
     $category_decor_type = get_field('category_decor_type', $category_obj) ?: 'default';
+    $category_id = $category_obj->term_id;
 
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
