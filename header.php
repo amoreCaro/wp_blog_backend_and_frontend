@@ -79,7 +79,6 @@ if (isset($nav_menu['header_menu'])) {
         <?php if (!empty($menu_items)) : ?>
 
             <nav class="navigation hidden flex-1 justify-center lg:flex">
-
                 <ul class="flex space-x-3">
 
                     <?php foreach ($menu_items as $item) :
@@ -92,20 +91,19 @@ if (isset($nav_menu['header_menu'])) {
                         <li class="list-none">
 
                             <a
-                                href="<?= esc_url($item->url); ?>"
-                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white transition-all hover:bg-white hover:text-black <?= $is_active ? 'bg-white text-black' : ''; ?>"
+                                href="<?php echo esc_url($item->url); ?>"
+                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-black transition-all dark:text-white dark:hover:bg-white dark:hover:text-black
+                                <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
                             >
 
-                                <?php if ($icon_svg) : ?>
-
+                                <?php if (!empty($icon_svg)) : ?>
                                     <span class="menu-icon">
-                                        <?= $icon_svg; ?>
+                                        <?php echo $icon_svg; ?>
                                     </span>
-
                                 <?php endif; ?>
 
                                 <span class="menu-text">
-                                    <?= esc_html($item->title); ?>
+                                    <?php echo esc_html($item->title); ?>
                                 </span>
 
                             </a>
@@ -115,7 +113,6 @@ if (isset($nav_menu['header_menu'])) {
                     <?php endforeach; ?>
 
                 </ul>
-
             </nav>
 
         <?php endif; ?>
