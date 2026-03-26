@@ -29,6 +29,7 @@ $buttons = $buttons_group['header_buttons'] ?? [];
 $nav_menu   = get_nav_menu_locations();
 $menu_items = [];
 
+
 if (isset($nav_menu['header_menu'])) {
     $menu_id    = $nav_menu['header_menu'];
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -37,7 +38,7 @@ if (isset($nav_menu['header_menu'])) {
 
 <div class="l-wrapper">
 
-<header class="header-default fixed top-0 left-0 z-[100] w-full bg-black px-5 xl:px-10 h-[80px] flex items-center text-white">
+<header class="header-default fixed top-0 left-0 z-[100] w-full px-5 xl:px-10 h-[80px] flex items-center bg-white text-black dark:bg-black dark:text-white">
 
     <div class="container flex items-center justify-between">
 
@@ -46,7 +47,7 @@ if (isset($nav_menu['header_menu'])) {
 
             <a
                 href="<?= esc_url(home_url('/')); ?>"
-                class="flex items-center flex-shrink-0 no-underline text-white transition-opacity"
+                class="flex items-center flex-shrink-0 no-underline text-black dark:text-white transition-opacity"
             >
 
                 <?php if ($logo_img_id) : ?>

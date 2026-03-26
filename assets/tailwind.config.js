@@ -9,6 +9,7 @@ module.exports = {
     "./src/js/**/*.js",
     "./src/css/**/*.css"
   ],
+    darkMode: 'class', 
 
   theme: {
     screens: {

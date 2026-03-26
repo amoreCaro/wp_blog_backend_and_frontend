@@ -14,7 +14,6 @@ $media_menu = get_field('media_menu', $blog_page_id) ?? [];
  */
 $media_menu = get_field('media_menu', $blog_page_id) ?? [];
 
-
 $acf_categories = $media_menu['media_menu_select_categories'] ?? [];
 $acf_tags_ids   = $media_menu['media_menu_select_tags'] ?? [];
 
@@ -54,7 +53,7 @@ if ($current_object instanceof WP_Term) {
 }
 ?>
 
-<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] flex flex-col py-2">
+<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] dark:bg-[#0B0B0D] flex flex-col py-2">
     <div class="container w-full mx-auto px-5 xl:px-10 2xl:px-0">
 
         <div class="media-menu__head flex items-center justify-between">
