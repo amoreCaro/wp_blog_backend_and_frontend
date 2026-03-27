@@ -17,7 +17,6 @@ $is_front_page   = is_front_page();
         itemscope
         itemtype="https://schema.org/BreadcrumbList">
 
-        <!-- 🔹 Front page -->
         <?php if ( $is_front_page ) : ?>
             <li class="text-white"
                 itemprop="itemListElement"

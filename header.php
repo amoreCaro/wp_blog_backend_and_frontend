@@ -29,6 +29,7 @@ $buttons = $buttons_group['header_buttons'] ?? [];
 $nav_menu   = get_nav_menu_locations();
 $menu_items = [];
 
+
 if (isset($nav_menu['header_menu'])) {
     $menu_id    = $nav_menu['header_menu'];
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -37,7 +38,7 @@ if (isset($nav_menu['header_menu'])) {
 
 <div class="l-wrapper">
 
-<header class="header-default fixed top-0 left-0 z-[100] w-full bg-black px-5 xl:px-10 h-[80px] flex items-center text-white">
+<header class="header-default fixed top-0 left-0 z-[100] w-full px-5 xl:px-10 h-[80px] flex items-center bg-white text-black dark:bg-black dark:text-white">
 
     <div class="container flex items-center justify-between">
 
@@ -46,7 +47,7 @@ if (isset($nav_menu['header_menu'])) {
 
             <a
                 href="<?= esc_url(home_url('/')); ?>"
-                class="flex items-center flex-shrink-0 no-underline text-white transition-opacity"
+                class="flex items-center flex-shrink-0 no-underline text-black dark:text-white transition-opacity"
             >
 
                 <?php if ($logo_img_id) : ?>
@@ -78,7 +79,6 @@ if (isset($nav_menu['header_menu'])) {
         <?php if (!empty($menu_items)) : ?>
 
             <nav class="navigation hidden flex-1 justify-center lg:flex">
-
                 <ul class="flex space-x-3">
 
                     <?php foreach ($menu_items as $item) :
@@ -91,20 +91,19 @@ if (isset($nav_menu['header_menu'])) {
                         <li class="list-none">
 
                             <a
-                                href="<?= esc_url($item->url); ?>"
-                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white transition-all hover:bg-white hover:text-black <?= $is_active ? 'bg-white text-black' : ''; ?>"
+                                href="<?php echo esc_url($item->url); ?>"
+                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-black transition-all dark:text-white dark:hover:bg-white dark:hover:text-black
+                                <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
                             >
 
-                                <?php if ($icon_svg) : ?>
-
+                                <?php if (!empty($icon_svg)) : ?>
                                     <span class="menu-icon">
-                                        <?= $icon_svg; ?>
+                                        <?php echo $icon_svg; ?>
                                     </span>
-
                                 <?php endif; ?>
 
                                 <span class="menu-text">
-                                    <?= esc_html($item->title); ?>
+                                    <?php echo esc_html($item->title); ?>
                                 </span>
 
                             </a>
@@ -114,7 +113,6 @@ if (isset($nav_menu['header_menu'])) {
                     <?php endforeach; ?>
 
                 </ul>
-
             </nav>
 
         <?php endif; ?>

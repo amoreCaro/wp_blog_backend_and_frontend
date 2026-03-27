@@ -110,7 +110,8 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
             'show_admin_column' => true,
             'show_in_nav_menus' => true,
             'show_in_rest'      => true, 
-            'rewrite'           => ['slug' => 'location'],
+            'rewrite'           => ['slug' => 'location'    
+],
         ];
 
         register_taxonomy('locations', ['post'], $args);

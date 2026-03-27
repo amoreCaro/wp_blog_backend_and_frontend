@@ -16,8 +16,6 @@
   stroke: currentColor; 
 }
 
-/* --- Логіка для модифікатора navigation.navigation--white --- */
-
 /* 1. Скидання дефолтних параметрів (рамка та текст) */
 .navigation.navigation--white a {
     border-color: transparent !important;

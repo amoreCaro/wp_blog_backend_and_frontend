@@ -14,7 +14,6 @@ $media_menu = get_field('media_menu', $blog_page_id) ?? [];
  */
 $media_menu = get_field('media_menu', $blog_page_id) ?? [];
 
-
 $acf_categories = $media_menu['media_menu_select_categories'] ?? [];
 $acf_tags_ids   = $media_menu['media_menu_select_tags'] ?? [];
 

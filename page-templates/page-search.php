@@ -16,7 +16,7 @@ get_header();
 
 ?>  
 
-<div class="blog-page">
+<div class="search-page">
     <div class="lg:pt-[46px] pt-[92px]">
     <?php 
         require PATH . "/components/media-menu/component.php";
