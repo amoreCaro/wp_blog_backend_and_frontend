@@ -21,7 +21,7 @@ get_header();
 
 <main class="main">
     <div class="archive-page">
-        <div class="lg:pt-[46px] pt-[92px] lg:pb-[100px] pb-[50px] bg-white">
+        <div class="lg:pt-[46px] pt-[92px] lg:pb-[100px] pb-[50px] bg-white dark:bg-black">
         <?php 
             include_once( PATH . "/components/media-menu/component.php" );
         ?>

@@ -130,6 +130,7 @@ add_filter('acf/fields/taxonomy/query/name=bento_category', function($args) {
 
 add_action('acf/save_post', 'theme_listing_category_svg_save', 20);
 
+
 if ( ! function_exists('theme_listing_category_svg_save') ) {
     function theme_listing_category_svg_save($post_id) {
 

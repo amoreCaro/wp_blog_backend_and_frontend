@@ -31,7 +31,7 @@ $share_title = urlencode(get_the_title());
             <?php endif; ?>
         </div>
         <div class="post__author-name-txt flex flex-col">
-            <span class="text-white text-[16px] leading-[26px] font-semibold"><?php echo esc_html($display_name); ?></span>
+            <span class="text-black dark:text-white text-[16px] leading-[26px] font-semibold"><?php echo esc_html($display_name); ?></span>
             <time class="text-[#c2c5c9] text-[13px] leading-[16px] font-bold" datetime="<?php echo get_the_date('c'); ?>">
                 <?php echo get_the_date(); ?>
             </time>
@@ -40,7 +40,7 @@ $share_title = urlencode(get_the_title());
 
 
 <div class="post__author-share items-center flex gap-3">
-    <span class="text-white text-[16px] leading-[26px] font-semibold">
+    <span class="text-black dark:text-white  text-[16px] leading-[26px] font-semibold">
         <?php echo esc_html__( "Share", THEME ); ?>
     </span>
     <div class="flex gap-2 text-white items-center">

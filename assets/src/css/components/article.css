@@ -5,7 +5,7 @@
 @layer components {
   .h-article {
     /* --- Основні налаштування тексту --- */
-    @apply text-white antialiased;
+    @apply text-black dark:text-white antialiased;
 
     /* ===================== */
     /* Headings */
