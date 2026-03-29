@@ -55,7 +55,7 @@ if (isset($nav_menu['footer_menu'])) {
                     <li>
                         <a
                             href="<?php echo esc_url($url); ?>"
-                            class="text-[14px] leading-[20px] font-medium text-gray-700 dark:text-white px-5 py-3 transition-colors duration-300 hover:text-black hover:text-blue-400"
+                            class="text-[14px] leading-[20px] font-medium text-gray-700 dark:text-white px-5 py-3 transition-colors duration-300 hover:text-blue-400 dark:hover:text-blue-400" 
                         >
                             <?php echo esc_html($text); ?>
                         </a>

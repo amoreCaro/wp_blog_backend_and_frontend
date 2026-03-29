@@ -55,6 +55,7 @@ $decor_images_right = get_field('acf_decor_images_right');
         <?php endif; ?>
     </div>
 
+
     <div class="hidden lg:block space-y-4 2xl:space-y-8 3xl:space-y-12 pt-[145px] 2xl:pt-[160px] 3xl:pt-[230px]">
         <?php if ( ! empty($decor_images_left[4]) ) : ?>
         <div class="animate-card-smooth [animation-delay:200ms] h-20 w-20 2xl:h-[140px] 2xl:w-[140px] 3xl:h-[150px] 3xl:w-[150px] max-w-full bg-gray-200 dark:bg-white/5 dark:border dark:border-white/10 rounded-2xl overflow-hidden shadow-lg -translate-x-[100%] 2xl:-translate-x-[70%] 3xl:-translate-x-[100%] backdrop-blur-sm">
@@ -91,19 +92,22 @@ $decor_images_right = get_field('acf_decor_images_right');
         </h1>
         <?php endif; ?>
         
-        <div class="relative max-w-2xl mx-auto group cursor-pointer">
-            <?php if (! empty ( $search_placeholder ) ) : ?>
-            <span class="absolute inset-y-0 left-5 sm:left-6 flex items-center text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </span>
-            <input 
-                type="text" 
-                placeholder="<?php echo esc_attr( $search_placeholder ); ?>"
-                class="w-full py-4 sm:py-6 pl-12 sm:pl-16 pr-6 bg-white dark:bg-[#232125] border border-gray-500 dark:border-gray-600 rounded-full shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-none focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 focus:border-gray-300 dark:focus:border-gray-500 transition-all text-base sm:text-lg text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                >
-        </div>
+        <?php if (! empty ( $search_placeholder ) ) : ?>
+            <form method="get" action="<?php echo esc_url( home_url( "/" ) ); ?>">                
+                <div class="relative max-w-2xl mx-auto group cursor-pointer">
+                    <span class="absolute inset-y-0 left-5 sm:left-6 flex items-center text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        name="s"
+                        placeholder="<?php echo esc_attr( $search_placeholder ); ?>"
+                        class="w-full py-4 sm:py-6 pl-12 sm:pl-16 pr-6 bg-white dark:bg-[#232125] border border-gray-500 dark:border-gray-600 rounded-full shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-none focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 focus:border-gray-300 dark:focus:border-gray-500 transition-all text-base sm:text-lg text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                        >
+                </div>
+            </form>
         <?php endif; ?>
         <?php
         if ( ! empty($locations) && ! is_wp_error($locations) ) : ?>
