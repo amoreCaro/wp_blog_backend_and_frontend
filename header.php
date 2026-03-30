@@ -29,7 +29,6 @@ $buttons = $buttons_group['header_buttons'] ?? [];
 $nav_menu   = get_nav_menu_locations();
 $menu_items = [];
 
-
 if (isset($nav_menu['header_menu'])) {
     $menu_id    = $nav_menu['header_menu'];
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -84,17 +83,38 @@ if (isset($nav_menu['header_menu'])) {
                     <?php foreach ($menu_items as $item) :
 
                         $icon_svg  = get_inline_svg_from_acf($item->ID, 'acf_navigation_icon');
+                        $bg_light = get_field('acf_navigation_light_theme_bg', $item->ID);
+                        $bg_hover = get_field('acf_navigation_light_theme_bg_hover', $item->ID);
                         $is_active = in_array('current-menu-item', $item->classes, true);
 
                     ?>
 
                         <li class="list-none">
 
-                            <a
-                                href="<?php echo esc_url($item->url); ?>"
-                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-black transition-all dark:text-white dark:hover:bg-white dark:hover:text-black
-                                <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
-                            >
+<a
+    href="<?php echo esc_url($item->url); ?>"
+    class="group flex items-center gap-2 rounded-full px-4 py-1.5 text-black transition-all
+           dark:border dark:border-white/40 dark:text-white
+           dark:hover:bg-white dark:hover:text-black
+           dark:bg-none
+           <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
+
+    <?php if (!empty($bg_light)) : ?>
+        style="background-color: <?php echo esc_attr($bg_light); ?>;"
+    <?php endif; ?>
+
+    onmouseover="
+        if (!document.documentElement.classList.contains('dark')) {
+            this.style.backgroundColor='<?php echo esc_attr($bg_hover ?: $bg_light); ?>';
+        }
+    "
+
+    onmouseout="
+        if (!document.documentElement.classList.contains('dark')) {
+            this.style.backgroundColor='<?php echo esc_attr($bg_light); ?>';
+        }
+    "
+>
 
                                 <?php if (!empty($icon_svg)) : ?>
                                     <span class="menu-icon">
