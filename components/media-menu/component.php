@@ -53,8 +53,8 @@ if ($current_object instanceof WP_Term) {
 }
 ?>
 
-<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] flex flex-col py-2">
-    <div class="container w-full mx-auto px-5 xl:px-10 2xl:px-0">
+<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] dark:bg-[#0B0B0D] flex flex-col py-2">
+    <div class="container w-full mx-auto px-5 xl:px-0">
 
         <div class="media-menu__head flex items-center justify-between">
 
@@ -81,7 +81,7 @@ if ($current_object instanceof WP_Term) {
                     ?>
                     <li>
                         <a href="<?php echo esc_url(home_url('/blog/')); ?>"
-                           class="media-menu__tab <?php echo esc_attr($all_news_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
+                           class="media-menu__tab <?php echo esc_attr($all_news_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black dark:hover:text-white">
                             All News
                         </a>
                     </li>
@@ -92,7 +92,7 @@ if ($current_object instanceof WP_Term) {
                         ?>
                             <li>
                                 <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>"
-                                   class="media-menu__tab <?php echo esc_attr($is_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
+                                   class="media-menu__tab <?php echo esc_attr($is_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black dark:hover:text-white">
                                     <?php echo esc_html($category->name); ?>
                                 </a>
                             </li>

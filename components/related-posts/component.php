@@ -19,7 +19,7 @@ if (empty($related_posts)) return;
 <section class="related-posts py-12 lg:py-[100px]">
     <div class="container mx-auto px-5 xl:px-[40px] 2xl:px-0">
 
-        <h2 class="text-white text-3xl md:text-5xl font-medium mb-12">
+        <h2 class="text-black dark:text-white text-3xl md:text-5xl font-medium mb-12">
             <?php _e("Related Posts", THEME); ?>
         </h2>
 
@@ -51,10 +51,10 @@ if (empty($related_posts)) return;
                     </a>
 
                     <div class="flex flex-col gap-2">
-                        <a href="<?php the_permalink(); ?>" class="text-white font-semibold text-[16px] leading-snug transition-colors duration-300 group-hover:text-blue-400">
+                        <a href="<?php the_permalink(); ?>" class="text-black dark:text-white font-semibold text-[16px] leading-snug transition-colors duration-300 group-hover:text-blue-400">
                             <?php the_title(); ?>
                         </a>
-                        <time class="text-sm text-[#C5C5C5]" datetime="<?php echo get_the_date('c'); ?>">
+                        <time class="text-sm text-[#6B7280] dark:text-[#C5C5C5]" datetime="<?php echo get_the_date('c'); ?>">
                             <?php echo get_the_date('F j, Y'); ?>
                         </time>
                     </div>

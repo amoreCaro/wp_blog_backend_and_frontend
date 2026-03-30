@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) exit;
 get_header(); 
 ?>
 
-<div class="home-page">
+<div class="home-page bg-white dark:bg-black">
     <div class=" lg:pb-[100px] pb-[50px]">
     <?php 
         require PATH . "/components/hero/component.php";
