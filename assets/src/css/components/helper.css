@@ -109,7 +109,7 @@
 }
 
 .media-menu__tab.active {
-  @apply text-black after:scale-x-100;
+  @apply text-black dark:text-white after:scale-x-100;
 }
 
 .btn-back {

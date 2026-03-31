@@ -38,12 +38,19 @@ if (!empty($valid_socials)) : ?>
     <?php foreach ($valid_socials as $social) : ?>
 <a href="<?php echo esc_url($social['url']); ?>"
    class="flex items-center justify-center w-[32px] h-[32px]
-          fill-current transition-colors duration-200"
-   style="
-color: <?php echo esc_attr($social['color_light']); ?>;
+          fill-current transition-colors duration-200
+
+          text-[var(--icon-light)]
+          hover:text-[var(--icon-hover)]
+          
+          dark:text-[var(--icon-dark)]
+          dark:hover:text-[var(--icon-hover)]
    "
-   onmouseover="this.style.color='<?php echo esc_attr($social['hover_color']); ?>'"
-   onmouseout="this.style.color='<?php echo esc_attr($social['color_light']); ?>'"
+   style="
+       --icon-light: <?php echo esc_attr($social['color_light'] ?: '#000'); ?>;
+       --icon-dark: <?php echo esc_attr($social['color_dark'] ?: '#fff'); ?>;
+       --icon-hover: <?php echo esc_attr($social['hover_color'] ?: $social['color_light']); ?>;
+   "
 >
     <?php echo $social['svg']; ?>
 </a>

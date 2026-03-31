@@ -21,6 +21,7 @@ get_header();
     <?php 
         require PATH . "/components/media-menu/component.php";
         require PATH . "/components/bento/component-new.php";
+        require PATH . "/components/burger-menu/component.php";
     ?>
     </div>
 </div>

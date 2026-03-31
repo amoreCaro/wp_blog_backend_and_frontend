@@ -38,23 +38,27 @@ if (is_array($links)) {
     $links = $filtered_links;
 }
 ?>
-<div class="pagination flex items-center justify-center py-4">
+<div class="pagination flex items-center justify-center py-6">
     <ul class="flex items-center gap-2">
         <?php foreach ($links as $link) : 
-            // Визначаємо, чи це поточна сторінка
             $is_current = strpos($link, 'current') !== false;
 
-            // Додаємо класи безпосередньо до <a>
             if ($is_current) {
                 $link = str_replace(
                     'current',
-                    'current flex items-center justify-center w-12 h-12 border-2 border-blue-600 text-blue-600 font-bold rounded',
+                    'current flex items-center justify-center w-12 h-12 
+                    border-2 border-blue-600 text-blue-600 font-semibold rounded-lg
+                    dark:border-white dark:text-white',
                     $link
                 );
             } else {
                 $link = str_replace(
                     'page-numbers',
-                    'page-numbers flex items-center justify-center w-12 h-12 border border-gray-400 text-gray-400 hover:border-blue-600 hover:text-blue-600 rounded',
+                    'page-numbers flex items-center justify-center w-12 h-12 
+                    border border-gray-300 text-gray-500 rounded-lg transition-all duration-200
+                    hover:border-blue-600 hover:text-blue-600
+                    dark:border-white/30 dark:text-white/70 
+                    dark:hover:border-white dark:hover:text-white',
                     $link
                 );
             }
@@ -62,7 +66,6 @@ if (is_array($links)) {
             <li><?php echo $link; ?></li>
         <?php endforeach; ?>
     </ul>
-</div>
-<?php
+</div><?php
 endif;
 ?>
