@@ -57,7 +57,7 @@ $category_name = get_cat_name($category_id);
 
         <?php if (!empty($title)) : ?>
             <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-6 text-white dark:text-black">
-                <?php echo esc_html($title); ?>
+                <?php echo esc_html(trim_title_chars($title, 50)); ?>
             </h4>
         <?php endif; ?>
 

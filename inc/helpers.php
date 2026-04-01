@@ -261,3 +261,10 @@ function theme_query_posts($args = []) {
 
     return new WP_Query($args);
 }
+
+function trim_title_chars($title, $max = 50) {
+    if (mb_strlen($title) > $max) {
+        return mb_substr($title, 0, $max) . '...';
+    }
+    return $title;
+}

@@ -220,6 +220,8 @@ if (isset($nav_menu['header_menu'])) {
 
             </button>
 
+
+            <button id="openSignInBtn" class='px-10 py-2 bg-blue-500'>Open Login modal</button>
         </div>
 
     </div>

@@ -188,10 +188,11 @@ add_action('pre_get_posts', function($query) {
 });
 
 
-function my_search_include_location($query) {
+function theme_search_include_location($query) {
     // Add custom post type for search
     if (!is_admin() && $query->is_main_query() && $query->is_search()) {
         $query->set('post_type', ['post', 'location']);
     }
 }
-add_action('pre_get_posts', 'my_search_include_location');
+add_action('pre_get_posts', 'theme_search_include_location');
+
