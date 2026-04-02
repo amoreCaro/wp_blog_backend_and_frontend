@@ -40,6 +40,26 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
 
 /***/ },
 
+/***/ "./src/js/components/form-tabs.js"
+/*!****************************************!*\
+  !*** ./src/js/components/form-tabs.js ***!
+  \****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   formTabs: () => (/* binding */ formTabs)\n/* harmony export */ });\nfunction formTabs() {\n  const links = document.querySelectorAll('.tab__link');\n  const tabs = document.querySelectorAll('.tab');\n\n  if (!links.length || !tabs.length) return;\n\n  function setActive(tabName) {\n    tabs.forEach(tab => {\n      const isTarget = tab.classList.contains(`tab--${tabName}`);\n\n      tab.classList.toggle('hidden', !isTarget);\n    });\n\n    links.forEach(link => {\n      const isActive = link.dataset.tab === tabName;\n      link.classList.toggle('tab__link--active', isActive);\n    });\n  }\n\n  links.forEach(link => {\n    link.addEventListener('click', (e) => {\n      e.preventDefault();\n      setActive(link.dataset.tab);\n    });\n  });\n\n  // default\n  setActive('login');\n}\n\n//# sourceURL=webpack:///./src/js/components/form-tabs.js?\n}");
+
+/***/ },
+
+/***/ "./src/js/components/form/login.js"
+/*!*****************************************!*\
+  !*** ./src/js/components/form/login.js ***!
+  \*****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   loginInit: () => (/* binding */ loginInit)\n/* harmony export */ });\nfunction loginInit() {\n    const form = document.querySelector('.form-login');\n\n    if (!form) {\n        console.log(\"❌ there is no form\");\n        return; \n    }\n\n    console.log(\"✅ form found:\", form);\n\n    form.addEventListener(\"submit\", function (e) {\n        e.preventDefault();\n\n        const formData = new FormData(form);\n\n        console.log(\"📦 FORM DATA:\");\n\n        for (let [key, value] of formData.entries()) {\n            console.log(key, value);\n        }\n\n        console.log(\"📦 OBJECT:\", Object.fromEntries(formData.entries()));\n    });\n}\n\n//# sourceURL=webpack:///./src/js/components/form/login.js?\n}");
+
+/***/ },
+
 /***/ "./src/js/components/lazyImages.js"
 /*!*****************************************!*\
   !*** ./src/js/components/lazyImages.js ***!
@@ -50,6 +70,16 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
 
 /***/ },
 
+/***/ "./src/js/components/modal.js"
+/*!************************************!*\
+  !*** ./src/js/components/modal.js ***!
+  \************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   modal: () => (/* binding */ modal)\n/* harmony export */ });\nfunction modal() {\n  const modal = document.getElementById('modal');\n  const openBtn = document.getElementById('openSignInBtn');\n  const closeBtn = document.getElementById('closeSignInModal');\n\n  if (!modal || !openBtn || !closeBtn) return;\n\n  function openMenu() {\n    modal.classList.remove('close');\n    modal.classList.add('open');\n  }\n\n  function closeMenu() {\n    modal.classList.remove('open');\n    modal.classList.add('close');\n  }\n\n  openBtn.addEventListener('click', (e) => {\n    e.preventDefault();\n    openMenu();\n  });\n\n  closeBtn.addEventListener('click', (e) => {\n    e.preventDefault();\n    closeMenu();\n  });\n\n  modal.addEventListener('click', (e) => {\n    if (e.target === modal) closeMenu();\n  });\n\n  document.addEventListener('keydown', (e) => {\n    if (e.key === 'Escape') closeMenu();\n  });\n}\n\n//# sourceURL=webpack:///./src/js/components/modal.js?\n}");
+
+/***/ },
+
 /***/ "./src/js/components/pagination.js"
 /*!*****************************************!*\
   !*** ./src/js/components/pagination.js ***!
@@ -57,16 +87,6 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   pagination: () => (/* binding */ pagination)\n/* harmony export */ });\nlet currentPage = 0;\n\nfunction togglePrevBtn(maxPages) {\n    const prevBtn = document.querySelector(\".pagination__btn--prev\");\n\n    if (!prevBtn) return;\n\n    if (currentPage === 0) {\n        prevBtn.classList.add(\"hidden\");\n    } else {\n        prevBtn.classList.remove(\"hidden\");\n    }\n}\n\nfunction toggleNextBtn(maxPages) {\n    const nextBtn = document.querySelector(\".pagination__btn--next\");\n\n    if (!nextBtn) return;\n\n    if (currentPage === maxPages - 1) {\n        nextBtn.classList.add(\"hidden\");\n    } else {\n        nextBtn.classList.remove(\"hidden\");\n    }\n}\n\nfunction updatePagination() {\n    const pages = document.querySelectorAll(\".pagination__page\");\n    const maxPages = pages.length;\n\n    pages.forEach(page => {\n        page.classList.remove(\"pagination__page--active\");\n    });\n\n    if (pages[currentPage]) {\n        pages[currentPage].classList.add(\"pagination__page--active\");\n    }\n\n    togglePrevBtn(maxPages);\n    toggleNextBtn(maxPages);\n}\n\nfunction pagination() {\n    updatePagination();\n}\n\n//# sourceURL=webpack:///./src/js/components/pagination.js?\n}");
-
-/***/ },
-
-/***/ "./src/js/components/signInModal.js"
-/*!******************************************!*\
-  !*** ./src/js/components/signInModal.js ***!
-  \******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   signInModal: () => (/* binding */ signInModal)\n/* harmony export */ });\nfunction signInModal() {\n  const signInModal = document.getElementById('signInModal');\n  const openBtn = document.getElementById('openSignInBtn');\n  const closeBtn = document.getElementById('closeSignInModal');\n\n  if (!signInModal || !openBtn || !closeBtn) return;\n\n  /** Відкриття меню */\n  function openMenu() {\n    console.log(\"click\");\n    signInModal.classList.add('showSlide');\n    document.body.classList.add('overflow-y-hidden');\n    \n  }\n\n  /** Закриття меню */\n  function closeMenu() {\n    signInModal.classList.remove('showSlide');\n    document.body.classList.remove('overflow-y-hidden');\n  }\n\n  /** Клік по кнопці відкриття */\n  openBtn.addEventListener('click', (e) => {\n    e.preventDefault();\n    openMenu();\n  });\n\n  /** Клік по кнопці закриття */\n  closeBtn.addEventListener('click', (e) => {\n    e.preventDefault();\n    closeMenu();\n  });\n\n  /** Закриття при кліку поза меню */\n  signInModal.addEventListener('click', (e) => {\n    if (e.target === signInModal) closeMenu();\n  });\n}\n\n\n//# sourceURL=webpack:///./src/js/components/signInModal.js?\n}");
 
 /***/ },
 
@@ -90,6 +110,16 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
 
 /***/ },
 
+/***/ "./src/js/components/togglePassword.js"
+/*!*********************************************!*\
+  !*** ./src/js/components/togglePassword.js ***!
+  \*********************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   togglePassword: () => (/* binding */ togglePassword)\n/* harmony export */ });\nfunction togglePassword() {\n    const toggleButtons = document.querySelectorAll(\".toggle-password\");\n\n    if (!toggleButtons.length) return;\n\n    toggleButtons.forEach((btn) => {\n        btn.addEventListener(\"click\", () => {\n            const container = btn.closest(\".password-field\");\n\n            const input = container.querySelector(\".password-input\");\n            const showIcon = container.querySelector(\".show-icon\");\n            const hideIcon = container.querySelector(\".hide-icon\");\n\n            const isPassword = input.type === \"password\";\n\n            // toggle input type\n            input.type = isPassword ? \"text\" : \"password\";\n\n            // toggle icons\n            showIcon.classList.toggle(\"hidden\", isPassword);\n            hideIcon.classList.toggle(\"hidden\", !isPassword);\n        });\n    });\n}\n\n//# sourceURL=webpack:///./src/js/components/togglePassword.js?\n}");
+
+/***/ },
+
 /***/ "./src/js/components/video.js"
 /*!************************************!*\
   !*** ./src/js/components/video.js ***!
@@ -106,7 +136,7 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
   \************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_estimateSinglePostReadTime_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/estimateSinglePostReadTime.js */ \"./src/js/components/estimateSinglePostReadTime.js\");\n/* harmony import */ var _components_calculateTotalPages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/calculateTotalPages.js */ \"./src/js/components/calculateTotalPages.js\");\n/* harmony import */ var _components_burgerMenu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/burgerMenu.js */ \"./src/js/components/burgerMenu.js\");\n/* harmony import */ var _components_tabs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/tabs.js */ \"./src/js/components/tabs.js\");\n/* harmony import */ var _components_themeHandler_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/themeHandler.js */ \"./src/js/components/themeHandler.js\");\n/* harmony import */ var _components_video_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/video.js */ \"./src/js/components/video.js\");\n/* harmony import */ var _components_lazyImages_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/lazyImages.js */ \"./src/js/components/lazyImages.js\");\n/* harmony import */ var _components_pagination_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/pagination.js */ \"./src/js/components/pagination.js\");\n/* harmony import */ var _components_signInModal_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/signInModal.js */ \"./src/js/components/signInModal.js\");\n\n\n\n\n\n\n\n\n\n\ndocument.addEventListener('DOMContentLoaded', function() {\n  (0,_components_lazyImages_js__WEBPACK_IMPORTED_MODULE_6__.lazyLoadImages)();\n  (0,_components_video_js__WEBPACK_IMPORTED_MODULE_5__.video)();\n  (0,_components_themeHandler_js__WEBPACK_IMPORTED_MODULE_4__.themeToggle)();\n  (0,_components_tabs_js__WEBPACK_IMPORTED_MODULE_3__.tabs)();\n  (0,_components_calculateTotalPages_js__WEBPACK_IMPORTED_MODULE_1__.calculateTotalPages)();\n  (0,_components_burgerMenu_js__WEBPACK_IMPORTED_MODULE_2__.burgerMenu)();\n  (0,_components_estimateSinglePostReadTime_js__WEBPACK_IMPORTED_MODULE_0__.estimateSinglePostReadTime)();\n  (0,_components_signInModal_js__WEBPACK_IMPORTED_MODULE_8__.signInModal)();\n  (0,_components_pagination_js__WEBPACK_IMPORTED_MODULE_7__.pagination)();\n});\n\n//# sourceURL=webpack:///./src/js/main.js?\n}");
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_estimateSinglePostReadTime_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/estimateSinglePostReadTime.js */ \"./src/js/components/estimateSinglePostReadTime.js\");\n/* harmony import */ var _components_calculateTotalPages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/calculateTotalPages.js */ \"./src/js/components/calculateTotalPages.js\");\n/* harmony import */ var _components_burgerMenu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/burgerMenu.js */ \"./src/js/components/burgerMenu.js\");\n/* harmony import */ var _components_tabs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/tabs.js */ \"./src/js/components/tabs.js\");\n/* harmony import */ var _components_themeHandler_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/themeHandler.js */ \"./src/js/components/themeHandler.js\");\n/* harmony import */ var _components_video_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/video.js */ \"./src/js/components/video.js\");\n/* harmony import */ var _components_lazyImages_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/lazyImages.js */ \"./src/js/components/lazyImages.js\");\n/* harmony import */ var _components_pagination_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/pagination.js */ \"./src/js/components/pagination.js\");\n/* harmony import */ var _components_modal_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/modal.js */ \"./src/js/components/modal.js\");\n/* harmony import */ var _components_togglePassword_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/togglePassword.js */ \"./src/js/components/togglePassword.js\");\n/* harmony import */ var _components_form_tabs_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/form-tabs.js */ \"./src/js/components/form-tabs.js\");\n/* harmony import */ var _components_form_login_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/form/login.js */ \"./src/js/components/form/login.js\");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndocument.addEventListener('DOMContentLoaded', function() {\n  (0,_components_lazyImages_js__WEBPACK_IMPORTED_MODULE_6__.lazyLoadImages)();\n  (0,_components_video_js__WEBPACK_IMPORTED_MODULE_5__.video)();\n  (0,_components_themeHandler_js__WEBPACK_IMPORTED_MODULE_4__.themeToggle)();\n  (0,_components_tabs_js__WEBPACK_IMPORTED_MODULE_3__.tabs)();\n  (0,_components_calculateTotalPages_js__WEBPACK_IMPORTED_MODULE_1__.calculateTotalPages)();\n  (0,_components_burgerMenu_js__WEBPACK_IMPORTED_MODULE_2__.burgerMenu)();\n  (0,_components_estimateSinglePostReadTime_js__WEBPACK_IMPORTED_MODULE_0__.estimateSinglePostReadTime)();\n  (0,_components_modal_js__WEBPACK_IMPORTED_MODULE_8__.modal)();\n  (0,_components_pagination_js__WEBPACK_IMPORTED_MODULE_7__.pagination)();\n  (0,_components_togglePassword_js__WEBPACK_IMPORTED_MODULE_9__.togglePassword)();\n  (0,_components_form_tabs_js__WEBPACK_IMPORTED_MODULE_10__.formTabs)();\n  (0,_components_form_login_js__WEBPACK_IMPORTED_MODULE_11__.loginInit)();\n});\n\n//# sourceURL=webpack:///./src/js/main.js?\n}");
 
 /***/ }
 

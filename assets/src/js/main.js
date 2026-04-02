@@ -6,7 +6,11 @@ import { themeToggle } from './components/themeHandler.js';
 import { video } from './components/video.js';
 import { lazyLoadImages } from './components/lazyImages.js';
 import { pagination } from './components/pagination.js';
-import { signInModal } from './components/signInModal.js';
+import { modal } from './components/modal.js';
+import { togglePassword } from './components/togglePassword.js';
+import { formTabs } from './components/form-tabs.js';
+import { loginInit } from './components/form/login.js';
+
 
 document.addEventListener('DOMContentLoaded', function() {
   lazyLoadImages();
@@ -16,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
   calculateTotalPages();
   burgerMenu();
   estimateSinglePostReadTime();
-  signInModal();
+  modal();
   pagination();
+  togglePassword();
+  formTabs();
+  loginInit();
 });

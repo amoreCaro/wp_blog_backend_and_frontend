@@ -1349,6 +1349,10 @@ video {
   --tw-translate-x: 85%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.translate-y-\[2px\]{
+  --tw-translate-y: 2px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .-rotate-90{
   --tw-rotate: -90deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2254,6 +2258,10 @@ video {
 .text-blue-400\/80{
   color: rgb(96 165 250 / 0.8);
 }
+.text-blue-500{
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity, 1));
+}
 .text-blue-600{
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
@@ -2513,35 +2521,53 @@ video {
   color: rgb(0 0 0 / var(--tw-text-opacity, 1)); 
   stroke: currentColor;
 }
-/* 1. Скидання дефолтних параметрів (рамка та текст) */
-.navigation.navigation--white a {
-    border-color: transparent !important;
-    color: rgba(0, 0, 0, 0.8) !important;
+.tab__link{
+  display: inline-block;
+  padding-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(161 161 170 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
-/* 2. Унікальні фони для посилань всередині navigation.navigation--white */
-.navigation.navigation--white li:nth-child(1) a { background-color: #E9F7DD; }
-/* Зеленуватий */
-.navigation.navigation--white li:nth-child(2) a { background-color: #FDF0D0; }
-/* Жовтуватий */
-.navigation.navigation--white li:nth-child(3) a { background-color: #E3EEEF; }
-/* Блакитний */
-.navigation.navigation--white li:nth-child(4) a { background-color: #EEE6FC; }
-/* Фіолетовий */
-/* 3. Ефект наведення для кольорового режиму */
-.navigation.navigation--white a:hover {
-    filter: brightness(0.96);
-    background-color: inherit; /* Вимикаємо білий фон Tailwind при ховері */
+.tab__link:hover{
+  --tw-text-opacity: 1;
+  color: rgb(82 82 91 / var(--tw-text-opacity, 1));
 }
-/* 4. Колір іконок всередині navigation.navigation--white */
-.navigation.navigation--white a svg {
-    color: rgba(0, 0, 0, 0.7);
+.tab__link:hover:is(.dark *){
+  --tw-text-opacity: 1;
+  color: rgb(212 212 216 / var(--tw-text-opacity, 1));
+}
+.tab__link--active{
+  --tw-translate-y: 2px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  border-bottom-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(24 24 27 / var(--tw-border-opacity, 1));
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(24 24 27 / var(--tw-text-opacity, 1));
+}
+.tab__link--active:is(.dark *){
+  --tw-border-opacity: 1;
+  border-color: rgb(244 244 245 / var(--tw-border-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(244 244 245 / var(--tw-text-opacity, 1));
 }
 .show {
   max-height: 500px;
   opacity: 1;
 }
-.h-flex{
-  display: flex;
+.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.close{
+  pointer-events: none;
+  opacity: 0;
 }
 @media (min-width: 768px){
   .mobile{
@@ -3341,6 +3367,10 @@ video {
 .dark\:hover\:text-zinc-300:hover:is(.dark *){
   --tw-text-opacity: 1;
   color: rgb(212 212 216 / var(--tw-text-opacity, 1));
+}
+.dark\:hover\:text-zinc-400:hover:is(.dark *){
+  --tw-text-opacity: 1;
+  color: rgb(161 161 170 / var(--tw-text-opacity, 1));
 }
 .dark\:focus\:border-zinc-100:focus:is(.dark *){
   --tw-border-opacity: 1;
