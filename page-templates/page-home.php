@@ -18,6 +18,7 @@ get_header();
         require PATH . "/components/hero/component.php";
         require PATH . "/components/bento/component-new.php";
         require PATH . "/components/burger-menu/component.php";
+        require PATH . "/components/modal/component.php";
     ?>
     </div>
 </div>

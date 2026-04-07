@@ -91,30 +91,21 @@ if (isset($nav_menu['header_menu'])) {
 
                         <li class="list-none">
 
-<a
-    href="<?php echo esc_url($item->url); ?>"
-    class="group flex items-center gap-2 rounded-full px-4 py-1.5 text-black transition-all
-           dark:border dark:border-white/40 dark:text-white
-           dark:hover:bg-white dark:hover:text-black
-           dark:bg-none
-           <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
-
-    <?php if (!empty($bg_light)) : ?>
-        style="background-color: <?php echo esc_attr($bg_light); ?>;"
-    <?php endif; ?>
-
-    onmouseover="
-        if (!document.documentElement.classList.contains('dark')) {
-            this.style.backgroundColor='<?php echo esc_attr($bg_hover ?: $bg_light); ?>';
-        }
-    "
-
-    onmouseout="
-        if (!document.documentElement.classList.contains('dark')) {
-            this.style.backgroundColor='<?php echo esc_attr($bg_light); ?>';
-        }
-    "
->
+                            <a
+                                href="<?php echo esc_url($item->url); ?>"
+                                class="group flex items-center gap-2 rounded-full px-4 py-1.5 text-black transition-all
+                                    bg-[var(--bg-color)] hover:bg-[var(--bg-hover)]
+                                    dark:bg-transparent
+                                    dark:border dark:border-white/40
+                                    dark:text-white
+                                    dark:hover:bg-white dark:hover:text-black
+                                    <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
+                                
+                                style="
+                                    --bg-color: <?php echo esc_attr($bg_light); ?>;
+                                    --bg-hover: <?php echo esc_attr($bg_hover); ?>;
+                                "
+                            >
 
                                 <?php if (!empty($icon_svg)) : ?>
                                     <span class="menu-icon">
@@ -229,6 +220,8 @@ if (isset($nav_menu['header_menu'])) {
 
             </button>
 
+
+            <button id="openSignInBtn" class='px-10 py-2 bg-blue-500'>Open Login modal</button>
         </div>
 
     </div>

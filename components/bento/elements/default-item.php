@@ -48,7 +48,7 @@ $category_name = get_cat_name($category_id);
         <?php if (!empty($category_name)) : ?>
             <span class="flex items-center gap-2 text-black text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-4"
                 style="
-                    <?= !empty($category_bg_color) ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
+                    <?php echo !empty($category_bg_color) ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
                     <?= !empty($category_text_color) ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
                 ">
 
@@ -58,25 +58,25 @@ $category_name = get_cat_name($category_id);
                     </span>
                 <?php endif; ?>
 
-                <?= esc_html($category_name); ?>
+                <?php echo esc_html($category_name); ?>
             </span>
         <?php endif; ?>
 
         <?php if (!empty($title)) : ?>
             <h4 class="text-black dark:text-white text-lg md:text-2xl xl:text-[27px] font-semibold leading-snug mb-3">
-                <?= esc_html($title); ?>
+                <?php echo esc_html(trim_title_chars($title, 50)); ?>
             </h4>
         <?php endif; ?>
 
         <?php if (!empty($excerpt)) : ?>
             <p class="text-[#373A39] dark:text-[#C4C4C4] text-sm lg:text-lg lg:leading-[29.3px] mb-4 line-clamp-3">
-                <?= esc_html($excerpt); ?>
+                <?php echo esc_html($excerpt); ?>
             </p>
         <?php endif; ?>
 
         <?php if (!empty($date)) : ?>
             <time class="text-black dark:text-white text-xs mt-auto font-bold">
-                <?= esc_html($date); ?>
+                <?php echo esc_html($date); ?>
             </time>
         <?php endif; ?>
 

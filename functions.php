@@ -13,3 +13,4 @@ require PATH . '/inc/acf.php';
 require PATH . '/inc/setup.php';
 require PATH . '/inc/enqueues.php';
 require PATH . '/inc/helpers.php';
+require PATH . '/inc/ajax.php';
