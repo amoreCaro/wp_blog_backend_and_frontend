@@ -7,8 +7,8 @@
     <div class="modal max-w-[500px] w-full rounded-2xl bg-white dark:bg-zinc-950 shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
 
         <div class="modal__head p-8 pb-4 text-left relative">
-            <h2 class="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">Sign in</h2>
-            <p class="text-zinc-500 dark:text-zinc-400 mt-2 text-sm">Welcome back! Please enter your details.</p>
+            <h2 class="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"><?php _e("Sign in", THEME); ?></h2>
+            <p class="text-zinc-500 dark:text-zinc-400 mt-2 text-sm"><?php _e("Welcome back! Please enter your details.", THEME); ?></p>
 
             <button id="closeSignInModal" class="absolute top-8 right-8 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -258,9 +258,9 @@
                         </div>
 
                         <span class="text-sm text-zinc-600 dark:text-zinc-400 transition-colors">
-                            I agree to the 
-                            <a class="text-blue-500 hover:text-zinc-600 dark:hover:text-zinc-400">
-                                Terms and Conditions
+                             <?php _e("I agree to the", THEME); ?>
+                             <a class="text-blue-500 hover:text-zinc-600 dark:hover:text-zinc-400">
+                                <?php _e("Terms and Conditions", THEME); ?>
                             </a>
                         </span>
                     </label>
@@ -270,7 +270,7 @@
                             type="submit"
                             class="w-full md:w-auto py-3 px-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold hover:bg-zinc-800 dark:hover:bg-white transition-all shadow-lg shadow-zinc-200 dark:shadow-none active:scale-[0.98] disabled:bg-zinc-400 dark:disabled:bg-zinc-40 disabled:text-zinc-200 dark:disabled:text-zinc- disabled:cursor-not-allowed disabled:opacity-70"
                         >
-                            Register
+                            <?php _e("Register", THEME); ?>
                         </button>
                         <div class="popup-success hidden flex items-center p-4 mt-5 mb-0 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] shadow-sm shadow-[#dcfce7]" role="alert">
                             <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#dcfce7] text-[#16a34a]">
@@ -279,7 +279,7 @@
                                 </svg>
                             </div>
                             <div class="ms-4 text-left">
-                                <p class="text-sm text-[#15803d]">Your account has been created successfully.</p>
+                                <p class="text-sm text-[#15803d]"><?php _e("Your account has been created successfully.", THEME); ?></p>
                             </div>
                         </div>
 
@@ -291,8 +291,8 @@
                             </div>
                             <div class="ms-4 text-left">
                                 <p class="popup-error__text text-sm text-[#b91c1c]">
-                                This email is already registered. 
-                                <a href="#" class="font-bold !underline !text-[#991b1b] hover:!text-[#7f1d1d]">Login instead?</a>
+                                <?php _e("This email is already registered.", THEME); ?>
+                                <a href="#" class="font-bold !underline !text-[#991b1b] hover:!text-[#7f1d1d]"><?php _e("Login instead?", THEME); ?></a>
                                 </p>
                             </div>
                         </div>

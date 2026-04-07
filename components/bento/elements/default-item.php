@@ -30,9 +30,9 @@ $category_name = get_cat_name($category_id);
 ?>
 
 <a href="<?= esc_url($link); ?>"  
-   class="group flex flex-col bg-white dark:bg-[#161618] overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]?>">
+   class="group flex flex-col bg-white dark:bg-[#121216] overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]?>">
 
-    <div class="h-[200px] md:h-[285px] overflow-hidden">
+    <div class="h-[200px] md:h-[185px] overflow-hidden">
         <picture class="block w-full h-full">
             <img 
                 data-src="<?= esc_url($thumbnail); ?>" 
