@@ -29,6 +29,22 @@
          translate-y-[2px];
 }
 
+.invalid {
+  @apply border-red-500 ring-1 ring-red-500/50 bg-red-500/5 
+         dark:border-red-400 dark:ring-red-400/40 dark:bg-red-900/20;
+}
+
+/* Щоб іконка всередині теж підсвітилася червоним */
+.invalid svg {
+  @apply text-red-500 dark:text-red-400;
+}
+
+/* Стан фокусу: робимо бордюр ще яскравішим */
+.invalid:focus-within {
+  @apply dark:border-red-400 dark:bg-red-500/15;
+  outline: none;
+}
+
 .show {
   max-height: 500px;
   opacity: 1;

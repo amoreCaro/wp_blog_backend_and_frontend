@@ -1,24 +1,25 @@
 export function togglePassword() {
-    const toggleButtons = document.querySelectorAll(".toggle-password");
+    const buttons = document.querySelectorAll(".toggle-password");
 
-    if (!toggleButtons.length) return;
+    if (!buttons.length) return;
 
-    toggleButtons.forEach((btn) => {
+    buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
-            const container = btn.closest(".password-field");
+            const field = btn.closest(".password-field");
+            if (!field) return;
 
-            const input = container.querySelector(".password-input");
-            const showIcon = container.querySelector(".show-icon");
-            const hideIcon = container.querySelector(".hide-icon");
+            const input = field.querySelector(".form__input-password");
+            const showIcon = field.querySelector(".show-icon");
+            const hideIcon = field.querySelector(".hide-icon");
 
-            const isPassword = input.type === "password";
+            if (!input || !showIcon || !hideIcon) return;
 
-            // toggle input type
-            input.type = isPassword ? "text" : "password";
+            const isHidden = input.type === "password";
 
-            // toggle icons
-            showIcon.classList.toggle("hidden", isPassword);
-            hideIcon.classList.toggle("hidden", !isPassword);
+            input.type = isHidden ? "text" : "password";
+
+            showIcon.classList.toggle("hidden", isHidden);
+            hideIcon.classList.toggle("hidden", !isHidden);
         });
     });
 }

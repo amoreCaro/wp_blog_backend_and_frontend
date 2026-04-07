@@ -10,6 +10,7 @@ import { modal } from './components/modal.js';
 import { togglePassword } from './components/togglePassword.js';
 import { formTabs } from './components/form-tabs.js';
 import { loginInit } from './components/form/login.js';
+import { signInit } from './components/form/sign.js';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -25,4 +26,5 @@ document.addEventListener('DOMContentLoaded', function() {
   togglePassword();
   formTabs();
   loginInit();
+  signInit();
 });

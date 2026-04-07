@@ -15,6 +15,7 @@ foreach ($repeaters as $item) {
 
     $bento_button = $item['bento_button'];
 
+
     $category_name       = $category_obj->name;
     $category_link       = get_term_link($category_obj);
     $category_svg        = get_inline_svg_category_from_acf($category_obj->term_id);
@@ -31,6 +32,7 @@ foreach ($repeaters as $item) {
         'paged'          => $paged,
         'orderby'        => 'date',
         'order'          => 'DESC',
+        'cat'            => $category_id,
     ];
 
     $query = new WP_Query($args);

@@ -1,4 +1,6 @@
-<?php if (!defined('ABSPATH')) exit; ?>
+<?php if (!defined('ABSPATH')) exit; 
+?>
+
 
 <div id="modal" class="fixed inset-0 flex items-center justify-center bg-zinc-900/60 backdrop-blur-sm z-50 p-4 close">
 
@@ -49,7 +51,7 @@
                             type="text" 
                             name="username"
                             placeholder="Username/Email"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
+                            class="form__input form__input--username w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
                         >
                     </div>
 
@@ -72,7 +74,7 @@
                             type="password" 
                             name="password"
                             placeholder="Password"
-                            class="password-input w-full pl-11 pr-12 py-3.5 rounded-xl 
+                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl 
                                 border border-zinc-200 dark:border-zinc-800 
                                 bg-zinc-50 dark:bg-zinc-900/50 
                                 text-zinc-900 dark:text-zinc-100 
@@ -84,9 +86,7 @@
                         >
 
                         <!-- Toggle button -->
-                        <button type="button"
-                            class="toggle-password absolute right-4 top-1/2 -translate-y-1/2 
-                                text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
+                        <button type="button" class="toggle-password absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
 
                             <!-- Show -->
                             <svg class="show-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -121,7 +121,7 @@
                             <input 
                                 type="checkbox" 
                                 name="rememberMe" 
-                                class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
+                                class="form__input form__input-remember-me peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
                             />
                             <svg 
                                 class="pointer-events-none absolute top-1/2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 stroke-white dark:stroke-zinc-900" 
@@ -147,7 +147,9 @@
                 </form>
             </div>
             <div class="tab tab--register">
-                <form action="" method="POST" class="form form-register flex flex-col gap-5">
+                <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="form form-register flex flex-col gap-5">
+                    <input type="hidden" name="action" value="register_user">
+                    <?php wp_nonce_field('register_user_action', 'nonce'); ?>
                     <!-- Username -->
                     <div class="relative group">
                         <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 dark:group-focus-within:text-zinc-100 transition-colors">
@@ -160,7 +162,7 @@
                             type="text" 
                             name="username"
                             placeholder="Username"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
+                            class="form__input form__input-username w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
                         >
                     </div>
                     <!-- Email -->
@@ -176,7 +178,7 @@
                             type="text" 
                             name="email"
                             placeholder="Email Adress"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
+                            class="form__input form__input-email w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
                         >
                     </div>
 
@@ -199,7 +201,7 @@
                             type="password" 
                             name="password"
                             placeholder="Password"
-                            class="password-input w-full pl-11 pr-12 py-3.5 rounded-xl 
+                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl 
                                 border border-zinc-200 dark:border-zinc-800 
                                 bg-zinc-50 dark:bg-zinc-900/50 
                                 text-zinc-900 dark:text-zinc-100 
@@ -242,7 +244,7 @@
                             <input 
                                 type="checkbox" 
                                 name="agreeToTermsAndConditions"
-                                class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
+                                class="form__input-checkbox peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
                             />
                             <svg 
                                 class="pointer-events-none absolute top-1/2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 stroke-white dark:stroke-zinc-900" 
@@ -264,9 +266,36 @@
                     </label>
 
                     <div class="pt-2">
-                        <button type="submit" class="w-full md:w-auto py-3 px-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold hover:bg-zinc-800 dark:hover:bg-white transition-all shadow-lg shadow-zinc-200 dark:shadow-none active:scale-[0.98]">
+                        <button
+                            type="submit"
+                            class="w-full md:w-auto py-3 px-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold hover:bg-zinc-800 dark:hover:bg-white transition-all shadow-lg shadow-zinc-200 dark:shadow-none active:scale-[0.98] disabled:bg-zinc-400 dark:disabled:bg-zinc-40 disabled:text-zinc-200 dark:disabled:text-zinc- disabled:cursor-not-allowed disabled:opacity-70"
+                        >
                             Register
                         </button>
+                        <div class="popup-success hidden flex items-center p-4 mt-5 mb-0 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] shadow-sm shadow-[#dcfce7]" role="alert">
+                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#dcfce7] text-[#16a34a]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="ms-4 text-left">
+                                <p class="text-sm text-[#15803d]">Your account has been created successfully.</p>
+                            </div>
+                        </div>
+
+                        <div class="popup-error hidden flex items-center p-4 mt-5 mb-0 rounded-xl border border-[#fecaca] bg-[#fef2f2] shadow-sm shadow-[#fee2e2]" role="alert">
+                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="ms-4 text-left">
+                                <p class="popup-error__text text-sm text-[#b91c1c]">
+                                This email is already registered. 
+                                <a href="#" class="font-bold !underline !text-[#991b1b] hover:!text-[#7f1d1d]">Login instead?</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
