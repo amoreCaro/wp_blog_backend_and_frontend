@@ -1,24 +1,68 @@
 export function loginInit() {
-    const form = document.querySelector('.form-login');
+    const loginForm = document.querySelector('.form-login');
+    if (!loginForm) return;
 
-    if (!form) {
-        console.log("❌ there is no form");
-        return; 
-    }
+    const submit = loginForm.querySelector('button[type="submit"]');
 
-    console.log("✅ form found:", form);
+    loginForm.addEventListener('input', (e) => {
+        if (e.target.matches('.form__input, .form__input-checkbox')) {
+            e.target.classList.remove('invalid');
+        }
+    });
 
-    form.addEventListener("submit", function (e) {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const formData = new FormData(form);
+        // Validate form fields before sending request
+        const inputs = loginForm.querySelectorAll(
+            '.form__input, .form__input-checkbox'
+        );
 
-        console.log("📦 FORM DATA:");
+        let valid = true;
 
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
+        inputs.forEach(input => {
+            const value = input.value.trim();
+
+            if ( input.classList.contains('form__input-password') && value.length < 6 ) {
+                input.classList.add('invalid');
+                valid = false;
+            } else if ( !value ) {
+                input.classList.add('invalid');
+                valid = false;
+            } else {
+                input.classList.remove('invalid');
+            }
+        });
+
+        if (!valid) return;
+
+        submit.disabled = false;
+
+        const formData = new FormData(loginForm);
+
+        try {
+            const res = await fetch('/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    action: 'login_user',
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    rememberMe: formData.get('rememberMe'),
+                    nonce: formData.get('nonce') 
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                alert('Login success');
+                window.location.reload();
+            } else {
+                alert(JSON.stringify(data.data));
+            }
+
+        } catch (err) {
+            console.error(err);
         }
-
-        console.log("📦 OBJECT:", Object.fromEntries(formData.entries()));
     });
 }

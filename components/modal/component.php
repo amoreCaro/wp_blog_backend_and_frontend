@@ -24,21 +24,24 @@
                     <a href="#"
                     data-tab="login"
                     class="tab__link inline-block pb-3 text-sm font-semibold  dark:border-zinc-100 text-zinc-900 dark:text-zinc-100">
-                        Log In
+                        <?php _e("Log In", THEME); ?>
                     </a>
                 </li>
-
+                
                 <li>
                     <a href="#"
                     data-tab="register"
                     class="tab__link inline-block pb-3 text-sm font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
-                        Register
+                        <?php _e("Register", THEME); ?>
                     </a>
                 </li>
             </ul>
 
             <div class="tab tab--login">
-                <form action="" method="POST" class="form form-login flex flex-col gap-5">
+                <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="form form-login flex flex-col gap-5">
+                    <input type="hidden" name="action" value="login_user">
+                    <?php wp_nonce_field('login_user_action', 'nonce'); ?>
+
                     <!-- Username -->
                     <div class="relative group">
                         <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 dark:group-focus-within:text-zinc-100 transition-colors">
@@ -50,8 +53,8 @@
                         <input 
                             type="text" 
                             name="username"
-                            placeholder="Username/Email"
-                            class="form__input form__input--username w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
+                            placeholder="Username"
+                            class="form__input form__input-username w-full pl-11 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all"
                         >
                     </div>
 
@@ -59,9 +62,7 @@
                     <div class="relative group password-field">
                         
                         <!-- Icon left -->
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 
-                                    group-focus-within:text-zinc-900 
-                                    dark:group-focus-within:text-zinc-100 transition-colors">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 dark:group-focus-within:text-zinc-100 transition-colors">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2"></rect>
@@ -74,16 +75,7 @@
                             type="password" 
                             name="password"
                             placeholder="Password"
-                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl 
-                                border border-zinc-200 dark:border-zinc-800 
-                                bg-zinc-50 dark:bg-zinc-900/50 
-                                text-zinc-900 dark:text-zinc-100 
-                                placeholder:text-zinc-400 
-                                focus:outline-none focus:ring-2 
-                                focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 
-                                focus:border-zinc-900 dark:focus:border-zinc-100 
-                                transition-all"
-                        >
+                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all">
 
                         <!-- Toggle button -->
                         <button type="button" class="toggle-password absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
@@ -116,12 +108,12 @@
                         Lost Your Password?
                     </a>
 
-                    <label class="flex items-center gap-3 cursor-pointer group w-fit">
+                    <label class="flex items-center gap-3 cursor-pointer w-fit">
                         <div class="relative flex items-center justify-center">
                             <input 
                                 type="checkbox" 
-                                name="rememberMe" 
-                                class="form__input form__input-remember-me peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
+                                name="rememberMe"
+                                class="form__input-checkbox peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-700 bg-transparent transition-all checked:bg-zinc-900 dark:checked:bg-zinc-100 checked:border-zinc-900 dark:checked:border-zinc-100"
                             />
                             <svg 
                                 class="pointer-events-none absolute top-1/2 left-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100 stroke-white dark:stroke-zinc-900" 
@@ -134,8 +126,8 @@
                             </svg>
                         </div>
 
-                        <span class="text-sm text-zinc-600 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">
-                            Remember Me
+                        <span class="text-sm text-zinc-600 dark:text-zinc-400 transition-colors">
+                             <?php _e("Remember Me", THEME); ?>
                         </span>
                     </label>
 
@@ -148,7 +140,7 @@
             </div>
             <div class="tab tab--register">
                 <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="form form-register flex flex-col gap-5">
-                    <input type="hidden" name="action" value="register_user">
+                   <input type="hidden" name="action" value="register_user">
                     <?php wp_nonce_field('register_user_action', 'nonce'); ?>
                     <!-- Username -->
                     <div class="relative group">
@@ -186,9 +178,7 @@
                     <div class="relative group password-field">
                         
                         <!-- Icon left -->
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 
-                                    group-focus-within:text-zinc-900 
-                                    dark:group-focus-within:text-zinc-100 transition-colors">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 dark:group-focus-within:text-zinc-100 transition-colors">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2"></rect>
@@ -201,16 +191,7 @@
                             type="password" 
                             name="password"
                             placeholder="Password"
-                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl 
-                                border border-zinc-200 dark:border-zinc-800 
-                                bg-zinc-50 dark:bg-zinc-900/50 
-                                text-zinc-900 dark:text-zinc-100 
-                                placeholder:text-zinc-400 
-                                focus:outline-none focus:ring-2 
-                                focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 
-                                focus:border-zinc-900 dark:focus:border-zinc-100 
-                                transition-all"
-                        >
+                            class="form__input form__input-password w-full pl-11 pr-12 py-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5 dark:focus:ring-zinc-100/5 focus:border-zinc-900 dark:focus:border-zinc-100 transition-all">
 
                         <!-- Toggle button -->
                         <button type="button" class="toggle-password absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">

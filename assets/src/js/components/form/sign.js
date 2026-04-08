@@ -1,23 +1,23 @@
 export function signInit() {
     // GET register form 
-    const form = document.querySelector('.form-register');
+    const registerForm = document.querySelector('.form-register');
 
-    if (!form) return;
+    if (!registerForm) return;
     // GET submit button in form 
-    const submit = form.querySelector('button[type="submit"]');
+    const submit = registerForm.querySelector('button[type="submit"]');
 
     // Remove validation error when user starts typing/changing input
-    form.addEventListener('input', (e) => {
+    registerForm.addEventListener('input', (e) => {
         if (e.target.matches('.form__input, .form__input-checkbox')) {
             e.target.classList.remove('invalid');
         }
     });
 
-    form.addEventListener('submit', function (e) {
+    registerForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         // Validate form fields before sending request
-        const inputs = form.querySelectorAll(
+        const inputs = registerForm.querySelectorAll(
             '.form__input, .form__input-checkbox'
         );
 
@@ -59,7 +59,7 @@ export function signInit() {
 
         submit.disabled = false;
         
-        const formData = new FormData(form);
+        const formData = new FormData(registerForm);
         formData.append('action', 'register_user');
 
         fetch('/wp-admin/admin-ajax.php', {
@@ -68,9 +68,9 @@ export function signInit() {
         })
             .then(res => res.json())
             .then(data => {
-                const successMsg = form.querySelector('.popup-success');
-                const errorMsg = form.querySelector('.popup-error');
-                const errorText = form.querySelector('.popup-error__text');
+                const successMsg = registerForm.querySelector('.popup-success');
+                const errorMsg = registerForm.querySelector('.popup-error');
+                const errorText = registerForm.querySelector('.popup-error__text');
 
                 if (data.success) {
                     successMsg.classList.remove('hidden');
@@ -83,14 +83,7 @@ export function signInit() {
                     successMsg.classList.add('hidden');
                     submit.disabled = false;
 
-                    if (field === 'email') {
-                        errorText.innerHTML = `
-                            This email is already registered.
-                            <a href="/login" class="font-bold underline">Login instead?</a>
-                        `;
-                    } else if (field === 'username') {
-                        errorText.textContent = 'This username is already taken.';
-                    } else {
+                    if (field) {
                         errorText.textContent = message;
                     }
                 }
@@ -101,3 +94,7 @@ export function signInit() {
             });
     });
 }
+
+// function validateInputs (input) {
+//    return valid true / false
+// }

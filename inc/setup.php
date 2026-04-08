@@ -189,10 +189,46 @@ add_action('pre_get_posts', function($query) {
 
 
 function theme_search_include_location($query) {
-    // Add custom post type for search
     if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+
         $query->set('post_type', ['post', 'location']);
+
+        // включає пошук по тегах
+        if (!empty($_GET['tag'])) {
+            $query->set('tag', sanitize_text_field($_GET['tag']));
+        }
     }
 }
 add_action('pre_get_posts', 'theme_search_include_location');
 
+
+function theme_search_include_tags($search, $wp_query) {
+    global $wpdb;
+
+    if (empty($search) || ! $wp_query->is_search()) {
+        return $search;
+    }
+
+    $term = $wp_query->get('s');
+
+    $like = '%' . $wpdb->esc_like($term) . '%';
+
+    $search = "
+        AND (
+            {$wpdb->posts}.post_title LIKE '{$like}'
+            OR {$wpdb->posts}.post_content LIKE '{$like}'
+            OR EXISTS (
+                SELECT 1
+                FROM {$wpdb->term_relationships} tr
+                INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+                WHERE tt.taxonomy = 'post_tag'
+                AND tr.object_id = {$wpdb->posts}.ID
+                AND t.name LIKE '{$like}'
+            )
+        )
+    ";
+
+    return $search;
+}
+add_filter('posts_search', 'theme_search_include_tags', 10, 2);

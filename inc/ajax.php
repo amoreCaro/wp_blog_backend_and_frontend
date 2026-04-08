@@ -2,8 +2,8 @@
 
 if (!defined('ABSPATH')) exit;
 
-add_action('wp_ajax_register_user', 'handle_register_user');
 add_action('wp_ajax_nopriv_register_user', 'handle_register_user');
+add_action('wp_ajax_register_user', 'handle_register_user');
 
 function handle_register_user() {
     $nonce = $_POST['nonce'] ?? '';
@@ -17,6 +17,7 @@ function handle_register_user() {
     $username = (isset($_POST['username']) && !empty($_POST['username'])) ? sanitize_user($_POST['username']) : '';
     $email = (isset($_POST['email']) && !empty($_POST['email'])) ? sanitize_email($_POST['email']) : '';
     $password = $_POST['password'] ?? '';
+    $agree = isset($_POST['agreeToTermsAndConditions']) ? true : false;
 
     // Валідація
     if (empty($username)) {
@@ -37,6 +38,13 @@ function handle_register_user() {
         wp_send_json_error([
             'field' => 'password',
             'message' => 'Password is required'
+        ]);
+    }
+
+    if (!$agree) {
+        wp_send_json_error([
+            'field' => 'agreeToTermsAndConditions',
+            'message' => 'You must agree to terms and conditions'
         ]);
     }
 
@@ -69,12 +77,56 @@ function handle_register_user() {
         ]);
     }
 
-    // autologin
-    // wp_set_current_user($user_id);
-    // wp_set_auth_cookie($user_id);
-
     wp_send_json_success([
         'message' => 'User created successfully',
         'user_id' => $user_id
+    ]);
+}
+
+add_action('wp_ajax_login_user', 'handle_login_user');
+
+function handle_login_user() {
+    $nonce = $_POST['nonce'] ?? '';
+
+    if (!wp_verify_nonce($nonce, 'login_user_action')) {
+        wp_send_json_error([
+            'message' => 'Invalid nonce'
+        ]);
+    }
+
+    $username = sanitize_user($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($username)) {
+        wp_send_json_error([
+            'field' => 'username',
+            'message' => 'Username is required'
+        ]);
+    }
+
+    if (empty($password)) {
+        wp_send_json_error([
+            'field' => 'password',
+            'message' => 'Password is required'
+        ]);
+    }
+
+    $creds = [
+        'user_login'    => $username,
+        'user_password' => $password,
+        'remember'      => $remember
+    ];
+
+    $user = wp_signon($creds, false);
+
+    if (is_wp_error($user)) {
+        wp_send_json_error([
+            'message' => $user->get_error_message()
+        ]);
+    }
+
+    wp_send_json_success([
+        'message' => 'Login successful',
+        'user_id' => $user->ID
     ]);
 }

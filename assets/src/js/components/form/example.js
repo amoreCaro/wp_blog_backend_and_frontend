@@ -103,8 +103,6 @@ function signForm() {
   });
 }
 
-
-
 export async function sign() {
   resendForm();
   signForm();
