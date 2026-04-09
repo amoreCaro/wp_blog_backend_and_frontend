@@ -135,6 +135,30 @@
                         <button type="submit" class="w-full md:w-auto py-3 px-12 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold hover:bg-zinc-800 dark:hover:bg-white transition-all shadow-lg shadow-zinc-200 dark:shadow-none active:scale-[0.98]">
                             Login
                         </button>
+                        <div class="popup-success hidden flex items-center p-4 mt-5 mb-0 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] shadow-sm shadow-[#dcfce7]" role="alert">
+                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#dcfce7] text-[#16a34a]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div class="ms-4 text-left">
+                                <p class="text-sm text-[#15803d]"><?php _e("Login success.", THEME); ?></p>
+                            </div>
+                        </div>
+
+                        <div class="popup-error hidden flex items-center p-4 mt-5 mb-0 rounded-xl border border-[#fecaca] bg-[#fef2f2] shadow-sm shadow-[#fee2e2]" role="alert">
+                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <div class="ms-4 text-left">
+                                <p class="popup-error__text text-sm text-[#b91c1c]">
+                                <?php _e("This email is already registered.", THEME); ?>
+                                <a href="#" class="font-bold !underline !text-[#991b1b] hover:!text-[#7f1d1d]"><?php _e("Login instead?", THEME); ?></a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

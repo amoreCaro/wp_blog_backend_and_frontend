@@ -133,30 +133,45 @@ if (isset($nav_menu['header_menu'])) {
         <div class="flex items-center gap-4 md:gap-6 text-sm flex-shrink-0">
 
             <!-- HEADER BUTTONS -->
-            <?php if (!empty($buttons)) : ?>
+<?php if (!empty($buttons)) : ?>
 
-                <div class="hidden lg:flex items-center gap-6">
+    <div class="hidden lg:flex items-center gap-6">
 
-                    <?php foreach ($buttons as $button) :
+        <?php foreach ($buttons as $index => $button) :
 
-                        $button_text = $button['header_button_text'] ?? '';
-                        $button_url  = $button['header_button_url'] ?? '#';
+            $button_text = $button['header_button_text'] ?? '';
+            $button_url  = $button['header_button_url'] ?? '';
 
-                    ?>
+            // radio field (ACF)
+            $show_auth_modal = $button['acf_show_auth_modal'] ?? '';
+        ?>
 
-                        <a
-                            href="<?= esc_url($button_url); ?>"
-                            class="transition-colors hover:text-blue-400"
-                        >
-                            <?= esc_html($button_text); ?>
-                        </a>
+            <?php if ($show_auth_modal === '1') : ?>
 
-                    <?php endforeach; ?>
+                <button
+                    type="button"
+                    id="openSignInBtn"
+                    class="transition-colors hover:text-blue-400"
+                >
+                    <?php echo esc_html($button_text); ?>
+                </button>
 
-                </div>
+            <?php else : ?>
+
+                <a
+                    href="<?php echo esc_url($button_url ?: '#'); ?>"
+                    class="transition-colors hover:text-blue-400"
+                >
+                    <?php echo esc_html($button_text); ?>
+                </a>
 
             <?php endif; ?>
 
+        <?php endforeach; ?>
+
+    </div>
+
+<?php endif; ?>
 
             <!-- THEME TOGGLE -->
             <label
@@ -219,11 +234,6 @@ if (isset($nav_menu['header_menu'])) {
                 </svg>
 
             </button>
-
-
-            <button id="openSignInBtn" class='px-10 py-2 bg-blue-500'>Open Login modal</button>
         </div>
-
     </div>
-
 </header>

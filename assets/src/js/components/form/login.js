@@ -4,6 +4,10 @@ export function loginInit() {
 
     const submit = loginForm.querySelector('button[type="submit"]');
 
+    const successMsg = loginForm.querySelector('.popup-success');
+    const errorMsg = loginForm.querySelector('.popup-error');
+    const errorText = loginForm.querySelector('.popup-error__text');
+
     loginForm.addEventListener('input', (e) => {
         if (e.target.matches('.form__input, .form__input-checkbox')) {
             e.target.classList.remove('invalid');
@@ -13,7 +17,6 @@ export function loginInit() {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Validate form fields before sending request
         const inputs = loginForm.querySelectorAll(
             '.form__input, .form__input-checkbox'
         );
@@ -21,12 +24,14 @@ export function loginInit() {
         let valid = true;
 
         inputs.forEach(input => {
-            const value = input.value.trim();
+            const value = input.type === 'checkbox'
+                ? input.checked
+                : input.value.trim();
 
-            if ( input.classList.contains('form__input-password') && value.length < 6 ) {
+            if (input.classList.contains('form__input-password') && value.length < 6) {
                 input.classList.add('invalid');
                 valid = false;
-            } else if ( !value ) {
+            } else if (!value && input.type !== 'checkbox') {
                 input.classList.add('invalid');
                 valid = false;
             } else {
@@ -36,33 +41,44 @@ export function loginInit() {
 
         if (!valid) return;
 
-        submit.disabled = false;
+        submit.disabled = true;
 
         const formData = new FormData(loginForm);
+        formData.append('action', 'login_user');
 
         try {
             const res = await fetch('/wp-admin/admin-ajax.php', {
                 method: 'POST',
-                body: new URLSearchParams({
-                    action: 'login_user',
-                    username: formData.get('username'),
-                    password: formData.get('password'),
-                    rememberMe: formData.get('rememberMe'),
-                    nonce: formData.get('nonce') 
-                })
+                body: formData
             });
 
             const data = await res.json();
 
             if (data.success) {
-                alert('Login success');
-                window.location.reload();
+                successMsg.classList.remove('hidden');
+                errorMsg.classList.add('hidden');
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 800);
+
             } else {
-                alert(JSON.stringify(data.data));
+                successMsg.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+
+                errorText.textContent = data?.data?.message || 'Login failed';
+
+                submit.disabled = false;
             }
 
         } catch (err) {
             console.error(err);
+
+            successMsg.classList.add('hidden');
+            errorMsg.classList.remove('hidden');
+            errorText.textContent = 'Server error';
+
+            submit.disabled = false;
         }
     });
 }

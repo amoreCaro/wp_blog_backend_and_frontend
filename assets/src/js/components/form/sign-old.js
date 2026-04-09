@@ -24,33 +24,54 @@ export function signInit() {
         let valid = true;
 
         inputs.forEach(input => {
-            if (input.classList.contains('form__input-checkbox')) {
-                if (!input.checked) {
-                    input.classList.add('invalid');
-                    valid = false;
-                } else {
-                    input.classList.remove('invalid');
+            switch (true) {
+                // checkbox
+                case input.classList.contains('form__input-checkbox'): {
+                    if (!input.checked) {
+                        input.classList.add('invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('invalid');
+                    }
+                    break;
                 }
-            } else {
-                const value = input.value.trim();
 
-                if (!value) {
-                    input.classList.add('invalid');
-                    valid = false;
-                } else if (
-                    input.classList.contains('form__input-password') &&
-                    value.length < 6
-                ) {
-                    input.classList.add('invalid');
-                    valid = false;
-                } else if (
-                    input.classList.contains('form__input-email') &&
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                ) {
-                    input.classList.add('invalid');
-                    valid = false;
-                } else {
-                    input.classList.remove('invalid');
+                // password < 6
+                case input.classList.contains('form__input-password'): {
+                    const value = input.value.trim();
+
+                    if (!value || value.length < 6) {
+                        input.classList.add('invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('invalid');
+                    }
+                    break;
+                }
+
+                // email regex
+                case input.classList.contains('form__input-email'): {
+                    const value = input.value.trim();
+
+                    if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                        input.classList.add('invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('invalid');
+                    }
+                    break;
+                }
+
+                // default (text, etc.)
+                default: {
+                    const value = input.value.trim();
+
+                    if (!value) {
+                        input.classList.add('invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('invalid');
+                    }
                 }
             }
         });

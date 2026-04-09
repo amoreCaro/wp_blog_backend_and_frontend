@@ -96,6 +96,7 @@ function handle_login_user() {
 
     $username = sanitize_user($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['rememberMe']) ? true : false;
 
     if (empty($username)) {
         wp_send_json_error([
@@ -125,8 +126,15 @@ function handle_login_user() {
         ]);
     }
 
+    wp_set_current_user($user->ID);
+    wp_set_auth_cookie($user->ID);
+
     wp_send_json_success([
         'message' => 'Login successful',
-        'user_id' => $user->ID
+        'user' => [
+            'id' => $user->ID,
+            'name' => $user->display_name,
+            'logged_in' => true
+        ]
     ]);
 }
