@@ -22,16 +22,14 @@ if ( ! empty( $categories ) ) : ?>
         ?>
             <a
                 href="<?php echo $category_link; ?>"
-                class="category-chip flex items-center gap-2 rounded-full border border-white px-4 py-1.5 text-white transition-all duration-300 hover:bg-white hover:text-black max-w-[200px] w-fit"
+                class="category-chip flex items-center gap-2 rounded-full border border-[#E5E7EB] dark:border-white/20 px-4 py-1.5 text-[#374151] dark:text-white  dark:bg-transparenttransition-all duration-300hover:bg-black hover:text-whitedark:hover:bg-white dark:hover:text-blackmax-w-[200px] w-fit"
             >
 
                 <?php if ( $icon_svg ) : ?>
                     <?php
                         $icon_svg = preg_replace('/(width|height)=".*?"/', '', $icon_svg);
-
                         $icon_svg = preg_replace('/fill=".*?"/', 'fill="currentColor"', $icon_svg);
                         $icon_svg = preg_replace('/stroke=".*?"/', 'stroke="currentColor"', $icon_svg);
-
                         $icon_svg = str_replace('<svg', '<svg class="w-4 h-4 flex-shrink-0"', $icon_svg);
 
                         echo $icon_svg;

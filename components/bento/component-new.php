@@ -1,126 +1,50 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-/*
-|--------------------------------------------------------------------------
-| Categories source
-|--------------------------------------------------------------------------
-*/
+$repeaters = get_field('bento_categories') ?? [];
 
-if (is_category()) {
+foreach ($repeaters as $item) {
+    $category_obj = $item['bento_category'];
+    if (!$category_obj) continue;
 
-    // Поточна категорія
-    $current_category = get_queried_object();
+    $template_type = $item['bento_template'];
+    $posts_count = 6;
 
-    if (!($current_category instanceof WP_Term)) return;
+    $bento_button = $item['bento_button'];
 
-    $categories_to_show = [
-        [
-            'bento_category' => $current_category,
-            'bento_template' => 'single-category'
-        ]
+    $category_name       = $category_obj->name;
+    $category_link       = get_term_link($category_obj);
+    $category_svg        = get_inline_svg_category_from_acf($category_obj->term_id);
+    $category_bg_color   = get_field('category_bg', $category_obj) ?: '';
+    $category_text_color = get_field('category_text_color', $category_obj) ?: '';
+    $category_decor_type = get_field('category_decor_type', $category_obj) ?: 'default';
+    $category_id = $category_obj->term_id;
+
+    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+
+    $args = [
+        'post_type'      => 'post',
+        'posts_per_page' => $posts_count,
+        'paged'          => $paged,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+        'cat'            => $category_id,
     ];
 
-} else {
+    $query = new WP_Query($args);
 
-    // ACF Bento
-    $bento_section = get_field('bento') ?: [];
+    $posts_in_cat = $query->posts;
 
-    if (empty($bento_section['bento_categories'])) return;
-
-    $categories_to_show = $bento_section['bento_categories'];
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Loop categories
-|--------------------------------------------------------------------------
-*/
-
-foreach ($categories_to_show as $category_index => $category_item) :
-
-    $category = $category_item['bento_category'] ?? null;
-    if (!$category) continue;
-
-    $category_id   = $category->term_id;
-    $category_name = $category->name;
-    $category_link = get_category_link($category_id);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Category ACF
-    |--------------------------------------------------------------------------
-    */
-
-    $category_svg        = get_inline_svg_category_from_acf($category_id);
-    $category_bg_color   = get_field('category_bg', 'category_' . $category_id);
-    $category_text_color = get_field('category_text_color', 'category_' . $category_id);
-    $category_decor_type = get_field('category_decor_type', 'category_' . $category_id);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Bento options
-    |--------------------------------------------------------------------------
-    */
-
-    $bento_button   = $category_item['bento_button'] ?? '';
-    $bento_template = $category_item['bento_template'] ?? 'default';
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Posts
-    |--------------------------------------------------------------------------
-    */
-
-    if (is_category()) {
-
-        // використовуємо WordPress main query
-        global $wp_query;
-        $posts_in_cat = $wp_query->posts;
-
-    } else {
-
-        // для Bento показуємо тільки 6 постів
-        $posts_in_cat = get_posts([
-            'cat' => (int) $category_id,
-            'posts_per_page' => 6,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'post_type' => 'post',
-        ]);
-    }
-
-    if (empty($posts_in_cat)) continue;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Templates
-    |--------------------------------------------------------------------------
-    */
-
-    if (is_category()) {
-
-        include PATH . '/components/bento/templates/single-category.php';
-
-    } else {
-
-        switch ($bento_template) {
-
-            case "reverse":
+    if ( ! empty ( $posts_in_cat ) ) {
+        switch ($template_type) {    
+            case 'reverse':
                 include PATH . '/components/bento/templates/reverse.php';
                 break;
-
-            case "default":
+    
             default:
                 include PATH . '/components/bento/templates/default.php';
                 break;
         }
-
+        wp_reset_postdata(); 
     }
-
-endforeach;
-?>
+}

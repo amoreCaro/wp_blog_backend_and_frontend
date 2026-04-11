@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 ?>
-<section class="bento-grid mx-auto bg-[#F6F5F8] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
+<section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] dark:bg-gradient-to-b dark:from-[#0B0B0D] dark:to-[#111114]lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
 
     <!-- HEADER -->
     <div class="flex items-center mb-12 justify-between container">
@@ -9,28 +9,28 @@ if (!defined('ABSPATH')) exit;
         <div class="flex items-center gap-4">
 
             <?php if ($category_name) : ?>
-                <h2 class="text-black text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-semibold tracking-tight leading-tight first-letter:uppercase">
-                    <?= esc_html($category_name); ?>
+                <h2 class="text-black dark:text-white/90 text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-semibold tracking-tight leading-tight first-letter:uppercase">
+                    <?php echo esc_html($category_name); ?>
                 </h2>
             <?php endif; ?>
 
             <?php if ($category_svg) : ?>
-                <div class="decor <?= esc_attr($category_decor_type); ?> -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full shadow-sm p-2"
+                <div class="decor <?php esc_attr($category_decor_type); ?> -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full p-2 bg-white/90 dark:bg-white/10 text-black dark:text-white backdrop-blur-md border border-black/5 dark:border-white/10 shadow-sm dark:shadow-none"
                     style="
-                        <?= $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
-                        <?= $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
+                        <?php echo $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
+                        <?php echo $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
                     ">
-                    <?= $category_svg; ?>
+                    <?php echo $category_svg; ?>
                 </div>
             <?php endif; ?>
 
         </div>
 
         <?php if ($bento_button) : ?>
-            <a href="<?= esc_url($category_link); ?>"
-               class="group flex items-center justify-center gap-1.5 text-xs px-4 py-2 md:text-base md:px-9 md:py-3 md:gap-2 text-black border-2 border-black font-semibold rounded-full transition-all duration-300 hover:bg-black hover:text-white w-fit">
+            <a href="<?php echo esc_url($category_link); ?>"
+               class="group flex items-center justify-center gap-1.5 text-xs px-4 py-2 md:text-base md:px-9 md:py-3 md:gap-2  text-black dark:text-white border-2 border-black dark:border-white/20 font-semibold rounded-full transition-all duration-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-blackw-fit">
 
-                <?= esc_html($bento_button); ?>
+                <?php echo esc_html($bento_button); ?>
 
                 <svg xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 0 24 24"
@@ -52,7 +52,7 @@ if (!defined('ABSPATH')) exit;
     <div class="space-y-8 md:space-y-12 container">
 
         <!-- Two -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
+        <div class="reverse grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
 
         <?php
         foreach ($posts_in_cat as $index => $post) {
@@ -61,12 +61,12 @@ if (!defined('ABSPATH')) exit;
 
                 case 0:
                     $item_index = 0;
-                    include PATH . '/components/bento/templates/large-item.php';
+                    include PATH . '/components/bento/elements/large-item.php';
                     break;
 
                 case 1:
                     $item_index = 1;
-                    include PATH . '/components/bento/templates/default-item.php';
+                    include PATH . '/components/bento/elements/default-item.php';
                     break;
 
             }
@@ -87,7 +87,7 @@ if (!defined('ABSPATH')) exit;
 
                     <?php
                     $item_index = $post_index;
-                    include PATH . '/components/bento/templates/default-item.php';
+                    include PATH . '/components/bento/elements/default-item.php';
                     ?>
 
                 <?php endforeach; ?>

@@ -35,6 +35,14 @@ if ( ! function_exists('theme_setup') ) {
 }
 add_action('after_setup_theme', 'theme_setup');
 
+if ( ! function_exists('theme_add_svg_upload') ) {
+    function theme_add_svg_upload($mimes) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+    }
+    add_filter('upload_mimes', 'theme_add_svg_upload');
+}
+
 
 /* -------------------------------------------------
  * Navigation menus
@@ -55,16 +63,24 @@ add_action('after_setup_theme', 'theme_register_menus');
  * ACF Options Page
  * ------------------------------------------------- */
 
-if ( function_exists('acf_add_options_page') ) {
-    acf_add_options_page([
-        'page_title' => 'Global Settings',
-        'menu_title' => 'Global Settings',
-        'menu_slug'  => 'global-settings',
-        'capability' => 'manage_options',
-        'icon_url'   => 'dashicons-admin-generic',
-        'position'   => 2,
-        'redirect'   => false,
-    ]);
+add_action('acf/init', 'theme_add_global_settings');
+
+function theme_add_global_settings() {
+
+    if (function_exists('acf_add_options_page')) {
+
+        acf_add_options_page([
+            'page_title'  => 'Global Settings',
+            'menu_title'  => 'Global Settings',
+            'menu_slug'   => 'global-settings',
+            'capability'  => 'manage_options',
+            'redirect'    => false,
+            'position'    => 2,
+            'icon_url'    => 'dashicons-admin-generic'
+        ]);
+
+    }
+
 }
 
 /* -------------------------------------------------
@@ -94,7 +110,8 @@ if ( ! function_exists('theme_register_locations_taxonomy') ) {
             'show_admin_column' => true,
             'show_in_nav_menus' => true,
             'show_in_rest'      => true, 
-            'rewrite'           => ['slug' => 'location'],
+            'rewrite'           => ['slug' => 'location'    
+],
         ];
 
         register_taxonomy('locations', ['post'], $args);
@@ -112,6 +129,7 @@ add_filter('acf/fields/taxonomy/query/name=bento_category', function($args) {
 
 
 add_action('acf/save_post', 'theme_listing_category_svg_save', 20);
+
 
 if ( ! function_exists('theme_listing_category_svg_save') ) {
     function theme_listing_category_svg_save($post_id) {
@@ -151,6 +169,7 @@ if ( ! function_exists('theme_listing_category_svg_save') ) {
     }
 }
 
+
 add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
 
     // Фільтруємо тільки категорії
@@ -160,3 +179,86 @@ add_filter('acf/fields/taxonomy/query', function($args, $field, $post_id) {
 
     return $args;
 }, 10, 3);
+
+
+add_action('pre_get_posts', function($query) {
+    if (!is_admin() && $query->is_main_query() && is_archive()) {
+        $query->set('posts_per_page', 12);
+    }
+});
+
+
+/**
+ * Extend WordPress search (pre_get_posts)
+ * - limit to posts
+ * - keep default search (title, content, excerpt)
+ * - add taxonomy search (category, tag, locations)
+ */
+add_action('pre_get_posts', function ($query) {
+
+    // only frontend main search query
+    if (is_admin() || !$query->is_main_query() || !$query->is_search()) {
+        return;
+    }
+
+    $search = trim($query->get('s'));
+    if (!$search) {
+        return;
+    }
+
+    $slug = sanitize_title($search);
+
+    $tax_query = [
+        'relation' => 'OR'
+    ];
+
+    $has_tax = false;
+
+    // category
+    $cat = get_term_by('slug', $slug, 'category');
+    if ($cat) {
+        $tax_query[] = [
+            'taxonomy' => 'category',
+            'field'    => 'term_id',
+            'terms'    => $cat->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // tag
+    $tag = get_term_by('slug', $slug, 'post_tag');
+    if ($tag) {
+        $tax_query[] = [
+            'taxonomy' => 'post_tag',
+            'field'    => 'term_id',
+            'terms'    => $tag->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // custom taxonomy
+    $loc = get_term_by('slug', $slug, 'locations');
+    if ($loc) {
+        $tax_query[] = [
+            'taxonomy' => 'locations',
+            'field'    => 'term_id',
+            'terms'    => $loc->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // apply tax query
+    if ($has_tax) {
+        $query->set('tax_query', $tax_query);
+    }
+
+    // pagination (OK)
+    $query->set('posts_per_page', 12);
+
+    // IMPORTANT: do NOT break default search completely
+    if ($has_tax) {
+        $query->set('s', ''); // only if taxonomy matched
+    }
+
+    $query->set('post_type', 'post');
+});

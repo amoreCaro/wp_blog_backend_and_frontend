@@ -14,7 +14,6 @@ $media_menu = get_field('media_menu', $blog_page_id) ?? [];
  */
 $media_menu = get_field('media_menu', $blog_page_id) ?? [];
 
-
 $acf_categories = $media_menu['media_menu_select_categories'] ?? [];
 $acf_tags_ids   = $media_menu['media_menu_select_tags'] ?? [];
 
@@ -54,14 +53,14 @@ if ($current_object instanceof WP_Term) {
 }
 ?>
 
-<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] flex flex-col py-2">
-    <div class="container w-full mx-auto px-5 xl:px-10 2xl:px-0">
+<div class="media-menu absolute w-full top-[80px] z-50 bg-[#F6F5F8] dark:bg-[#0B0B0D] flex flex-col py-2">
+    <div class="container w-full mx-auto px-5 xl:px-0">
 
         <div class="media-menu__head flex items-center justify-between">
 
             <!-- Mobile categories button -->
             <?php if (!empty($categories)) : ?>
-            <button class="media-menu__categories-btn flex items-center gap-2 md:hidden py-3 text-black">
+            <button class="media-menu__categories-btn flex items-center gap-2 md:hidden py-3 text-slate-400 hover:text-blue-600">
                 <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" class="fill-current">
                     <rect width="7" height="7" rx="1"></rect>
                     <rect x="11" width="7" height="7" rx="1"></rect>
@@ -69,7 +68,9 @@ if ($current_object instanceof WP_Term) {
                     <rect x="11" y="11" width="7" height="7" rx="1"></rect>
                 </svg>
 
-                <span class="font-bold uppercase text-[15px] leading-[15px]">Category</span>
+                <span class="font-bold uppercase text-[15px] leading-[15px]">
+                     <?php _e("Category", THEME); ?>
+                </span>
             </button>
             <?php endif; ?>
 
@@ -82,8 +83,9 @@ if ($current_object instanceof WP_Term) {
                     ?>
                     <li>
                         <a href="<?php echo esc_url(home_url('/blog/')); ?>"
-                           class="media-menu__tab <?php echo esc_attr($all_news_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
-                            All News
+                           class="media-menu__tab <?php echo esc_attr($all_news_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black dark:hover:text-white">
+                            <?php _e("All news", THEME); ?>
+                            
                         </a>
                     </li>
 
@@ -93,7 +95,7 @@ if ($current_object instanceof WP_Term) {
                         ?>
                             <li>
                                 <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>"
-                                   class="media-menu__tab <?php echo esc_attr($is_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black">
+                                   class="media-menu__tab <?php echo esc_attr($is_active); ?> uppercase block py-3 text-[15px] leading-[18px] font-bold hover:text-black dark:hover:text-white">
                                     <?php echo esc_html($category->name); ?>
                                 </a>
                             </li>
@@ -105,7 +107,7 @@ if ($current_object instanceof WP_Term) {
             <!-- Tags button -->
             <?php if (!empty($tags)) : ?>
             <button class="media-menu__tags-btn cursor-pointer flex items-center gap-2 uppercase font-bold text-[15px] leading-[15px] transition-all duration-300 text-slate-400 hover:text-blue-600">
-                <span>All tags</span>
+                <?php _e("All tags", THEME); ?>
                 <svg class="transition-transform duration-300 transform group-hover:stroke-blue-600"
                      xmlns="http://www.w3.org/2000/svg"
                      width="18"
@@ -131,8 +133,8 @@ if ($current_object instanceof WP_Term) {
                 ?>
                 <li class="flex-1 text-left">
                     <a href="<?php echo esc_url(home_url('/blog/')); ?>"
-                       class="media-menu__tab <?php echo esc_attr($all_news_mobile_active); ?> uppercase py-3 text-[15px] leading-[18px] font-bold inline-block relative hover:text-black">
-                        All News
+                       class="media-menu__tab <?php echo esc_attr($all_news_mobile_active); ?> uppercase py-3 text-[15px] leading-[18px] font-bold inline-block relative hover:text-black dark:hover:text-white">
+                        <?php _e("All News", THEME); ?>
                     </a>
                 </li>
 
@@ -142,7 +144,7 @@ if ($current_object instanceof WP_Term) {
                     ?>
                         <li class="flex-1 text-left">
                             <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>"
-                               class="media-menu__tab <?php echo esc_attr($is_active_mobile); ?> uppercase py-3 text-[15px] leading-[18px] font-bold inline-block relative hover:text-black">
+                               class="media-menu__tab <?php echo esc_attr($is_active_mobile); ?> uppercase py-3 text-[15px] leading-[18px] font-bold inline-block relative hover:text-black dark:hover:text-white">
                                 <?php echo esc_html($category->name); ?>
                             </a>
                         </li>
@@ -158,7 +160,7 @@ if ($current_object instanceof WP_Term) {
                 <?php foreach ($tags as $tag) : ?>
                     <li>
                         <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>"
-                           class="media-menu__tag uppercase text-[15px] leading-[18px] font-bold text-[#9395ab] hover:text-[#252735] transition-all duration-300 cursor-pointer">
+                           class="media-menu__tag uppercase text-[15px] leading-[18px] font-bold text-[#9395ab] hover:text-[#252735] dark:hover:text-white transition-all duration-300 cursor-pointer">
                             #<?php echo esc_html($tag->name); ?>
                         </a>
                     </li>

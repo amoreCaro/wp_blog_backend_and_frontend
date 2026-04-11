@@ -29,6 +29,8 @@ $buttons = $buttons_group['header_buttons'] ?? [];
 $nav_menu   = get_nav_menu_locations();
 $menu_items = [];
 
+$current_user = wp_get_current_user();
+
 if (isset($nav_menu['header_menu'])) {
     $menu_id    = $nav_menu['header_menu'];
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -37,7 +39,7 @@ if (isset($nav_menu['header_menu'])) {
 
 <div class="l-wrapper">
 
-<header class="header-default fixed top-0 left-0 z-[100] w-full bg-black px-5 xl:px-10 h-[80px] flex items-center text-white">
+<header class="header-default fixed top-0 left-0 z-[100] w-full px-5 xl:px-10 h-[80px] flex items-center bg-white text-black dark:bg-black dark:text-white">
 
     <div class="container flex items-center justify-between">
 
@@ -46,7 +48,7 @@ if (isset($nav_menu['header_menu'])) {
 
             <a
                 href="<?= esc_url(home_url('/')); ?>"
-                class="flex items-center flex-shrink-0 no-underline text-white transition-opacity"
+                class="flex items-center flex-shrink-0 no-underline text-black dark:text-white transition-opacity"
             >
 
                 <?php if ($logo_img_id) : ?>
@@ -78,12 +80,13 @@ if (isset($nav_menu['header_menu'])) {
         <?php if (!empty($menu_items)) : ?>
 
             <nav class="navigation hidden flex-1 justify-center lg:flex">
-
                 <ul class="flex space-x-3">
 
                     <?php foreach ($menu_items as $item) :
 
                         $icon_svg  = get_inline_svg_from_acf($item->ID, 'acf_navigation_icon');
+                        $bg_light = get_field('acf_navigation_light_theme_bg', $item->ID);
+                        $bg_hover = get_field('acf_navigation_light_theme_bg_hover', $item->ID);
                         $is_active = in_array('current-menu-item', $item->classes, true);
 
                     ?>
@@ -91,20 +94,29 @@ if (isset($nav_menu['header_menu'])) {
                         <li class="list-none">
 
                             <a
-                                href="<?= esc_url($item->url); ?>"
-                                class="group flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-white transition-all hover:bg-white hover:text-black <?= $is_active ? 'bg-white text-black' : ''; ?>"
+                                href="<?php echo esc_url($item->url); ?>"
+                                class="group flex items-center gap-2 rounded-full px-4 py-1.5 text-black transition-all
+                                    bg-[var(--bg-color)] hover:bg-[var(--bg-hover)]
+                                    dark:bg-transparent
+                                    dark:border dark:border-white/40
+                                    dark:text-white
+                                    dark:hover:bg-white dark:hover:text-black
+                                    <?php echo $is_active ? 'bg-white text-black dark:bg-white dark:text-black' : ''; ?>"
+                                
+                                style="
+                                    --bg-color: <?php echo esc_attr($bg_light); ?>;
+                                    --bg-hover: <?php echo esc_attr($bg_hover); ?>;
+                                "
                             >
 
-                                <?php if ($icon_svg) : ?>
-
+                                <?php if (!empty($icon_svg)) : ?>
                                     <span class="menu-icon">
-                                        <?= $icon_svg; ?>
+                                        <?php echo $icon_svg; ?>
                                     </span>
-
                                 <?php endif; ?>
 
                                 <span class="menu-text">
-                                    <?= esc_html($item->title); ?>
+                                    <?php echo esc_html($item->title); ?>
                                 </span>
 
                             </a>
@@ -114,7 +126,6 @@ if (isset($nav_menu['header_menu'])) {
                     <?php endforeach; ?>
 
                 </ul>
-
             </nav>
 
         <?php endif; ?>
@@ -128,26 +139,57 @@ if (isset($nav_menu['header_menu'])) {
 
                 <div class="hidden lg:flex items-center gap-6">
 
-                    <?php foreach ($buttons as $button) :
+                    <?php foreach ($buttons as $index => $button) :
 
                         $button_text = $button['header_button_text'] ?? '';
-                        $button_url  = $button['header_button_url'] ?? '#';
+                        $button_url  = $button['header_button_url'] ?? '';
+                        $show_auth_modal = $button['acf_show_auth_modal'] ?? '';
 
                     ?>
 
-                        <a
-                            href="<?= esc_url($button_url); ?>"
-                            class="transition-colors hover:text-blue-400"
-                        >
-                            <?= esc_html($button_text); ?>
-                        </a>
+                        <?php if ($show_auth_modal === '1') : ?>
+
+                            <?php if (is_user_logged_in()) : ?>
+
+                                <a class="w-8 h-8 overflow-hidden rounded-full border border-white/10 shadow-sm" href="/profile">
+                                    <?php echo get_avatar($current_user->ID, 32, '', $current_user->display_name, array('class' => 'object-cover')); ?>
+                                </a>
+
+                                <a
+                                    href="<?php echo esc_url(wp_logout_url(home_url())); ?>"
+                                    class="transition-colors hover:text-blue-400"
+                                >
+                                    Logout
+                                </a>
+
+                            <?php else : ?>
+
+                                <button
+                                    type="button"
+                                    id="openSignInBtn"
+                                    class="transition-colors hover:text-blue-400"
+                                >
+                                    <?php echo esc_html($button_text); ?>
+                                </button>
+
+                            <?php endif; ?>
+
+                        <?php else : ?>
+
+                            <a
+                                href="<?php echo esc_url($button_url ?: '#'); ?>"
+                                class="transition-colors hover:text-blue-400"
+                            >
+                                <?php echo esc_html($button_text); ?>
+                            </a>
+
+                        <?php endif; ?>
 
                     <?php endforeach; ?>
 
                 </div>
 
             <?php endif; ?>
-
 
             <!-- THEME TOGGLE -->
             <label
@@ -210,9 +252,6 @@ if (isset($nav_menu['header_menu'])) {
                 </svg>
 
             </button>
-
         </div>
-
     </div>
-
 </header>

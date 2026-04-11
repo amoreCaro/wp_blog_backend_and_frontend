@@ -12,7 +12,7 @@ get_header();
 <main class="main">
     <!-- Single Post -->
     <div class="single-post">
-        <div class="lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px]">
+        <div class="lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] bg-white dark:bg-black">
             <div class="container mx-auto relative 2xl:max-w-[1152px] xl:px-[0px] lg:px-[40px] px-[20px]">
                 <div class="container mx-auto relative">
                     <?php require PATH . "/components/breadcrumbs/component.php"; ?>
