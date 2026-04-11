@@ -188,11 +188,77 @@ add_action('pre_get_posts', function($query) {
 });
 
 
-function theme_search_include_location($query) {
-    // Add custom post type for search
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
-        $query->set('post_type', ['post', 'location']);
-    }
-}
-add_action('pre_get_posts', 'theme_search_include_location');
+/**
+ * Extend WordPress search (pre_get_posts)
+ * - limit to posts
+ * - keep default search (title, content, excerpt)
+ * - add taxonomy search (category, tag, locations)
+ */
+add_action('pre_get_posts', function ($query) {
 
+    // only frontend main search query
+    if (is_admin() || !$query->is_main_query() || !$query->is_search()) {
+        return;
+    }
+
+    $search = trim($query->get('s'));
+    if (!$search) {
+        return;
+    }
+
+    $slug = sanitize_title($search);
+
+    $tax_query = [
+        'relation' => 'OR'
+    ];
+
+    $has_tax = false;
+
+    // category
+    $cat = get_term_by('slug', $slug, 'category');
+    if ($cat) {
+        $tax_query[] = [
+            'taxonomy' => 'category',
+            'field'    => 'term_id',
+            'terms'    => $cat->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // tag
+    $tag = get_term_by('slug', $slug, 'post_tag');
+    if ($tag) {
+        $tax_query[] = [
+            'taxonomy' => 'post_tag',
+            'field'    => 'term_id',
+            'terms'    => $tag->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // custom taxonomy
+    $loc = get_term_by('slug', $slug, 'locations');
+    if ($loc) {
+        $tax_query[] = [
+            'taxonomy' => 'locations',
+            'field'    => 'term_id',
+            'terms'    => $loc->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // apply tax query
+    if ($has_tax) {
+        $query->set('tax_query', $tax_query);
+    }
+
+    // pagination (OK)
+    $query->set('posts_per_page', 12);
+
+    // IMPORTANT: do NOT break default search completely
+    if ($has_tax) {
+        $query->set('s', ''); // only if taxonomy matched
+    }
+
+    $query->set('post_type', 'post');
+});

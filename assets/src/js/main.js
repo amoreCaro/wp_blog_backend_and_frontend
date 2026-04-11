@@ -12,7 +12,6 @@ import { formTabs } from './components/form-tabs.js';
 import { loginInit } from './components/form/login.js';
 import { signInit } from './components/form/sign.js';
 
-
 document.addEventListener('DOMContentLoaded', function() {
   lazyLoadImages();
   video();

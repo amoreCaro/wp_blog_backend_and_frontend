@@ -15,7 +15,7 @@ $excerpt = get_the_excerpt() ?: '';
 <?php endif; ?>
 
 <?php if ( ! empty( $excerpt ) ) : ?>
-    <p class="post__excerpt text-[#cecece] dark:text-[#C2C2C2] font-light text-[18px] leading-[36px] py-[18px]">
+    <p class="post__excerpt text-[#374151] dark:text-[#C2C2C2] font-light text-[18px] leading-[36px] py-[18px]">
         <?php echo esc_html( $excerpt ); ?>
     </p>
 <?php endif; ?>

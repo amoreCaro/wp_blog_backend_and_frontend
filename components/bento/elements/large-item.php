@@ -16,12 +16,14 @@ $excerpt    = get_the_excerpt($post_id);
 $date       = get_the_date('', $post_id);
 
 // Дані категорії
+$categories = get_the_category($post_id);
+$category_id = !empty($categories) ? $categories[0]->term_id : null;
 $category_svg  = get_inline_svg_category_from_acf($category_id);
 $category_name = get_cat_name($category_id);
 ?>
 
 <a href="<?php echo esc_url($link); ?>" 
-   class="group lg:col-span-3 bg-neutral-950 dark:bg-white rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
+   class="group lg:col-span-3 bg-neutral-950 dark:bg-[#121216] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
 
     <div class="h-[300px] sm:h-[400px] lg:h-auto lg:w-[55%] overflow-hidden relative">
         <picture class="block w-full h-full">
@@ -42,7 +44,7 @@ $category_name = get_cat_name($category_id);
         text-black relative h-full">
 
         <?php if (!empty($category_name)) : ?>
-        <span class="border flex items-center gap-2 text-white dark:text-black text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-6">
+        <span class="border flex items-center gap-2 text-white  text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-6">
 
             <?php if (!empty($category_svg)) : ?>
                 <span class="w-5 h-5 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
@@ -56,7 +58,7 @@ $category_name = get_cat_name($category_id);
         <?php endif; ?>
 
         <?php if (!empty($title)) : ?>
-            <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-6 text-white dark:text-black">
+            <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-6 text-white">
                 <?php echo esc_html(trim_title_chars($title, 50)); ?>
             </h4>
         <?php endif; ?>
@@ -68,7 +70,7 @@ $category_name = get_cat_name($category_id);
         <?php endif; ?>
 
         <?php if (!empty($date)) : ?>
-            <time class="text-white dark:text-black text-sm font-bold mt-auto">
+            <time class="text-white text-sm font-bold mt-auto">
                 <?php echo esc_html($date); ?>
             </time>
         <?php endif; ?>

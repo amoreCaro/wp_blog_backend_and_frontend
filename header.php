@@ -29,6 +29,8 @@ $buttons = $buttons_group['header_buttons'] ?? [];
 $nav_menu   = get_nav_menu_locations();
 $menu_items = [];
 
+$current_user = wp_get_current_user();
+
 if (isset($nav_menu['header_menu'])) {
     $menu_id    = $nav_menu['header_menu'];
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -137,26 +139,57 @@ if (isset($nav_menu['header_menu'])) {
 
                 <div class="hidden lg:flex items-center gap-6">
 
-                    <?php foreach ($buttons as $button) :
+                    <?php foreach ($buttons as $index => $button) :
 
                         $button_text = $button['header_button_text'] ?? '';
-                        $button_url  = $button['header_button_url'] ?? '#';
+                        $button_url  = $button['header_button_url'] ?? '';
+                        $show_auth_modal = $button['acf_show_auth_modal'] ?? '';
 
                     ?>
 
-                        <a
-                            href="<?= esc_url($button_url); ?>"
-                            class="transition-colors hover:text-blue-400"
-                        >
-                            <?= esc_html($button_text); ?>
-                        </a>
+                        <?php if ($show_auth_modal === '1') : ?>
+
+                            <?php if (is_user_logged_in()) : ?>
+
+                                <a class="w-8 h-8 overflow-hidden rounded-full border border-white/10 shadow-sm" href="/profile">
+                                    <?php echo get_avatar($current_user->ID, 32, '', $current_user->display_name, array('class' => 'object-cover')); ?>
+                                </a>
+
+                                <a
+                                    href="<?php echo esc_url(wp_logout_url(home_url())); ?>"
+                                    class="transition-colors hover:text-blue-400"
+                                >
+                                    Logout
+                                </a>
+
+                            <?php else : ?>
+
+                                <button
+                                    type="button"
+                                    id="openSignInBtn"
+                                    class="transition-colors hover:text-blue-400"
+                                >
+                                    <?php echo esc_html($button_text); ?>
+                                </button>
+
+                            <?php endif; ?>
+
+                        <?php else : ?>
+
+                            <a
+                                href="<?php echo esc_url($button_url ?: '#'); ?>"
+                                class="transition-colors hover:text-blue-400"
+                            >
+                                <?php echo esc_html($button_text); ?>
+                            </a>
+
+                        <?php endif; ?>
 
                     <?php endforeach; ?>
 
                 </div>
 
             <?php endif; ?>
-
 
             <!-- THEME TOGGLE -->
             <label
@@ -219,11 +252,6 @@ if (isset($nav_menu['header_menu'])) {
                 </svg>
 
             </button>
-
-
-            <button id="openSignInBtn" class='px-10 py-2 bg-blue-500'>Open Login modal</button>
         </div>
-
     </div>
-
 </header>
