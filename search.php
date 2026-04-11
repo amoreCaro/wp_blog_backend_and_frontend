@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 get_header();
 ?>
 
-<div class="search-page">
+<div class="search-page bg-white dark:bg-black">
     <div class="lg:pt-[46px] pt-[92px]">
 
         <?php require PATH . "/components/media-menu/component.php"; ?>
@@ -12,46 +12,40 @@ get_header();
         <section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
 
             <div class="container mb-10">
-                <h1 class="text-black dark:text-white text-[32px] md:text-[40px] font-semibold">
-                    Results for: "<?php echo esc_html(get_search_query()); ?>"
-                </h1>
+<div class="container mb-10">
+    <h1 class="text-black dark:text-white text-[32px] md:text-[40px] font-semibold">
+        <?php _e("Results for:", THEME); ?>
+        <?php echo esc_html(get_query_var('s')); ?>
+    </h1>
+</div>
             </div>
 
             <div class="space-y-8 md:space-y-12 container">
 
                 <?php if (have_posts()) : ?>
+
                     <?php $i = 0; ?>
 
-                    <?php while (have_posts()) : the_post(); ?>
-                        <?php if ($i % 6 === 0) : ?>
-                            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
-                        <?php endif; ?>
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
 
-                        <?php
-                        if ($i % 6 === 0) {
-                            include PATH . '/components/bento/elements/large-item.php';
-                        } else {
-                            include PATH . '/components/bento/elements/default-item.php';
-                        }
-                        ?>
+                        <?php while (have_posts()) : the_post(); ?>
 
-                        <?php $i++; ?>
+                            <?php
+                            if ($i % 6 === 0) {
+                                include PATH . '/components/bento/elements/large-item.php';
+                            } else {
+                                include PATH . '/components/bento/elements/default-item.php';
+                            }
+                            ?>
 
-                        <?php if ($i % 6 === 0) : ?>
-                            </div>
+                            <?php $i++; ?>
 
-                            <?php if ($i > 2) : ?>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10 mt-6">
-                            <?php endif; ?>
-                        <?php endif; ?>
+                        <?php endwhile; ?>
 
-                    <?php endwhile; ?>
-
-                    <?php if ($i % 6 !== 0) : ?>
-                        </div>
-                    <?php endif; ?>
+                    </div>
 
                 <?php else : ?>
+
                     <div class="relative flex min-h-[500px] w-full flex-col items-center justify-center overflow-hidden  px-4 py-16 text-center transition-colors duration-300">
                     
                     <div class="absolute inset-0 z-0 opacity-30 dark:opacity-10">
@@ -71,24 +65,24 @@ get_header();
 
                     <div class="relative z-10 max-w-md">
                         <h2 class="text-3xl font-semibold tracking-tight text-black dark:text-white/90 sm:text-4xl">
-                        Horizon is Empty
+                         <?php _e("Horizon is Empty", THEME); ?>
                         </h2>
                         <p class="mt-4 text-base leading-relaxed text-black/60 dark:text-white/50">
-                        We've combed through every corner of our archives, but found nothing. Maybe try different filters or check your spelling?
+                            <?php _e("We've combed through every corner of our archives, but found nothing. Maybe try different filters or check your spelling?", THEME); ?>
                         </p>
                     </div>
 
                     <div class="relative z-10 mt-10 flex flex-col items-center gap-4 sm:flex-row">
                         
                         <button class="inline-flex h-11 items-center justify-center rounded-full bg-black px-8 text-sm font-semibold text-white transition-all hover:bg-black/80 active:scale-95 dark:bg-white dark:text-black dark:hover:bg-white/90">
-                        Reset Filters
+                         <?php _e("Reset Filters", THEME); ?>
                         </button>
                         
                         <button class="group inline-flex h-11 items-center justify-center gap-2 rounded-full border-2 border-black bg-transparent px-8 text-sm font-semibold text-black transition-all hover:bg-black hover:text-white active:scale-95 dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-black">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
                         </svg>
-                        Go Back
+                        <?php _e("Go Back", THEME); ?>
                         </button>
 
                     </div>
@@ -98,6 +92,8 @@ get_header();
             </div>
 
         </section>
+
+        <?php require PATH . "/components/pagination/component.php"; ?>
     </div>
 </div>
 

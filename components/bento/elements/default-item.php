@@ -25,6 +25,8 @@ $excerpt   = get_the_excerpt($post_id);
 $date      = get_the_date('', $post_id);
 
 // Дані категорії
+$categories = get_the_category($post_id);
+$category_id = !empty($categories) ? $categories[0]->term_id : null;
 $category_svg  = get_inline_svg_category_from_acf($category_id);
 $category_name = get_cat_name($category_id);
 ?>

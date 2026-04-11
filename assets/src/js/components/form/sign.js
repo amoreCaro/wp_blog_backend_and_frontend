@@ -1,12 +1,9 @@
 export function signInit() {
-    // GET register form 
     const registerForm = document.querySelector('.form-register');
-
     if (!registerForm) return;
-    // GET submit button in form 
+
     const submit = registerForm.querySelector('button[type="submit"]');
 
-    // Remove validation error when user starts typing/changing input
     registerForm.addEventListener('input', (e) => {
         if (e.target.matches('.form__input, .form__input-checkbox')) {
             e.target.classList.remove('invalid');
@@ -16,7 +13,6 @@ export function signInit() {
     registerForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Validate form fields before sending request
         const inputs = registerForm.querySelectorAll(
             '.form__input, .form__input-checkbox'
         );
@@ -37,18 +33,21 @@ export function signInit() {
                 if (!value) {
                     input.classList.add('invalid');
                     valid = false;
+
                 } else if (
                     input.classList.contains('form__input-password') &&
                     value.length < 6
                 ) {
                     input.classList.add('invalid');
                     valid = false;
+
                 } else if (
                     input.classList.contains('form__input-email') &&
                     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
                 ) {
                     input.classList.add('invalid');
                     valid = false;
+
                 } else {
                     input.classList.remove('invalid');
                 }
@@ -57,40 +56,47 @@ export function signInit() {
 
         if (!valid) return;
 
-        submit.disabled = false;
-        
-        const formData = new FormData(registerForm);
-        formData.append('action', 'register_user');
+        submit.disabled = true;
 
         fetch('/wp-admin/admin-ajax.php', {
             method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(data => {
-                const successMsg = registerForm.querySelector('.popup-success');
-                const errorMsg = registerForm.querySelector('.popup-error');
-                const errorText = registerForm.querySelector('.popup-error__text');
-
-                if (data.success) {
-                    successMsg.classList.remove('hidden');
-                    errorMsg.classList.add('hidden');
-                    submit.disabled = true;
-                } else {
-                    const { field, message } = data.data;
-
-                    errorMsg.classList.remove('hidden');
-                    successMsg.classList.add('hidden');
-                    submit.disabled = false;
-
-                    if (field) {
-                        errorText.textContent = message;
-                    }
-                }
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                action: 'register_user',
+                username: registerForm.querySelector('.form__input-username')?.value || '',
+                email: registerForm.querySelector('.form__input-email')?.value || '',
+                password: registerForm.querySelector('.form__input-password')?.value || '',
+                agree: registerForm.querySelector('.form__input-checkbox')?.checked ? '1' : '0',
+                nonce: theme.nonce_register || ''
             })
-            .catch(err => {
-                console.error(err);
+        })
+        .then(res => res.json())
+        .then(data => {
+            const successMsg = registerForm.querySelector('.popup-success');
+            const errorMsg = registerForm.querySelector('.popup-error');
+            const errorText = registerForm.querySelector('.popup-error__text');
+
+            if (data.success) {
+                successMsg.classList.remove('hidden');
+                errorMsg.classList.add('hidden');
+
+                submit.disabled = true; 
+            } else {
+                const { message } = data.data;
+
+                errorMsg.classList.remove('hidden');
+                successMsg.classList.add('hidden');
+
+                errorText.textContent = message;
+
                 submit.disabled = false;
-            });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            submit.disabled = false;
+        });
     });
 }

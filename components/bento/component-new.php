@@ -1,9 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-// custom page => ACF template => default / reverse
-// перевірка через switch 
-
 $repeaters = get_field('bento_categories') ?? [];
 
 foreach ($repeaters as $item) {
@@ -14,7 +11,6 @@ foreach ($repeaters as $item) {
     $posts_count = 6;
 
     $bento_button = $item['bento_button'];
-
 
     $category_name       = $category_obj->name;
     $category_link       = get_term_link($category_obj);

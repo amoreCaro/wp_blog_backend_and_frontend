@@ -188,47 +188,77 @@ add_action('pre_get_posts', function($query) {
 });
 
 
-function theme_search_include_location($query) {
-    if (!is_admin() && $query->is_main_query() && $query->is_search()) {
+/**
+ * Extend WordPress search (pre_get_posts)
+ * - limit to posts
+ * - keep default search (title, content, excerpt)
+ * - add taxonomy search (category, tag, locations)
+ */
+add_action('pre_get_posts', function ($query) {
 
-        $query->set('post_type', ['post', 'location']);
-
-        // включає пошук по тегах
-        if (!empty($_GET['tag'])) {
-            $query->set('tag', sanitize_text_field($_GET['tag']));
-        }
-    }
-}
-add_action('pre_get_posts', 'theme_search_include_location');
-
-
-function theme_search_include_tags($search, $wp_query) {
-    global $wpdb;
-
-    if (empty($search) || ! $wp_query->is_search()) {
-        return $search;
+    // only frontend main search query
+    if (is_admin() || !$query->is_main_query() || !$query->is_search()) {
+        return;
     }
 
-    $term = $wp_query->get('s');
+    $search = trim($query->get('s'));
+    if (!$search) {
+        return;
+    }
 
-    $like = '%' . $wpdb->esc_like($term) . '%';
+    $slug = sanitize_title($search);
 
-    $search = "
-        AND (
-            {$wpdb->posts}.post_title LIKE '{$like}'
-            OR {$wpdb->posts}.post_content LIKE '{$like}'
-            OR EXISTS (
-                SELECT 1
-                FROM {$wpdb->term_relationships} tr
-                INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-                INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
-                WHERE tt.taxonomy = 'post_tag'
-                AND tr.object_id = {$wpdb->posts}.ID
-                AND t.name LIKE '{$like}'
-            )
-        )
-    ";
+    $tax_query = [
+        'relation' => 'OR'
+    ];
 
-    return $search;
-}
-add_filter('posts_search', 'theme_search_include_tags', 10, 2);
+    $has_tax = false;
+
+    // category
+    $cat = get_term_by('slug', $slug, 'category');
+    if ($cat) {
+        $tax_query[] = [
+            'taxonomy' => 'category',
+            'field'    => 'term_id',
+            'terms'    => $cat->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // tag
+    $tag = get_term_by('slug', $slug, 'post_tag');
+    if ($tag) {
+        $tax_query[] = [
+            'taxonomy' => 'post_tag',
+            'field'    => 'term_id',
+            'terms'    => $tag->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // custom taxonomy
+    $loc = get_term_by('slug', $slug, 'locations');
+    if ($loc) {
+        $tax_query[] = [
+            'taxonomy' => 'locations',
+            'field'    => 'term_id',
+            'terms'    => $loc->term_id,
+        ];
+        $has_tax = true;
+    }
+
+    // apply tax query
+    if ($has_tax) {
+        $query->set('tax_query', $tax_query);
+    }
+
+    // pagination (OK)
+    $query->set('posts_per_page', 12);
+
+    // IMPORTANT: do NOT break default search completely
+    if ($has_tax) {
+        $query->set('s', ''); // only if taxonomy matched
+    }
+
+    $query->set('post_type', 'post');
+});

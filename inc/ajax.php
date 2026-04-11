@@ -6,18 +6,14 @@ add_action('wp_ajax_nopriv_register_user', 'handle_register_user');
 add_action('wp_ajax_register_user', 'handle_register_user');
 
 function handle_register_user() {
-    $nonce = $_POST['nonce'] ?? '';
-
-    if (!wp_verify_nonce($nonce, 'register_user_action')) {
-        wp_send_json_error([
-            'message' => 'Invalid nonce'
-        ]);
+    if (!wp_verify_nonce($_POST['nonce'], 'register_user_nonce')) {
+        wp_die();
     }
 
     $username = (isset($_POST['username']) && !empty($_POST['username'])) ? sanitize_user($_POST['username']) : '';
     $email = (isset($_POST['email']) && !empty($_POST['email'])) ? sanitize_email($_POST['email']) : '';
     $password = $_POST['password'] ?? '';
-    $agree = isset($_POST['agreeToTermsAndConditions']) ? true : false;
+    $agree = isset($_POST['agree']) ? true : false;
 
     // Валідація
     if (empty($username)) {
@@ -48,7 +44,6 @@ function handle_register_user() {
         ]);
     }
 
-    // Перевірка чи існує користувач
     if (username_exists($username)) {
         wp_send_json_error([
             'field' => 'username',
@@ -81,22 +76,24 @@ function handle_register_user() {
         'message' => 'User created successfully',
         'user_id' => $user_id
     ]);
+
+    wp_die();
 }
 
+add_action('wp_ajax_nopriv_login_user', 'handle_login_user');
 add_action('wp_ajax_login_user', 'handle_login_user');
 
 function handle_login_user() {
-    $nonce = $_POST['nonce'] ?? '';
 
-    if (!wp_verify_nonce($nonce, 'login_user_action')) {
+    if (!wp_verify_nonce($_POST['nonce'], 'login_user_nonce')) {
         wp_send_json_error([
-            'message' => 'Invalid nonce'
+            'message' => 'Invalid request'
         ]);
     }
 
     $username = sanitize_user($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    $remember = isset($_POST['rememberMe']) ? true : false;
+    $remember = !empty($_POST['remember']);
 
     if (empty($username)) {
         wp_send_json_error([
@@ -122,7 +119,7 @@ function handle_login_user() {
 
     if (is_wp_error($user)) {
         wp_send_json_error([
-            'message' => $user->get_error_message()
+            'message' => 'Wrong username or password.'
         ]);
     }
 
@@ -134,7 +131,7 @@ function handle_login_user() {
         'user' => [
             'id' => $user->ID,
             'name' => $user->display_name,
-            'logged_in' => true
+            'logged_in' => true,
         ]
     ]);
 }

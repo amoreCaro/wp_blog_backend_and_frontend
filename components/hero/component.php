@@ -92,24 +92,34 @@ $decor_images_right = get_field('acf_decor_images_right');
         </h1>
         <?php endif; ?>
         
-        <?php if (! empty ( $search_placeholder ) ) : ?>
-            <form method="get" action="<?php echo esc_url( home_url( "/" ) ); ?>">                
-                <div class="relative max-w-2xl mx-auto group cursor-pointer">
-                    <span class="absolute inset-y-0 left-5 sm:left-6 flex items-center text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </span>
-                    <input 
-                        type="text" 
-                        name="s"
-                        placeholder="<?php echo esc_attr( $search_placeholder ); ?>"
-                        class="w-full py-4 sm:py-6 pl-12 sm:pl-16 pr-6 bg-white dark:bg-[#232125] border border-gray-500 dark:border-gray-600 rounded-full shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-none focus:outline-none focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 focus:border-gray-300 dark:focus:border-gray-500 transition-all text-base sm:text-lg text-gray-700 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                        >
-                </div>
-            </form>
-        <?php endif; ?>
-        <?php
+<?php if (!empty($search_placeholder)) : ?>
+
+<form method="get" action="<?php echo esc_url(home_url('/')); ?>">
+
+    <div class="relative max-w-2xl mx-auto group cursor-pointer">
+
+        <!-- ICON -->
+        <span class="absolute inset-y-0 left-5 flex items-center text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </span>
+
+        <!-- SEARCH INPUT -->
+        <input 
+            type="text"
+            name="s"   
+            value="<?php echo get_search_query(); ?>"
+            placeholder="<?php echo esc_attr($search_placeholder); ?>"
+            class="w-full py-4 pl-12 pr-6 bg-white dark:bg-[#232125] border rounded-full"
+        >
+
+    </div>
+
+</form>
+
+<?php endif; ?>   
+  <?php
         if ( ! empty($locations) && ! is_wp_error($locations) ) : ?>
             
             <div class="mt-6 md:mt-8 flex flex-wrap justify-center gap-2 sm:gap-4 text-[14px] sm:text-[15px] text-gray font-medium">
