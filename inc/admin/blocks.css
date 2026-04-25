@@ -7151,7 +7151,7 @@ p {
 
 .grid-container--type1 {
     grid-template-columns: repeat(6, 1fr);
-    grid-gap: 20px
+    grid-gap: 2rem
 }
 
 @media (max-width:479px) {
@@ -7730,9 +7730,8 @@ p {
         grid-row-start: span 2
     }
     .grid-container--type1 .product:first-child .product__picture {
-        max-width: 150px;
-        width: 100%;
-        height: 810px;
+        width: 15rem;
+        height: 81rem;
         min-height: initial;
         -ms-flex-item-align: end;
         align-self: flex-end
@@ -10974,9 +10973,7 @@ textarea.form-control {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 50%;
         flex: 0 0 50%;
-        max-width: 50%;
-        margin-bottom: 20px;
-
+        max-width: 50%
     }
     .col-md-8,
     .row-cols-md-3>* {
@@ -13255,9 +13252,6 @@ textarea.form-control {
 .breadcrumbs__list li:nth-last-child(2) .icon {
     color: #fff
 }
-.product__info-read {
-    padding-bottom: 60px !important;
-}
 
 .breadcrumbs__list li a {
     position: relative;
@@ -13327,7 +13321,7 @@ textarea.form-control {
 .product {
     border: 1px solid #474a54;
     display: flex;
-    padding: 0 0 0 40px;
+    padding: 0 0 0 4rem;
     overflow: hidden;
     pointer-events: auto;
     -webkit-transition: background-color .5s, border-color .5s;
@@ -13346,7 +13340,7 @@ textarea.form-control {
     -ms-flex-positive: 1;
     flex-grow: 1;
     padding-right: 6px;
-    padding-top: 60px;
+    padding-top: 6rem;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -13386,7 +13380,7 @@ textarea.form-control {
 .product__info-top p:not(:last-child),
 .product__info-top ul:not(:last-child),
 .recommended-block .product {
-    margin-bottom: 20px
+    margin-bottom: 2rem
 }
 
 .product__picture .spritespin,
@@ -13401,8 +13395,8 @@ textarea.form-control {
 
 .product__info p {
     font-weight: 400;
-    font-size: 16px;
-    line-height: 29px;
+    font-size: 1.6rem;
+    line-height: 1.6em;
     color: #fff
 }
 
@@ -13418,8 +13412,8 @@ textarea.form-control {
 }
 
 .product__picture {
-    width: 130px;
-    min-height: 380px;
+    width: 13rem;
+    min-height: 38rem;
     -ms-flex-negative: 0;
     flex-shrink: 0;
     position: relative;
@@ -13481,13 +13475,12 @@ textarea.form-control {
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    padding: 40px 20px 40px 40px
+    padding: 4rem 2rem 4rem 4rem
 }
 
 .product.product--horizontal .product__picture {
-    max-width: 220px;
-    width: 100%;
-    height: 220px;
+    width: 22rem;
+    height: 22rem;
     min-height: auto
 }
 
@@ -13537,12 +13530,8 @@ textarea.form-control {
 }
 
 .product.product--horizontal .product__info {
-    max-width: 280px;
+    max-width: 28rem;
     padding-top: 0
-}
-.acf-block-preview .section--nextIsVideo .container {
-    max-width: 1180px;
-    width: 100%;
 }
 
 @media (max-width:479px) {
@@ -13577,8 +13566,8 @@ textarea.form-control {
 }
 
 .product.product--horizontal .product__info-read {
-    padding-bottom: 0 !important;
-    padding-top: 40px
+    padding-bottom: 0;
+    padding-top: 4rem
 }
 
 @media (max-width:1219px) {
@@ -14535,32 +14524,16 @@ blockquote p {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    margin-bottom: 20px
 }
 
-
-.button:after {
-    content: ' ';
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    width: 0;
-    z-index: 1;
-    -webkit-transition: .5s;
-    /* transition: .5s; */
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0)
-}
-
-.button--blue:after {
-    background: #fff;
-}
-
-.categories {
-    margin-top: -15rem;
-    padding-top: 0;
-    padding-bottom: 95rem !important;
-}
 .leader-item {
     border: 1px solid #474a54;
     padding: 30px 40px;
@@ -14946,8 +14919,8 @@ blockquote p {
 .news-item__info-top span {
     font-family: "Bai Jamjuree";
     font-weight: 700;
-    font-size: 0.8rem;
-    line-height: 1rem;
+    font-size: 12px;
+    line-height: 12px;
     text-transform: uppercase;
     color: #2a5dea
 }
