@@ -77,7 +77,7 @@ function save_gnews_data( array $articles ) {
             continue; 
         }
 
-        //  create post 
+        //  create post
         $post_id = wp_insert_post( array(
             'post_title'   => $title,
             'post_excerpt' => $excerpt,
