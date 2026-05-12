@@ -21,7 +21,7 @@ $placeholder = get_template_directory_uri() . '/assets/src/images/placeholder.pn
 $title     = get_the_title($post_id);
 $link      = get_permalink($post_id);
 $thumbnail = get_the_post_thumbnail_url($post_id, 'large') ?: $placeholder;
-$excerpt   = get_the_excerpt($post_id);
+$excerpt    = get_the_excerpt($post_id);
 $date      = get_the_date('', $post_id);
 
 // Дані категорії
@@ -70,13 +70,13 @@ $has_custom_style = !empty($category_bg_color) || !empty($category_text_color);
 
         <?php if (!empty($title)) : ?>
             <h4 class="text-black dark:text-white text-lg md:text-2xl xl:text-[27px] font-semibold leading-snug mb-3">
-                <?php echo esc_html(trim_title_chars($title, 50)); ?>
+                <?php echo esc_html(trim_text_chars($title, 35)); ?>
             </h4>
         <?php endif; ?>
 
         <?php if (!empty($excerpt)) : ?>
             <p class="text-[#373A39] dark:text-[#C4C4C4] text-sm lg:text-lg lg:leading-[29.3px] mb-4 line-clamp-3">
-                <?php echo esc_html($excerpt); ?>
+                <?php echo esc_html(trim_text_chars($excerpt, 150)); ?>
             </p>
         <?php endif; ?>
 

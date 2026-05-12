@@ -203,7 +203,6 @@ add_action('pre_get_posts', function ($query) {
     $search = trim($query->get('s'));
     if (!$search) return;
 
-    // 🔥 зберігаємо оригінальний пошук
     set_query_var('original_search', $search);
 
     $slug = sanitize_title($search);

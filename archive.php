@@ -41,14 +41,14 @@ get_header();
                             </h2>
 
                             <?php if (!empty($category_svg)) : ?>
-                                <div class="decor <?= esc_attr($category_decor_type); ?> 
+                                <div class="decor <?php echo esc_attr($category_decor_type); ?> 
                                     -translate-y-1/2 w-14 h-14 flex items-center justify-center 
                                     rounded-t-full rounded-br-full 
                                     shadow-sm dark:shadow-none p-2 
                                     bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10"
                                     style="
-                                        <?= $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
-                                        <?= $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
+                                        <?php echo $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
+                                        <?php echo $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
                                     ">
                                     <?php echo $category_svg; ?>
                                 </div>
