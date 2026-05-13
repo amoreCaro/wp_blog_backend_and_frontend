@@ -4,96 +4,119 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Fetch posts from GNews API
-function get_gnews_data() {
+function gnews_import_articles( $query = 'travel', $lang = 'en', $country = 'us', $max = 1 ) {
 
-    $url = "https://gnews.io/api/v4/search?q=travel&lang=en&country=us&max=1&apikey=9ada3a7b19304eb54178900d655b3a28";
+    $api_key = '32d8badeeee982e0465cb7c4ebd3ffa7';
+    $url = "https://gnews.io/api/v4/search?q={$query}&lang={$lang}&country={$country}&max={$max}&apikey={$api_key}";
 
-    $response = wp_remote_get( $url );
+    $response = wp_remote_get( $url, [ 'timeout' => 15 ] );
 
     if ( is_wp_error( $response ) ) {
-        return null;
+        return;
     }
 
+    // get data
     $body = wp_remote_retrieve_body( $response );
+
+    // data to array
     $data = json_decode( $body, true );
 
+    // return 
     if ( empty( $data['articles'] ) ) {
-        return null;
+        return;
     }
 
-    return $data['articles'];
-}
+    //  get database
+    global $wpdb;
 
-/**
- * Save posts WordPress
- *
- */
-function save_gnews_data( array $articles ) {
+    //  set table to wp_gnews_response
+    $table = $wpdb->prefix . 'gnews_response';
+    $saved          = 0;
+    $skipped        = 0;
 
-    foreach ( $articles as $article ) {
-        $title = ( isset( $article['title'] ) && ! empty( $article['title'] ) )
-            ? sanitize_text_field( $article['title'] )
-            : '';
+    // get articles 
+    foreach ( $data['articles'] as $article ) {
 
-        $excerpt = ( isset( $article['description'] ) && ! empty( $article['description'] ) )
-            ? sanitize_textarea_field( $article['description'] )
-            : '';
+        $article_id = md5( $article['url'] );
 
-        $content = ( isset( $article['content'] ) && ! empty( $article['content'] ) )
-            ? wp_kses_post( $article['content'] )
-            : '';
+        $exists = $wpdb->get_var(
+            $wpdb->prepare( "SELECT id FROM {$table} WHERE article_id = %s", $article_id )
+        );
 
-        $thumbnail = ( isset( $article['image'] ) && ! empty( $article['image'] ) )
-            ? esc_url( $article['image'] )
-            : '';
-
-        $article_url = ( isset( $article['url'] ) && ! empty( $article['url'] ) )
-            ? esc_url( $article['url'] )
-            : '';
-
-        $published_at = ( isset( $article['publishedAt'] ) && ! empty( $article['publishedAt'] ) )
-            ? sanitize_text_field( $article['publishedAt'] )
-            : '';
-
-        $source_name = ( isset( $article['source']['name'] ) && ! empty( $article['source']['name'] ) )
-            ? sanitize_text_field( $article['source']['name'] )
-            : '';
-
-        $source_url = ( isset( $article['source']['url'] ) && ! empty( $article['source']['url'] ) )
-            ? esc_url( $article['source']['url'] )
-            : '';
-
-        $slug = sanitize_title( $title );
-
-        if ( empty( $slug ) ) {
+        if ( $exists ) {
+            $skipped++;
             continue;
         }
 
-        // Ckeck if post exists by slug
-        $existing_post = get_page_by_path( $slug, OBJECT, 'post' );
+        $insert_result = $wpdb->insert( $table, [
+            'article_id'     => $article_id,
+            'title'          => $article['title']             ?? '',
+            'description'    => $article['description']       ?? '',
+            'url'            => $article['url']               ?? '',
+            'image'          => $article['image']             ?? '',
+            'published_at'   => $article['publishedAt']       ?? '',
+            'lang'           => $article['lang']              ?? '',
+            'source_name'    => $article['source']['name']    ?? '',
+            'source_url'     => $article['source']['url']     ?? '',
+            'source_country' => $article['source']['country'] ?? '',
+            'content'        => $article['content']           ?? '',
+        ] );
 
-        if ( $existing_post ) {
-            continue; 
+        if ( $insert_result !== false ) {
+            $saved++;
         }
+    }
+    dd($data['articles']);
+    exit;
+}
 
-        //  create post
-        $post_id = wp_insert_post( array(
-            'post_title'   => $title,
-            'post_excerpt' => $excerpt,
-            'post_content' => $content,
-            'post_status'  => 'publish',
-            'post_type'    => 'post',
-        ) );
+function get_all_posts_from_gnews_db() {
+    global $wpdb;
 
-        if ( is_wp_error( $post_id ) || ! $post_id ) {
-            continue;
+    $table = $wpdb->prefix . 'gnews_response';
+
+    $posts = $wpdb->get_results("
+        SELECT *
+        FROM {$table}
+    ");
+
+    if (empty($posts)) {
+        return;
+    }
+
+foreach ($posts as $post) {
+
+    $slug = sanitize_title($post->title);
+
+    $existing = get_page_by_path($slug, OBJECT, 'post');
+
+    if ($existing) {
+        continue;
+    }
+
+    $post_id = wp_insert_post([
+        'post_title'   => wp_strip_all_tags($post->title),
+        'post_name'    => $slug,
+        'post_content' => $post->content ?? '',
+        'post_excerpt' => $post->description ?? '',
+        'post_status'  => 'publish',
+        'post_type'    => 'post',
+        'post_date'    => date('Y-m-d H:i:s', strtotime($post->published_at)),
+    ]);
+
+    if ($post_id && !empty($post->image)) {
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        $image_id = media_sideload_image($post->image, $post_id, null, 'id');
+
+        if (!is_wp_error($image_id)) {
+            set_post_thumbnail($post_id, $image_id);
         }
     }
 }
-
-$articles = get_gnews_data();
-
-if ( ! empty( $articles ) ) {
-    save_gnews_data( $articles );
 }
+
+gnews_import_articles();
+get_all_posts_from_gnews_db();
