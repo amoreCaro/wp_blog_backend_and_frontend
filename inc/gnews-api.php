@@ -37,35 +37,10 @@ function theme_create_api_response_table() {
         source_url TEXT NULL,
         source_country VARCHAR(10) NULL,
 
-        raw_response LONGTEXT NULL,
-
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         -- доступ по ID
         PRIMARY KEY (id),
         UNIQUE KEY article_id (article_id)
-
-        -- для відслідковування які пости записані у WP 
-        processed TINYINT(1) DEFAULT 0, 
-        -- Статус обробки статті:
-        -- 0 = ще не імпортовано в WordPress
-        -- 1 = вже створено WP пост
-
-        wp_post_id BIGINT(20) NULL,
-        -- ID створеного WordPress поста
-        -- використовується для зв'язку між API записом і WP постом
-
-        imported_at DATETIME NULL,
-        -- Дата і час, коли стаття була успішно імпортована в WordPress
-        -- використовується для логування та контролю імпорту
-
-        failed TINYINT(1) DEFAULT 0,
-        -- Статус помилки при імпорті:
-        -- 0 = без помилок
-        -- 1 = імпорт завершився помилкою
-
-        error_message TEXT NULL
-        -- Текст помилки, якщо імпорт не вдався
-        -- використовується для дебагу та аналізу причин failure
     ) $charset_collate;";
 
     // dbDelta cтворює таблицю
@@ -158,17 +133,10 @@ function theme_save_api_response_table( array $articles ) {
                 'image'          => $article['image'] ?? '',
                 'published_at'   => $article['publishedAt'] ?? '',
                 'lang'           => $article['lang'] ?? '',
+                'category_slug' => $article['category'] ?? '',
             ],
-            [
-                // Data formats
-                '%s', // article_id
-                '%s', // title
-                '%s', // description
-                '%s', // content
-                '%s', // url
-                '%s', // image
-                '%s', // published_at
-                '%s', // lang
+             [
+                '%s','%s','%s','%s','%s','%s','%s','%s','%s'
             ]
         );
         // Optional error log
@@ -184,16 +152,25 @@ function theme_save_api_response_table( array $articles ) {
 }
 
 // 3. Get articles from table
-function theme_get_api_response_table() {
+// треба додати фільтр по категорії
+function theme_get_api_response_table(string $category = '') {
+
     global $wpdb;
 
     $table = $wpdb->prefix . 'gnews_response';
 
-    return $wpdb->get_results("
-        SELECT * FROM gnews_response
-            WHERE processed = 0
-            LIMIT N
-    ");
+    if ($category) {
+        return $wpdb->get_results(
+            $wpdb->prepare("
+                SELECT *
+                FROM {$table}
+                WHERE category_slug = %s
+                ORDER BY id DESC
+            ", $category)
+        );
+    }
+
+    return $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC");
 }
 
 // 4. Check if post exists helper by slug
@@ -209,7 +186,7 @@ function theme_post_exists_by_slug( string $title ) {
 // 5. Sanitize article data before insert
 function theme_sanitize_post( object $article ) {
     $title = isset( $article->title ) && !empty( $article->title ) ? wp_strip_all_tags( $article->title ) : '';
-    $category = isset( $article->category ) && ! empty( $article->category ) ? sanitize_text_field( $article->category ) : '';
+    $category = isset( $article->category_slug ) && ! empty( $article->category_slug ) ? sanitize_text_field( $article->category_slug ) : '';
     $slug = isset( $article->title ) && !empty( $article->title ) ? sanitize_title( $article->title ) : '';
     $content = isset( $article->content ) && !empty( $article->content ) ?  theme_clean_content( wp_kses_post( $article->content ) ) : '';
     $excerpt = isset( $article->description ) && !empty( $article->description ) ? sanitize_text_field( $article->description ) : '';
@@ -233,17 +210,29 @@ function theme_sanitize_post( object $article ) {
 // 6. Create WP post
 function theme_insert_post(array $article) {
 
-    // 1. Create post
-    $post_data = [
+    if (!empty($article['id'])) {
+
+        $existing = get_posts([
+            'post_type'      => 'post',
+            'meta_key'       => 'external_id',
+            'meta_value'     => $article['id'],
+            'fields'         => 'ids',
+            'posts_per_page' => 1,
+        ]);
+
+        if (!empty($existing)) {
+            return false;
+        }
+    }
+
+    $post_id = wp_insert_post([
         'post_title'   => $article['title'] ?? '',
         'post_name'    => $article['slug'] ?? '',
         'post_content' => $article['content'] ?? '',
         'post_excerpt' => $article['excerpt'] ?? '',
         'post_status'  => 'publish',
         'post_type'    => 'post',
-    ];
-
-    $post_id = wp_insert_post($post_data);
+    ]);
 
     if (is_wp_error($post_id) || !$post_id) {
         return false;
@@ -251,31 +240,22 @@ function theme_insert_post(array $article) {
 
     if (!empty($article['category'])) {
 
-        $category_slug = sanitize_title($article['category']);
+        $term = get_term_by('slug', $article['category'], 'category');
 
-        // check if term exists
-        $term = get_term_by('slug', $category_slug, 'category');
-
-        // if not exists → create it
         if (!$term) {
-            $term_result = wp_insert_term($category_slug, 'category');
+            $term = wp_insert_term($article['category'], 'category');
 
-            if (!is_wp_error($term_result)) {
-                $term_id = $term_result['term_id'];
-            } else {
-                $term_id = 0;
-            }
+            $term_id = is_array($term) ? $term['term_id'] : 0;
         } else {
             $term_id = $term->term_id;
         }
 
-        // assign category to post
         if (!empty($term_id)) {
             wp_set_post_terms($post_id, [$term_id], 'category');
         }
     }
 
-    // 3. Featured image
+    // thumbnail
     if (!empty($article['image'])) {
         theme_insert_post_thumbnail(
             $post_id,
@@ -284,12 +264,10 @@ function theme_insert_post(array $article) {
         );
     }
 
-    // 4. Meta
     if (!empty($article['published_at'])) {
         update_post_meta($post_id, 'published_at', $article['published_at']);
     }
 
-    // 5. Optional: prevent duplicates (store external ID if exists)
     if (!empty($article['id'])) {
         update_post_meta($post_id, 'external_id', $article['id']);
     }
@@ -321,16 +299,21 @@ function theme_insert_post_thumbnail( int $post_id, string $image, string $title
 }
 
 function theme_posts_save($posts) {
-    if ( ! empty( $posts ) ) {
-        foreach ( $posts as $post ) {
-            if ( theme_post_exists_by_slug( $post->title ) ) {
-                continue;
-            }
 
-            // виконується для нових постів для тих що були створені не виконується
-            $post_object = theme_sanitize_post( $post );
-            $post_id = theme_insert_post( $post_object );
+    if (empty($posts)) {
+        return;
+    }
+
+    foreach ($posts as $post) {
+
+        // якщо пост вже існує — пропускаємо
+        if (theme_post_exists_by_slug($post->title)) {
+            continue;
         }
+
+        // sanitize + insert
+        $post_object = theme_sanitize_post($post);
+        theme_insert_post($post_object);
     }
 }
 
@@ -362,7 +345,6 @@ function theme_get_posts_categories() {
 
     return $category_slugs;
 }
-
 
 /**
  * Get posts from API by category
@@ -418,54 +400,50 @@ function theme_api_posts_by_category(
     return $data['articles'] ?? [];
 }
 
-
-function theme_handler_posts_by_categories(
-    int $limit = 12,
-    int $paged = 1,
-    string $lang = 'en'
-){
-
-    $categories = theme_get_posts_categories();
-
-    if (empty($categories)) {
-        return;
+function theme_handler_posts_by_categories() {
+    if ( ! isset($_POST['nonce']) ||  ! wp_verify_nonce($_POST['nonce'], 'theme_nonce') ) {
+        wp_die();
     }
 
-    foreach ($categories as $category_slug) {
+    $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
+    $limit    = isset($_POST['limit']) ? intval($_POST['limit']) : 5;
+    $paged    = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    $lang     = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : 'en';
 
-        $posts = theme_api_posts_by_category(
-            $category_slug,
-            $limit,
-            $paged,
-            $lang
-        );
-
-        if (empty($posts)) {
-            continue;
-        }
-
-        foreach ($posts as $post) {
-
-            // додаємо категорію прямо тут
-            $post['category'] = $category_slug;
-
-            // санітизація
-            $post_object = (object) $post;
-
-            $clean_post = theme_sanitize_post($post_object);
-
-            theme_insert_post($clean_post);
-        }
+    if (!$category) {
+        wp_send_json_error(['message' => 'Missing category']);
+        wp_die();
     }
+
+    // 1. API
+    $posts = theme_api_posts_by_category($category, $limit, $paged, $lang);
+
+    if (empty($posts)) {
+        wp_send_json_success([
+            'category' => $category,
+            'inserted' => [],
+            'skipped'  => [],
+            'count'    => 0
+        ]);
+        wp_die();
+    }
+
+    // add category to posts
+    foreach ($posts as $key => $post) {
+        $posts[$key]->category = $category;
+    }
+    // 2. save to DB table (raw api log)
+    theme_save_api_response_table($posts);
+
+    // 3. save WP posts + get result
+    $save_result = theme_posts_save($posts);
+
+    wp_die();
 }
 
-// $data = theme_handler_posts_by_categories(
-//     1,      
-//     1,      
-//     'en'   
-// );
+add_action('wp_ajax_theme_get_posts_by_category', 'theme_handler_posts_by_categories');
 
-
+// 8. import run
 // function theme_handler_api() {
 //     $api = theme_get_api();
 //     theme_save_api_response_table( $api );
