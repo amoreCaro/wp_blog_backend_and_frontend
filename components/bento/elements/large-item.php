@@ -25,7 +25,7 @@ $category_name = get_cat_name($category_id);
 <a href="<?php echo esc_url($link); ?>" 
    class="group lg:col-span-3 bg-neutral-950 dark:bg-[#121216] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
 
-    <div class="h-[300px] sm:h-[400px] lg:h-auto lg:w-[55%] overflow-hidden relative">
+    <div class="h-[300px] sm:h-[350px] lg:h-auto lg:w-[55%] overflow-hidden relative">
         <picture class="block w-full h-full">
             <img 
                 data-src="<?php echo esc_url($thumbnail); ?>" 
@@ -40,8 +40,7 @@ $category_name = get_cat_name($category_id);
         </div>
     </div>
 
-    <div class="lg:w-[45%] p-8 md:p-12 lg:p-12 flex flex-col 
-        text-black relative h-full">
+    <div class="lg:w-[45%] p-8 md:p-12 lg:p-12 flex flex-col text-black relative min-h-[300px] md:h-full">
 
         <?php if (!empty($category_name)) : ?>
         <span class="border flex items-center gap-2 text-white  text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-6">
@@ -59,13 +58,13 @@ $category_name = get_cat_name($category_id);
 
         <?php if (!empty($title)) : ?>
             <h4 class="text-2xl md:text-4xl lg:text-5xl font-medium leading-[1.15] mb-6 text-white">
-                <?php echo esc_html(trim_title_chars($title, 50)); ?>
+                <?php echo esc_html(trim_text_chars($title, 35)); ?>
             </h4>
         <?php endif; ?>
 
         <?php if (!empty($excerpt)) : ?>
             <p class="text-[#C4C4C4] text-base md:text-[18px] lg:text-[20px] leading-relaxed mb-10 font-light">
-                <?php echo esc_html($excerpt); ?>
+                <?php echo esc_html(trim_text_chars ($excerpt, 200)); ?>
             </p>
         <?php endif; ?>
 

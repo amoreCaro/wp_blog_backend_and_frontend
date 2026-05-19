@@ -92,33 +92,32 @@ $decor_images_right = get_field('acf_decor_images_right');
         </h1>
         <?php endif; ?>
         
-<?php if (!empty($search_placeholder)) : ?>
+        <?php if (!empty($search_placeholder)) : ?>
+        <form method="get" action="<?php echo esc_url(home_url('/')); ?>">
 
-<form method="get" action="<?php echo esc_url(home_url('/')); ?>">
+            <div class="relative max-w-2xl mx-auto group cursor-pointer">
 
-    <div class="relative max-w-2xl mx-auto group cursor-pointer">
+                <!-- ICON -->
+                <span class="absolute inset-y-0 left-5 flex items-center text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </span>
 
-        <!-- ICON -->
-        <span class="absolute inset-y-0 left-5 flex items-center text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </span>
+                <!-- SEARCH INPUT -->
+                <input 
+                    type="text"
+                    name="s"   
+                    value="<?php echo get_search_query(); ?>"
+                    placeholder="<?php echo esc_attr($search_placeholder); ?>"
+                    class="w-full py-4 pl-12 pr-6 bg-white dark:bg-[#232125] border rounded-full"
+                >
 
-        <!-- SEARCH INPUT -->
-        <input 
-            type="text"
-            name="s"   
-            value="<?php echo get_search_query(); ?>"
-            placeholder="<?php echo esc_attr($search_placeholder); ?>"
-            class="w-full py-4 pl-12 pr-6 bg-white dark:bg-[#232125] border rounded-full"
-        >
+            </div>
 
-    </div>
+        </form>
 
-</form>
-
-<?php endif; ?>   
+        <?php endif; ?>   
   <?php
         if ( ! empty($locations) && ! is_wp_error($locations) ) : ?>
             

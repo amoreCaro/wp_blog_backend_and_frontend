@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $title   = get_the_title();
 $date    = get_the_date( 'F j, Y' );
-$excerpt = get_the_excerpt() ?: '';
+$excerpt = has_excerpt() ? get_the_excerpt() : '';
 ?>
 
 <?php if ( ! empty( $title ) ) : ?>

@@ -42,3 +42,31 @@ function theme_register_styles()
 }
 
 add_action('wp_enqueue_scripts', 'theme_register_styles');
+
+add_action('admin_enqueue_scripts', function ($hook) {
+
+    if ($hook !== 'toplevel_page_api-sync') return;
+
+    wp_enqueue_script(
+        'api',
+        get_template_directory_uri() . '/assets/src/js/components/api.js',
+        [],
+        null,
+        true
+    );
+
+    wp_localize_script('api', 'apiSyncData', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('api_sync_nonce'),
+    ]);
+});
+
+add_filter('script_loader_tag', function ($tag, $handle) {
+
+    if ($handle === 'api') {
+        return str_replace('<script ', '<script type="module" ', $tag);
+    }
+
+    return $tag;
+
+}, 10, 2);

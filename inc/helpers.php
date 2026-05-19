@@ -249,22 +249,34 @@ if (!function_exists('theme_get_post_image')) {
         return $thumbnail ? $thumbnail : $placeholder;
     }
 }
+if (!function_exists('theme_query_posts')) {
+    function theme_query_posts($args = []) {
 
-function theme_query_posts($args = []) {
+        $default = [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+        ];
 
-    $default = [
-        'post_type' => 'post',
-        'post_status' => 'publish',
-    ];
+        $args = array_merge($default, $args);
 
-    $args = array_merge($default, $args);
-
-    return new WP_Query($args);
+        return new WP_Query($args);
+    }
 }
 
-function trim_title_chars($title, $max = 50) {
-    if (mb_strlen($title) > $max) {
-        return mb_substr($title, 0, $max) . '...';
+
+if (!function_exists('trim_text_chars')) {
+    function trim_text_chars($title, $max = 50) {
+        if (mb_strlen($title) > $max) {
+            return mb_substr($title, 0, $max) . '...';
+        }
+        return $title;
     }
-    return $title;
+}
+
+
+if (!function_exists('remove_excerpt_more')) {
+function remove_excerpt_more($more) {
+    return ''; // нічого не додає в кінці
+}
+add_filter('excerpt_more', 'remove_excerpt_more');
 }

@@ -6,7 +6,7 @@
     <?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?>
 <?php wp_body_open(); ?>
 
 <?php
@@ -47,13 +47,13 @@ if (isset($nav_menu['header_menu'])) {
         <?php if ($logo_text || $logo_img_id) : ?>
 
             <a
-                href="<?= esc_url(home_url('/')); ?>"
+                href="<?php echo esc_url(home_url('/')); ?>"
                 class="flex items-center flex-shrink-0 no-underline text-black dark:text-white transition-opacity"
             >
 
                 <?php if ($logo_img_id) : ?>
 
-                    <?= wp_get_attachment_image(
+                    <?php echo wp_get_attachment_image(
                         $logo_img_id,
                         'full',
                         false,
@@ -66,7 +66,7 @@ if (isset($nav_menu['header_menu'])) {
                 <?php elseif ($logo_text) : ?>
 
                     <span class="text-xl font-semibold tracking-tight">
-                        <?= esc_html($logo_text); ?>
+                        <?php echo esc_html($logo_text); ?>
                     </span>
 
                 <?php endif; ?>

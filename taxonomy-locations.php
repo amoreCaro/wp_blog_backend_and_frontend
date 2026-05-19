@@ -9,10 +9,13 @@ $location_description = $term->description;
 $post_count = $term->count;
 
 // Query
+$paged = get_query_var('paged') ? get_query_var('paged') : 1;
+
 $query_args = [
-    'post_type' => 'post',
-    'posts_per_page' => -1,
-    'tax_query' => [
+    'post_type'      => 'post',
+    'posts_per_page' => 12,
+    'paged'          => $paged,
+    'tax_query'      => [
         [
             'taxonomy' => 'locations',
             'field'    => 'slug',
@@ -97,6 +100,7 @@ get_header();
 
         </section>
         <?php 
+        require PATH . "/components/pagination/component.php";
         require PATH . "/components/burger-menu/component.php";
         ?>
     </div>
