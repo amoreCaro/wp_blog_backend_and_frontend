@@ -14,18 +14,15 @@ export function apiInit() {
         status.textContent = 'Ready...';
     }
 
-    function setProgress(p, text = '') {
-        fill.style.width = `${p}%`;
-        percent.textContent = `${p}%`;
-        if (text) status.textContent = text;
-    }
-
-    function setDone(stats) {
-        fill.style.width = '100%';
-        percent.textContent = '100%';
-
-        status.textContent =
-            `Fetched: ${stats.fetched}, Inserted: ${stats.inserted}, Skipped: ${stats.skipped}`;
+    function setLoading(isLoading) {
+        if (isLoading) {
+            fill.style.width = '50%';
+            percent.textContent = '';
+            status.textContent = 'Loading...';
+        } else {
+            fill.style.width = '100%';
+            percent.textContent = '100%';
+        }
     }
 
     async function run() {
@@ -35,7 +32,7 @@ export function apiInit() {
         btn.classList.add('disabled');
 
         resetUI();
-        setProgress(40, 'Syncing...');
+        setLoading(true);
 
         try {
             const response = await fetch(apiSyncData.ajax_url, {
@@ -43,6 +40,7 @@ export function apiInit() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 },
+                // двні які відправляються на бекенд
                 body: new URLSearchParams({
                     action: 'theme_get_posts_by_category',
                     nonce: apiSyncData.nonce,
@@ -53,25 +51,31 @@ export function apiInit() {
                 })
             });
 
-            const data = await response.json();
+            const raw = await response.text();
+            console.log('RAW RESPONSE:', raw);
 
-            if (!data.success) {
-                throw new Error(data?.data?.message || 'API error');
+            let data;
+            try {
+                data = JSON.parse(raw);
+            } catch (e) {
+                throw new Error('Invalid JSON response');
             }
 
-            const payload = data.data;
+            if (!data.success) {
+                status.textContent = data?.data?.message || 'Error occurred';
+                fill.style.width = '0%';
+                return;
+            }
 
-            setProgress(80, 'Saving posts...');
-            
-            setTimeout(() => {
-                setDone(payload.stats);
-            }, 300);
+            const articles = data.data?.articles || [];
+
+            setLoading(false);
+            status.textContent = `${articles.length} items loaded`;
 
         } catch (err) {
-            console.error(err);
-            status.textContent = err.message || 'Request failed';
+            console.error('Request failed:', err);
+            status.textContent = 'Request failed';
             fill.style.width = '0%';
-            percent.textContent = '0%';
         } finally {
             btn.disabled = false;
             btn.classList.remove('disabled');

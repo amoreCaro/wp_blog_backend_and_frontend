@@ -69,8 +69,8 @@ $has_custom_style = !empty($category_bg_color) || !empty($category_text_color);
         <?php endif; ?>
 
         <?php if (!empty($title)) : ?>
-            <h4 class="text-black dark:text-white text-lg md:text-2xl xl:text-[27px] font-semibold leading-snug mb-3">
-                <?php echo esc_html(trim_text_chars($title, 35)); ?>
+            <h4 class="text-black dark:text-white text-lg md:text-2xl xl:text-[24px] font-semibold leading-snug mb-3">
+                <?php echo esc_html(trim_text_chars($title, 36)); ?>
             </h4>
         <?php endif; ?>
 

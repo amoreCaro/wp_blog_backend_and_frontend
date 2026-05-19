@@ -298,25 +298,51 @@ function theme_insert_post_thumbnail( int $post_id, string $image, string $title
     return $attachment_id;
 }
 
-function theme_posts_save($posts) {
+function theme_posts_save(array $posts) {
+
+    $result = [
+        'inserted' => [],
+        'skipped'  => [],
+        'errors'   => [],
+    ];
 
     if (empty($posts)) {
-        return;
+        return $result;
     }
 
     foreach ($posts as $post) {
 
-        // якщо пост вже існує — пропускаємо
-        if (theme_post_exists_by_slug($post->title)) {
+        $title = $post['title'] ?? '';
+
+        if (!$title) {
+            $result['errors'][] = 'Missing title';
             continue;
         }
 
-        // sanitize + insert
-        $post_object = theme_sanitize_post($post);
-        theme_insert_post($post_object);
-    }
-}
+        // duplicate
+        if (theme_post_exists_by_slug($title)) {
+            $result['skipped'][] = $title;
+            continue;
+        }
 
+        // convert array -> object
+        $post_object = (object) $post;
+
+        // sanitize
+        $sanitized = theme_sanitize_post($post_object);
+
+        // insert
+        $post_id = theme_insert_post($sanitized);
+
+        if ($post_id) {
+            $result['inserted'][] = $title;
+        } else {
+            $result['errors'][] = $title;
+        }
+    }
+
+    return $result;
+}
 // helper function to remove … [3928 chars] from content
 function theme_clean_content( string $content ) {
 
@@ -377,7 +403,7 @@ function theme_api_posts_by_category(
         $category_name = 'general';
     }
 
-    $api_key = '9ada3a7b19304eb54178900d655b3a28';
+    $api_key = '32d8badeeee982e0465cb7c4ebd3ffa7';
 
     $url = add_query_arg([
         'category' => $category_name,
@@ -401,7 +427,7 @@ function theme_api_posts_by_category(
 }
 
 function theme_handler_posts_by_categories() {
-    if ( ! isset($_POST['nonce']) ||  ! wp_verify_nonce($_POST['nonce'], 'theme_nonce') ) {
+    if ( ! wp_verify_nonce($_POST['nonce'], 'api_sync_nonce')) {
         wp_die();
     }
 
@@ -429,19 +455,24 @@ function theme_handler_posts_by_categories() {
     }
 
     // add category to posts
-    foreach ($posts as $key => $post) {
-        $posts[$key]->category = $category;
+    foreach ($posts as &$post) {
+        $post['category_slug'] = $category;
     }
+
     // 2. save to DB table (raw api log)
     theme_save_api_response_table($posts);
 
     // 3. save WP posts + get result
     $save_result = theme_posts_save($posts);
 
-    wp_die();
+    wp_send_json_success([
+    'articles' => $posts,
+    'count'    => count($posts),
+]);
 }
 
 add_action('wp_ajax_theme_get_posts_by_category', 'theme_handler_posts_by_categories');
+
 
 // 8. import run
 // function theme_handler_api() {

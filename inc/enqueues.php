@@ -57,10 +57,9 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
     wp_localize_script('api', 'apiSyncData', [
         'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce'    => wp_create_nonce('theme_nonce'),
+        'nonce'    => wp_create_nonce('api_sync_nonce'),
     ]);
 });
-
 
 add_filter('script_loader_tag', function ($tag, $handle) {
 
