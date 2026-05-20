@@ -206,7 +206,6 @@ function theme_sanitize_post( object $article ) {
     ];
 }
 
-
 // 6. Create WP post
 function theme_insert_post(array $article) {
 
@@ -240,18 +239,30 @@ function theme_insert_post(array $article) {
 
     if (!empty($article['category'])) {
 
-        $term = get_term_by('slug', $article['category'], 'category');
+        $category_slugs = array_filter(
+            array_map('trim', explode(',', $article['category']))
+        );
 
-        if (!$term) {
-            $term = wp_insert_term($article['category'], 'category');
+        $term_ids = [];
 
-            $term_id = is_array($term) ? $term['term_id'] : 0;
-        } else {
-            $term_id = $term->term_id;
+        foreach ($category_slugs as $slug) {
+
+            $term = get_term_by('slug', $slug, 'category');
+
+            if (!$term) {
+                $new_term = wp_insert_term($slug, 'category');
+                $term_id  = is_array($new_term) ? $new_term['term_id'] : 0;
+            } else {
+                $term_id = $term->term_id;
+            }
+
+            if (!empty($term_id)) {
+                $term_ids[] = $term_id;
+            }
         }
 
-        if (!empty($term_id)) {
-            wp_set_post_terms($post_id, [$term_id], 'category');
+        if (!empty($term_ids)) {
+            wp_set_post_terms($post_id, $term_ids, 'category');
         }
     }
 
@@ -343,6 +354,7 @@ function theme_posts_save(array $posts) {
 
     return $result;
 }
+
 // helper function to remove … [3928 chars] from content
 function theme_clean_content( string $content ) {
 
@@ -372,9 +384,7 @@ function theme_get_posts_categories() {
     return $category_slugs;
 }
 
-/**
- * Get posts from API by category
- */
+// Get posts from API by category
 function theme_api_posts_by_category(
     string $category_name,
     int $limit = 1,
@@ -426,60 +436,65 @@ function theme_api_posts_by_category(
     return $data['articles'] ?? [];
 }
 
+// handler
 function theme_handler_posts_by_categories() {
+
     if ( ! wp_verify_nonce($_POST['nonce'], 'api_sync_nonce')) {
         wp_die();
     }
 
-    $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
-    $limit    = isset($_POST['limit']) ? intval($_POST['limit']) : 5;
-    $paged    = isset($_POST['page']) ? intval($_POST['page']) : 1;
-    $lang     = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : 'en';
+    $categories = isset($_POST['categories']) ? (array) $_POST['categories'] : [];
+    $categories = array_map( 'sanitize_text_field', $categories );
+    $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 2;
+    $paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    $lang = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : 'en';
 
-    if (!$category) {
-        wp_send_json_error(['message' => 'Missing category']);
-        wp_die();
-    }
-
-    // 1. API
-    $posts = theme_api_posts_by_category($category, $limit, $paged, $lang);
-
-    if (empty($posts)) {
-        wp_send_json_success([
-            'category' => $category,
-            'inserted' => [],
-            'skipped'  => [],
-            'count'    => 0
+    if (empty($categories)) {
+        wp_send_json_error([
+            'message' => 'Missing categories'
         ]);
-        wp_die();
     }
 
-    // add category to posts
-    foreach ($posts as &$post) {
-        $post['category_slug'] = $category;
+    $all_posts = [];
+
+    foreach ($categories as $category) {
+
+        $posts = theme_api_posts_by_category(
+            $category,
+            $limit,
+            $paged,
+            $lang
+        );
+
+        if (empty($posts)) {
+            continue;
+        }
+
+        foreach ($posts as &$post) {
+
+            $post['category_slug'] = $category;
+        }
+
+        unset($post);
+
+
+        // Save DB
+        theme_save_api_response_table($posts);
+
+        // Create WP posts
+        theme_posts_save($posts);
+
+        $all_posts = array_merge(
+            $all_posts,
+            $posts
+        );
     }
-
-    // 2. save to DB table (raw api log)
-    theme_save_api_response_table($posts);
-
-    // 3. save WP posts + get result
-    $save_result = theme_posts_save($posts);
 
     wp_send_json_success([
-    'articles' => $posts,
-    'count'    => count($posts),
-]);
+        'articles'   => $all_posts,
+        'count'      => count($all_posts),
+        'categories' => $categories
+    ]);
 }
 
 add_action('wp_ajax_theme_get_posts_by_category', 'theme_handler_posts_by_categories');
-
-
-// 8. import run
-// function theme_handler_api() {
-//     $api = theme_get_api();
-//     theme_save_api_response_table( $api );
-//     $posts = theme_get_api_response_table();
-//     theme_posts_save($posts);
-// }
-
-// theme_handler_api();

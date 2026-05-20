@@ -46,7 +46,7 @@ $has_custom_style = !empty($category_bg_color) || !empty($category_text_color);
         </picture>
     </div>
 
-    <div class="p-6 md:p-8 flex flex-col flex-grow">
+    <div class="p-6 md:p-6 flex flex-col flex-grow">
 
         <?php if (!empty($category_name)) : ?>
             <span class="

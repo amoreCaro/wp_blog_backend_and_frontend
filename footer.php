@@ -32,7 +32,7 @@ if (isset($nav_menu['footer_menu'])) {
 }
 ?>
 
-<footer class="footer py-[100px] flex items-center bg-white dark:bg-black justify-center border-t dark:border-[#1a1a1a]">
+<footer class="footer py-[100px] flex items-center bg-white dark:bg-black justify-center">
     <div class="container mx-auto flex flex-col items-center gap-5 text-center">
 
         <!-- Disclaimer -->

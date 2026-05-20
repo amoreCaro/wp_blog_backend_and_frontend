@@ -83,7 +83,7 @@ function theme_add_global_settings() {
 
 }
 
-add_action('admin_menu', function () {
+ add_action('admin_menu', function () {
     add_menu_page(
         'API Sync',
         'API Sync',
@@ -94,18 +94,7 @@ add_action('admin_menu', function () {
         25
     );
 });
- 
-add_action('admin_menu', function () {
-    add_menu_page(
-        'API Sync',
-        'API Sync',
-        'manage_options',
-        'api-sync',
-        'theme_api_sync_page',
-        'dashicons-update',
-        25
-    );
-});
+
 
 function theme_api_sync_page() {
     $categories = get_categories([
@@ -135,15 +124,81 @@ function theme_api_sync_page() {
                 </div>
 
                 <div class="api__field">
-                    <label class="api__field-label" for="api-category"><?php _e("Category", THEME); ?></label>
+                    <label class="api__field-label">
+                        <?php _e("Category", THEME); ?>
+                    </label>
 
-                    <select class="api__field-select" id="api-category">
-                        <?php foreach ($categories as $cat): ?>
-                            <option value="<?php echo esc_attr($cat->slug); ?>">
-                                <?php echo esc_html($cat->name); ?>
+                    <div class="api__multiselect">
+
+                        <div class="api__multiselect-trigger">
+
+                            <div class="api__multiselect-chips">
+                                <span class="api__multiselect-placeholder">
+                                    <?php _e("Select categories...", THEME); ?>
+                                </span>
+                            </div>
+
+                            <span class="api__multiselect-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M6 9l6 6l6 -6" />
+                                </svg>
+                            </span>
+
+                        </div>
+
+                        <div class="api__multiselect-dropdown">
+
+                            <?php foreach ($categories as $category): ?>
+
+                                <div
+                                    class="api__multiselect-option"
+                                    data-slug="<?php echo esc_attr($category->slug); ?>"
+                                    data-name="<?php echo esc_attr($category->name); ?>"
+                                >
+
+                                    <div class="api__multiselect-checkbox">
+                                        <span class="api__multiselect-checkmark">✓</span>
+                                    </div>
+
+                                    <span><?php echo esc_html($category->name); ?></span>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        </div>
+
+                    </div>
+
+                    <select id="api-category" name="api-category[]" multiple style="display:none">
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo esc_attr($category->slug); ?>">
+                                <?php echo esc_html($category->name); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+
+                    <!-- Chip template -->
+                    <div id="chip-template" class="is-hidden">
+                        <div class="api__multiselect-chip">
+                            <span class="api__multiselect-chip-name"></span>
+
+                            <button type="button" class="api__multiselect-chip-remove">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <button id="start-sync" class="api__btn" type="button">
@@ -192,114 +247,97 @@ function theme_api_sync_page() {
 
         </div>
     </div>
- 
+
     <style>
-/* =========================
-   BLOCK: API
-========================= */
+        .is-hidden { display: none; }
+
 .api {
-    max-width: 860px;
-    padding: 20px;
+    width: 100%;
+    max-width: 980px;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
-/* HEADER */
 .api__header {
     margin-bottom: 20px;
 }
 
 .api__title {
-    font-size: 22px;
     font-weight: 600;
-    margin: 0 0 4px;
+    margin: 0 0 6px;
     color: #1a1917;
+    line-height: 28px;
 }
 
 .api__subtitle {
-    font-size: 13px;
-    color: #8a8880;
     margin: 0;
+    color: #8a8880;
+    line-height: 20px;
 }
 
-/* GRID */
 .api__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
 
-/* CARD */
 .api__card {
-    background: #ffffff;
+    width: 100%;
+    background: #fff;
     border: 1px solid #e2dff0;
     border-radius: 16px;
     padding: 20px;
+    box-sizing: border-box;
 }
 
-/* CARD HEADER */
 .api__card-header {
     margin-bottom: 16px;
 }
 
 .api__badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 6px;
     color: #7c6fff;
     background: #f0eeff;
     border: 1px solid #d9d4ff;
-    padding: 3px 8px;
-    border-radius: 6px;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 .api__card-title {
-    font-size: 15px;
+    margin: 0 0 6px;
     font-weight: 600;
-    margin: 0;
+    line-height: 22px;
     color: #1a1917;
 }
 
 .api__card-desc {
-    font-size: 12px;
+    margin: 0;
     color: #9a9793;
-    margin: 2px 0 0;
+    line-height: 18px;
 }
 
-/* FIELD */
 .api__field {
     margin-bottom: 16px;
 }
 
 .api__field-label {
     display: block;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #3d3a4a;
+    font-weight: 600;
+    line-height: 18px;
 }
 
-.api__field-select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #d9d4ff;
-    border-radius: 10px;
-    background: #faf9ff;
-    font-size: 13px;
-    outline: none;
-    cursor: pointer;
-}
-
-/* BUTTON */
 .api__btn {
     width: 100%;
-    padding: 12px 14px;
+    height: 44px;
     background: #2d2c2b;
     color: #fff;
     border: none;
     border-radius: 10px;
-    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.15s ease;
@@ -309,12 +347,204 @@ function theme_api_sync_page() {
     background: #1a1917;
 }
 
-.api__btn.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.api__multiselect {
+    position: relative;
+    width: 100%;
 }
 
-/* PROGRESS */
+/* TRIGGER */
+.api__multiselect-trigger {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid #d9d4ff;
+    border-radius: 10px;
+    background: #faf9ff;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    box-sizing: border-box;
+    user-select: none;
+    color: #3d3a4a;
+    transition: 0.15s ease;
+}
+
+.api__multiselect-trigger:hover {
+    border-color: #7c6fff;
+}
+
+.api__multiselect-trigger.open {
+    border-color: #7c6fff;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: #fff;
+}
+
+/* CHIPS AREA */
+.api__multiselect-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+}
+
+/* PLACEHOLDER */
+.api__multiselect-placeholder {
+    color: #9a9793;
+    line-height: 20px;
+}
+
+/* CHIP */
+.api__multiselect-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    height: 24px;
+    padding: 0 8px;
+
+    background: #f0eeff;
+    border: 1px solid #d9d4ff;
+    color: #534ab7;
+
+    border-radius: 6px;
+    flex-shrink: 0;
+    max-width: 160px;
+    min-width: 0;
+}
+
+.api__multiselect-chip-name {
+    font-size: 12px; line-height: 12px; font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.api__multiselect-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 8px;
+    width: 100%;
+    height: 8px;
+    flex-shrink: 0;
+    padding: 0;
+
+    cursor: pointer;
+    color: #7c6fff;
+    transition: 0.15s ease;
+    background: transparent;
+    border: none;
+    line-height: 1;
+}
+
+.api__multiselect-chip-remove:hover {
+    color: #534ab7;
+}
+
+.api__multiselect-arrow {
+    max-width: 16px;
+    width: 100%;
+    height: 16px;
+    flex-shrink: 0;
+    color: #7c6fff;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.api__multiselect-arrow.open {
+    transform: rotate(180deg);
+}
+
+.api__multiselect-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #faf9ff;
+    border: 1px solid #d9d4ff;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 1000;
+    max-height: 220px;
+    overflow-y: auto;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.api__multiselect-dropdown.open {
+    display: block;
+}
+
+/* OPTION */
+.api__multiselect-option {
+    min-height: 42px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+    color: #3d3a4a;
+
+    transition: background 0.1s ease;
+}
+
+.api__multiselect-option:hover {
+    background: #f0eeff;
+}
+
+.api__multiselect-option.selected {
+    background: #f6f5ff;
+    color: #534ab7;
+}
+
+.api__multiselect-checkbox {
+    max-width: 16px;
+    width: 100%;
+    height: 16px;
+    min-width: 16px;   
+    border-radius: 4px;
+
+    border: 1px solid #d9d4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.api__multiselect-option.selected .api__multiselect-checkbox {
+    background: #7c6fff;
+    border-color: #7c6fff;
+}
+
+.api__multiselect-checkmark {
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    display: none;
+}
+
+.api__multiselect-option.selected .api__multiselect-checkmark {
+    display: block;
+}
+
 .api__progress {
     margin-bottom: 16px;
 }
@@ -337,17 +567,16 @@ function theme_api_sync_page() {
 .api__progress-meta {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    line-height: 18px;
     color: #9a9793;
 }
 
 .api__progress-percent {
-    font-size: 20px;
     font-weight: 600;
-    color: #1a1917;
+    color: #534ab7;
 }
 
-/* STATS */
+
 .api__stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -362,29 +591,27 @@ function theme_api_sync_page() {
 }
 
 .api__stat-value {
-    font-size: 16px;
     font-weight: 600;
-    color: #1a1917;
+    line-height: 22px;
 }
 
 .api__stat-label {
-    font-size: 11px;
     color: #9a9793;
+    line-height: 18px;
 }
 
-/* MODIFIERS */
 .api__stat--success .api__stat-value {
     color: #6d28d9;
 }
 
-.api__stat--warn .api__stat-value {
-    color: #1a1917;
+.hidden {
+    display: none;
 }
     </style>
- 
+
+
     <?php
 }
- 
 /* -------------------------------------------------
  * Locations taxonomy
  * ------------------------------------------------- */
@@ -544,8 +771,6 @@ add_action('pre_get_posts', function ($query) {
 
     if ($has_tax) {
         $query->set('tax_query', $tax_query);
-
-        // 🔥 важливо: прибираємо search щоб був OR
         $query->set('s', '');
     }
 

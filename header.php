@@ -15,13 +15,13 @@
  */
 
 $logo_group    = get_field('header_logo', 'option');
-$buttons_group = get_field('header_buttons', 'option');
 
 $logo_text   = $logo_group['header_logo_txt'] ?? '';
 $logo_img_id = $logo_group['header_logo_img'] ?? '';
 
-$buttons = $buttons_group['header_buttons'] ?? [];
+$buttons_group = get_field('header_buttons', 'option');
 
+$buttons = $buttons_group ? [$buttons_group] : [];
 /**
  * MENU
  */
