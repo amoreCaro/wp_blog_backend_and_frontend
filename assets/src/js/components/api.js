@@ -1,116 +1,155 @@
 export function apiInit() {
+    const form = document.querySelector('.api__form');
+    if (!form) return;
 
-    const btn = document.getElementById('start-sync');
-    const select = document.getElementById('api-category');
+    const submit = form.querySelector('.api__btn');
+    const limitInput = form.querySelector('.api__posts-per-category');
+    const select = form.querySelector('#api__category');
+    const chipsContainer = form.querySelector('.api__multiselect-chips');
 
-    const fill = document.getElementById('api-progress-fill');
-    const percent = document.getElementById('sync-percent');
+    const fill = document.querySelector('.api__progress-fill');
+    const percent = document.querySelector('.api__progress-percent');
     const status = document.querySelector('.api__progress-status');
 
-    if (!btn || !select || !fill || !percent || !status) return;
+    const plus = form.querySelector('.api__button--increment');
+    const minus = form.querySelector('.api__button--decrement');
+
+    const MAX_POSTS = 100;
 
     function resetUI() {
         fill.style.width = '0%';
         percent.textContent = '0%';
-        status.textContent = 'Ready...';
+        status.textContent = 'Ready';
     }
 
-    function setLoading(isLoading) {
+    function setLoading() {
+        fill.style.width = '40%';
+        status.textContent = 'Loading...';
+    }
 
-        if (isLoading) {
-            fill.style.width = '50%';
-            percent.textContent = '';
-            status.textContent = 'Loading...';
-            return;
-        }
-
+    function setDone(count) {
         fill.style.width = '100%';
         percent.textContent = '100%';
+        status.textContent = `${count} items loaded`;
     }
 
-    async function run() {
+    function setError(message) {
+        status.textContent = message;
+        fill.style.width = '0%';
+    }
 
-        const selectedCategories = [...select.selectedOptions]
-            .map(option => option.value);
+    function getSelectedCategories() {
+        return [...select.selectedOptions].map(opt => opt.value);
+    }
 
-        if (!selectedCategories.length) {
-            status.textContent = 'Select categories';
-            return;
+    function getLimit() {
+        return parseInt(limitInput.value, 10) || 1;
+    }
+
+    function validate() {
+        const categories = getSelectedCategories();
+        const total = categories.length * getLimit();
+
+        let isValid = true;
+
+        if (!categories.length) {
+            isValid = false;
         }
 
-        btn.disabled = true;
-        btn.classList.add('disabled');
+        if (total > MAX_POSTS) {
+            setError(`Limit exceeded: ${total}/${MAX_POSTS} posts`);
+            isValid = false;
+        }
+
+        submit.disabled = !isValid;
+
+        if (isValid) {
+            status.textContent = 'Ready';
+        }
+
+        return isValid;
+    }
+
+    function runValidation() {
+        return validate();
+    }
+
+    plus?.addEventListener('click', () => {
+        const next = getLimit() + 1;
+        const categoriesCount = getSelectedCategories().length;
+
+        limitInput.value = next;
+
+        if (categoriesCount * next > MAX_POSTS) {
+            setError(`Max limit reached (${MAX_POSTS})`);
+        }
+
+        runValidation();
+    });
+
+    minus?.addEventListener('click', () => {
+        limitInput.value = Math.max(1, getLimit() - 1);
+        runValidation();
+    });
+
+    select.addEventListener('change', runValidation);
+
+    limitInput.addEventListener('input', runValidation);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!runValidation()) return;
+
+        const categories = getSelectedCategories();
+        const limit = getLimit();
+
+        const body = new URLSearchParams({
+            action: 'theme_get_posts_by_category',
+            nonce: apiSyncData.nonce,
+            limit,
+            page: 1,
+            lang: 'en'
+        });
+
+        categories.forEach(cat => {
+            body.append('categories[]', cat);
+        });
+
+        submit.disabled = true;
+        submit.classList.add('is-loading');
 
         resetUI();
-        setLoading(true);
+        setLoading();
 
         try {
-
-            const response = await fetch(apiSyncData.ajax_url, {
+            const res = await fetch(apiSyncData.ajax_url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 },
-
-                body: new URLSearchParams([
-                    ['action', 'theme_get_posts_by_category'],
-                    ['nonce', apiSyncData.nonce],
-                    ['limit', 2],
-                    ['page', 1],
-                    ['lang', 'en'],
-
-                    ...selectedCategories.map(category => [
-                        'categories[]',
-                        category
-                    ])
-                ])
+                body
             });
 
-            const raw = await response.text();
-
-            console.log('RAW RESPONSE:', raw);
-
-            let data;
-
-            try {
-                data = JSON.parse(raw);
-            } catch (error) {
-                throw new Error('Invalid JSON response');
-            }
+            const data = await res.json();
 
             if (!data.success) {
-                status.textContent =
-                    data?.data?.message || 'Error occurred';
-
+                setError(data?.data?.message || 'Error occurred');
                 fill.style.width = '0%';
-
                 return;
             }
 
             const articles = data?.data?.articles || [];
+            setDone(articles.length);
 
-            console.log('ARTICLES:', articles);
-
-            setLoading(false);
-
-            status.textContent =
-                `${articles.length} items loaded`;
-
-        } catch (error) {
-
-            console.error('Request failed:', error);
-
-            status.textContent = 'Request failed';
-            fill.style.width = '0%';
-
+        } catch (err) {
+            console.error(err);
+            setError('Request failed');
         } finally {
-
-            btn.disabled = false;
-            btn.classList.remove('disabled');
+            submit.disabled = false;
+            submit.classList.remove('is-loading');
         }
-    }
-
-    btn.addEventListener('click', run);
+    });
 }
 
 apiInit();
@@ -123,7 +162,7 @@ export function multiSelect() {
     const trigger = container.querySelector('.api__multiselect-trigger');
     const chips = container.querySelector('.api__multiselect-chips');
     const dropdown = container.querySelector('.api__multiselect-dropdown');
-    const select = document.getElementById('api-category');
+    const select = document.getElementById('api__category');
     const placeholder = container.querySelector('.api__multiselect-placeholder');
     const arrow = container.querySelector('.api__multiselect-arrow');
 
@@ -227,3 +266,47 @@ export function multiSelect() {
 }
 
 multiSelect();
+
+export function postsPerCategory() {
+    const input = document.querySelector(".api_posts-per-category");
+    const incrementBtn = document.querySelector(".api__button--increment");
+    const decrementBtn = document.querySelector(".api__button--decrement");
+
+    if (!input || !incrementBtn || !decrementBtn) return;
+
+    // 🔒 захист від повторної ініціалізації
+    if (input.dataset.counterInit === "1") return;
+    input.dataset.counterInit = "1";
+
+    const MIN = Number(input.min ?? 0);
+
+    function getValue() {
+        const value = Number.parseInt(input.value, 10);
+        return Number.isNaN(value) ? MIN : value;
+    }
+
+    function setValue(value) {
+        input.value = value;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    function increment() {
+        setValue(getValue() + 1);
+    }
+
+    function decrement() {
+        setValue(Math.max(MIN, getValue() - 1));
+    }
+
+    incrementBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        increment();
+    });
+
+    decrementBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        decrement();
+    });
+}
+
+postsPerCategory();

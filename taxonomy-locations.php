@@ -42,7 +42,7 @@ get_header();
 
 <div class="main-page">
     <div class="lg:pb-[100px] pb-[50px] bg-white dark:bg-black">
-        <section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
+        <section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] dark:bg-gradient-to-b dark:from-[#0B0B0D] dark:to-[#111114] lg:py-[80px] py-[50px] px-5 xl:px-10 2xl:px-0">
 
             <!-- HEADER -->
             <?php if (!empty($location_name)) : ?>

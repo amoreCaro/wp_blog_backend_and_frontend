@@ -17,7 +17,8 @@ foreach ($repeaters as $item) {
     $category_svg        = get_inline_svg_category_from_acf($category_obj->term_id);
     $category_bg_color   = get_field('category_bg', $category_obj) ?: '';
     $category_text_color = get_field('category_text_color', $category_obj) ?: '';
-    $category_decor_type = get_field('category_decor_type', $category_obj) ?: 'default';
+    $category_decor_type = get_field('category_decor_type', 'category_' . $category_obj->term_id);
+
     $category_id = $category_obj->term_id;
 
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
