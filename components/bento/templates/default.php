@@ -1,7 +1,7 @@
 <?php
 if (!defined('ABSPATH')) exit;
 ?>
-<section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] dark:bg-gradient-to-b dark:from-[#0B0B0D] dark:to-[#111114]lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
+<section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] dark:bg-gradient-to-b dark:from-[#0B0B0D] dark:to-[#111114] lg:py-[80px] py-[50px] px-5 xl:px-10 2xl:px-0">
 
     <!-- HEADER -->
     <div class="flex items-center mb-12 justify-between container">
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) exit;
             <?php endif; ?>
 
             <?php if ($category_svg) : ?>
-                <div class="decor <?php esc_attr($category_decor_type); ?> -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full p-2 bg-white/90 dark:bg-white/10 text-black dark:text-white backdrop-blur-md border border-black/5 dark:border-white/10 shadow-sm dark:shadow-none"
+                <div class="decor <?php echo esc_attr($category_decor_type); ?> -translate-y-1/2 w-14 h-14 flex items-center justify-center rounded-t-full rounded-br-full p-2 bg-white/90 dark:bg-white/10 text-black dark:text-white backdrop-blur-md border border-black/5 dark:border-white/10 shadow-sm dark:shadow-none"
                     style="
                         <?php echo $category_bg_color ? 'background-color:' . esc_attr($category_bg_color) . ';' : ''; ?>
                         <?php echo $category_text_color ? 'color:' . esc_attr($category_text_color) . ';' : ''; ?>
@@ -52,7 +52,7 @@ if (!defined('ABSPATH')) exit;
     <div class="space-y-8 md:space-y-12 container">
 
         <!-- Two -->
-        <div class="reverse grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10">
 
         <?php
         foreach ($posts_in_cat as $index => $post) {

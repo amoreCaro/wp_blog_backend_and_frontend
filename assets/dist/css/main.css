@@ -442,22 +442,22 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-.container{
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-}
 .\!container{
   width: 100% !important;
   margin-right: auto !important;
   margin-left: auto !important;
 }
+.container{
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
 @media (min-width: 1280px){
-  .container{
-    max-width: 1280px;
-  }
   .\!container{
     max-width: 1280px !important;
+  }
+  .container{
+    max-width: 1280px;
   }
 }
 .h-article {
@@ -815,9 +815,6 @@ video {
 }
 .pointer-events-none{
   pointer-events: none;
-}
-.visible{
-  visibility: visible;
 }
 .fixed{
   position: fixed;
@@ -1297,14 +1294,17 @@ video {
 .flex-1{
   flex: 1 1 0%;
 }
-.flex-shrink-0{
-  flex-shrink: 0;
-}
 .flex-shrink{
   flex-shrink: 1;
 }
+.flex-shrink-0{
+  flex-shrink: 0;
+}
 .shrink-0{
   flex-shrink: 0;
+}
+.shrink{
+  flex-shrink: 1;
 }
 .flex-grow{
   flex-grow: 1;
@@ -2059,6 +2059,21 @@ video {
 .pt-\[92px\]{
   padding-top: 92px;
 }
+.pt-\[60px\]{
+  padding-top: 60px;
+}
+.pt-\[0px\]{
+  padding-top: 0px;
+}
+.pt-\[90px\]{
+  padding-top: 90px;
+}
+.pt-\[100px\]{
+  padding-top: 100px;
+}
+.pt-\[80px\]{
+  padding-top: 80px;
+}
 .text-left{
   text-align: left;
 }
@@ -2564,9 +2579,6 @@ video {
   --tw-backdrop-blur: blur(4px);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
-.backdrop-filter{
-  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-}
 .transition{
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -2617,9 +2629,6 @@ video {
 }
 .ease-out{
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-.ease-in-out{
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .\[animation-delay\:200ms\]{
   animation-delay: 200ms;
@@ -3841,6 +3850,9 @@ video {
   .md\:p-8{
     padding: 2rem;
   }
+  .md\:p-6{
+    padding: 1.5rem;
+  }
   .md\:px-9{
     padding-left: 2.25rem;
     padding-right: 2.25rem;
@@ -4048,6 +4060,24 @@ video {
   .lg\:pt-\[46px\]{
     padding-top: 46px;
   }
+  .lg\:pt-\[0px\]{
+    padding-top: 0px;
+  }
+  .lg\:pt-\[600px\]{
+    padding-top: 600px;
+  }
+  .lg\:pt-\[60px\]{
+    padding-top: 60px;
+  }
+  .lg\:pt-\[100px\]{
+    padding-top: 100px;
+  }
+  .lg\:pt-\[90px\]{
+    padding-top: 90px;
+  }
+  .lg\:pt-\[20px\]{
+    padding-top: 20px;
+  }
   .lg\:text-5xl{
     font-size: 3rem;
     line-height: 1;
@@ -4109,6 +4139,9 @@ video {
   }
   .xl\:text-\[22px\]{
     font-size: 22px;
+  }
+  .xl\:text-\[24px\]{
+    font-size: 24px;
   }
   .xl\:text-\[27px\]{
     font-size: 27px;

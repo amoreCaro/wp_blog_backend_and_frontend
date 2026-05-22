@@ -11,7 +11,7 @@ get_header();
 
         <?php require PATH . "/components/media-menu/component.php"; ?>
 
-        <section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] lg:pt-[120px] pt-[120px] lg:pb-[100px] pb-[50px] px-5 xl:px-10 2xl:px-0">
+        <section class="bento-grid mx-auto bg-[#F6F5F8] dark:bg-[#0B0B0D] dark:bg-gradient-to-b dark:from-[#0B0B0D] dark:to-[#111114] lg:py-[80px] py-[50px] px-5 xl:px-10 2xl:px-0">
             <div class="container mb-10">
                 <h1 class="text-black dark:text-white text-[32px] md:text-[40px] font-semibold">
                     <?php _e("Results for:", THEME); ?>

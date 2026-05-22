@@ -50,38 +50,6 @@ function theme_create_api_response_table() {
 // use action after_switch_theme because theme_create_gnews_response_table is used only in this theme
 add_action('after_switch_theme', 'theme_create_api_response_table');
 
-// 1. Get posts from API 
-// returns an array with $data['articles']
-function theme_get_api( array $props = [] ) {
-
-    $defaults = [
-        'query'   => 'google',
-        'lang'    => 'en',
-        'country' => 'us',
-        'max'     => 10,
-    ];
-
-    $props = array_merge( $defaults, $props );
-    $api_key = 'd1e76397f969d22c20873b9d955a31bc';
-
-    $url = "https://gnews.io/api/v4/search?q={$props['query']}&lang={$props['lang']}&country={$props['country']}&max={$props['max']}&apikey={$api_key}";
-
-    $response = wp_remote_get( $url, [ 'timeout' => 15 ] );
-
-    if ( is_wp_error( $response ) ) {
-        return [];
-    }
-
-    $body = wp_remote_retrieve_body( $response );
-    $data = json_decode( $body, true );
-
-    if ( empty( $data['articles'] ) ) {
-        return [];
-    }
-
-    return $data['articles'];
-}
-
 // 2. Save GNews API articles into wp_gnews_response database table
 function theme_save_api_response_table( array $articles ) {
     // Get access to WordPress database
@@ -206,7 +174,6 @@ function theme_sanitize_post( object $article ) {
     ];
 }
 
-
 // 6. Create WP post
 function theme_insert_post(array $article) {
 
@@ -240,18 +207,30 @@ function theme_insert_post(array $article) {
 
     if (!empty($article['category'])) {
 
-        $term = get_term_by('slug', $article['category'], 'category');
+        $category_slugs = array_filter(
+            array_map('trim', explode(',', $article['category']))
+        );
 
-        if (!$term) {
-            $term = wp_insert_term($article['category'], 'category');
+        $term_ids = [];
 
-            $term_id = is_array($term) ? $term['term_id'] : 0;
-        } else {
-            $term_id = $term->term_id;
+        foreach ($category_slugs as $slug) {
+
+            $term = get_term_by('slug', $slug, 'category');
+
+            if (!$term) {
+                $new_term = wp_insert_term($slug, 'category');
+                $term_id  = is_array($new_term) ? $new_term['term_id'] : 0;
+            } else {
+                $term_id = $term->term_id;
+            }
+
+            if (!empty($term_id)) {
+                $term_ids[] = $term_id;
+            }
         }
 
-        if (!empty($term_id)) {
-            wp_set_post_terms($post_id, [$term_id], 'category');
+        if (!empty($term_ids)) {
+            wp_set_post_terms($post_id, $term_ids, 'category');
         }
     }
 
@@ -343,6 +322,7 @@ function theme_posts_save(array $posts) {
 
     return $result;
 }
+
 // helper function to remove … [3928 chars] from content
 function theme_clean_content( string $content ) {
 
@@ -372,9 +352,7 @@ function theme_get_posts_categories() {
     return $category_slugs;
 }
 
-/**
- * Get posts from API by category
- */
+// Get posts from API by category
 function theme_api_posts_by_category(
     string $category_name,
     int $limit = 1,
@@ -426,60 +404,85 @@ function theme_api_posts_by_category(
     return $data['articles'] ?? [];
 }
 
+// This function will collect all data from $_POST request 
+function theme_collect_request_params() {
+
+}
+
+// This function will validate all data like max_posts value calculations etc
+function theme_validate_api_request_data() {
+
+}
+
+// This function will send response to frontend 
+function theme_send_posts_response() {
+
+}
+
+// Get posts from API by category
 function theme_handler_posts_by_categories() {
-    if ( ! wp_verify_nonce($_POST['nonce'], 'api_sync_nonce')) {
+
+    if ( ! isset($_POST['nonce']) || ! wp_verify_nonce($_POST['nonce'], 'api_sync_nonce') ) { 
         wp_die();
     }
 
-    $category = isset($_POST['category']) ? sanitize_text_field($_POST['category']) : '';
-    $limit    = isset($_POST['limit']) ? intval($_POST['limit']) : 5;
-    $paged    = isset($_POST['page']) ? intval($_POST['page']) : 1;
-    $lang     = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : 'en';
+    // винести бізнес логіку в окрему функцію масив категорій і max_posts
+    $MAX_POSTS = 100;
 
-    if (!$category) {
-        wp_send_json_error(['message' => 'Missing category']);
-        wp_die();
+    // винести парсинг даних
+    // вивід результатів 
+    $categories = isset($_POST['categories'])  ? (array) $_POST['categories'] : [];
+    $categories = array_map('sanitize_text_field', $categories);
+    $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 1;
+    $paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    $lang = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : 'en';
+
+    if (empty($categories)) {
+        wp_send_json_error([
+            'message' => 'Missing categories'
+        ], 400);
     }
 
-    // 1. API
-    $posts = theme_api_posts_by_category($category, $limit, $paged, $lang);
+    $total_requested = count($categories) * $limit;
 
-    if (empty($posts)) {
-        wp_send_json_success([
-            'category' => $category,
-            'inserted' => [],
-            'skipped'  => [],
-            'count'    => 0
-        ]);
-        wp_die();
+    if ($total_requested > $MAX_POSTS) {
+        wp_send_json_error([
+            'message' => "API limit exceeded: max {$MAX_POSTS} posts allowed. You requested {$total_requested}."
+        ], 400);
     }
 
-    // add category to posts
-    foreach ($posts as &$post) {
-        $post['category_slug'] = $category;
+    $all_posts = [];
+
+    foreach ($categories as $category) {
+
+        $posts = theme_api_posts_by_category(
+            $category,
+            $limit,
+            $paged,
+            $lang
+        );
+
+        if (!empty($posts)) {
+
+            foreach ($posts as &$post) {
+                $post['category_slug'] = $category;
+            }
+            unset($post);
+
+            theme_save_api_response_table($posts);
+            theme_posts_save($posts);
+
+            $all_posts = array_merge($all_posts, $posts);
+        }
     }
-
-    // 2. save to DB table (raw api log)
-    theme_save_api_response_table($posts);
-
-    // 3. save WP posts + get result
-    $save_result = theme_posts_save($posts);
 
     wp_send_json_success([
-    'articles' => $posts,
-    'count'    => count($posts),
-]);
+        'articles'   => $all_posts,
+        'count'      => count($all_posts),
+        'categories' => $categories,
+        'limit'      => $limit,
+        'total'      => $total_requested
+    ]);
 }
 
 add_action('wp_ajax_theme_get_posts_by_category', 'theme_handler_posts_by_categories');
-
-
-// 8. import run
-// function theme_handler_api() {
-//     $api = theme_get_api();
-//     theme_save_api_response_table( $api );
-//     $posts = theme_get_api_response_table();
-//     theme_posts_save($posts);
-// }
-
-// theme_handler_api();
