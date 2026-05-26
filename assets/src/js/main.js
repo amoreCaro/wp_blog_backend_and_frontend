@@ -1,3 +1,5 @@
+import { slider } from "./components/slider.js";
+import { postVideo } from "./components/postVideo.js";
 import { estimateSinglePostReadTime } from "./components/estimateSinglePostReadTime.js";
 import { calculateTotalPages } from "./components/calculateTotalPages.js";
 import { burgerMenu } from "./components/burgerMenu.js";
@@ -12,7 +14,10 @@ import { formTabs } from './components/form-tabs.js';
 import { loginInit } from './components/form/login.js';
 import { signInit } from './components/form/sign.js';
 
+
 document.addEventListener('DOMContentLoaded', function() {
+  slider();
+  postVideo();
   lazyLoadImages();
   video();
   themeToggle();

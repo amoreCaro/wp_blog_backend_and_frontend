@@ -104,7 +104,31 @@ function theme_api_sync_page() {
     ?>
 
     <div class="api">
+        <div class="notice-stack">
 
+            <div class="notice__item notice__item--error is-hidden">
+                <div class="notice__content">
+                    <p class="notice__text">
+                        <strong>Критична помилка</strong> — текст повідомлення.
+                    </p>
+                </div>
+
+                <button class="notice__btn notice__btn-close" type="button"></button>
+                <div class="notice__progress"></div>
+            </div>
+
+            <div class="notice__item notice__item--warning is-hidden">
+                <div class="notice__content">
+                    <p class="notice__text">
+                        <strong>Увага</strong> — текст повідомлення.
+                    </p>
+                </div>
+
+                <button class="notice__btn notice__btn-close" type="button"></button>
+                <div class="notice__progress"></div>
+            </div>
+
+        </div>
         <!-- HEADER -->
         <div class="api__header">
             <h1 class="api__title"><?php _e("API Synchronization", THEME); ?></h1>
@@ -303,6 +327,185 @@ function theme_api_sync_page() {
     </div>
 
     <style>
+        /* =========================
+   STACK
+========================= */
+.notice-stack {
+  position: fixed;
+  top: 30px;
+  right: 0;
+  z-index: 99999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  max-width: 500px;
+  width: 100%;
+  padding-right: 12px;
+}
+
+/* =========================
+   ITEM BASE STATE
+========================= */
+.notice__item {
+  position: relative;
+  display: flex;
+  gap: 12px;
+
+  padding: 12px 14px;
+  border-radius: 8px;
+
+  border: 1px solid;
+  border-left-width: 4px;
+
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+
+  /* hidden animation state by default */
+  opacity: 0;
+  transform: translateX(120%);
+  pointer-events: none;
+
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+/* =========================
+   VISIBLE STATE (NO is-visible CLASS)
+========================= */
+.notice__item:not(.is-hidden) {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* =========================
+   HARD HIDE
+========================= */
+.is-hidden {
+  display: none;
+}
+
+/* =========================
+   TYPES
+========================= */
+.notice__item--error {
+  background: #fdf2f2;
+  border-color: #f5c6c6;
+  border-left-color: #d63638;
+}
+
+.notice__item--warning {
+  background: #fffaeb;
+  border-color: #f5e090;
+  border-left-color: #dba617;
+}
+
+.notice__item--success {
+  background: #f0fdf4;
+  border-color: #b7f7c2;
+  border-left-color: #16a34a;
+}
+
+/* =========================
+   CONTENT
+========================= */
+.notice__content {
+  flex: 1;
+}
+
+.notice__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1f1f1f;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+.notice__btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.notice__btn:hover {
+  opacity: 1;
+}
+
+.notice__btn svg {
+  color: #555;
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+.notice__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  height: 3px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.06);
+
+  overflow: hidden;
+}
+
+.notice__progress::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  transform-origin: left;
+  animation: notice-progress 4s linear forwards;
+}
+
+/* =========================
+   PROGRESS COLORS
+========================= */
+.notice__item--error .notice__progress::after {
+  background: #d63638;
+}
+
+.notice__item--warning .notice__progress::after {
+  background: #dba617;
+}
+
+.notice__item--success .notice__progress::after {
+  background: #16a34a;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes notice-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
 
         .is-hidden { display: none; }
 

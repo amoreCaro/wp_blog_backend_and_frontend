@@ -1,16 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-/**
- * Цей template отримує дані з component-new.php
- * Очікує змінні:
- * $post
- * $category_id
- * $item_index
- */
-
-if (!isset($post)) return;
-
 setup_postdata($post);
 
 // Дані поста
@@ -30,29 +20,19 @@ $category_id = !empty($categories) ? $categories[0]->term_id : null;
 $category_svg  = get_inline_svg_category_from_acf($category_id);
 $category_name = get_cat_name($category_id);
 $has_custom_style = !empty($category_bg_color) || !empty($category_text_color);
+$avatar_url = get_avatar_url($author_id, ['size' => 28]);
+$username = get_the_author_meta('display_name', $author_id);
+// $has_gallery = true;
+// $has_video = true;
 ?>
 
 <a href="<?php echo esc_url($link); ?>"  
-   class="group flex flex-col bg-white dark:bg-[#121216] overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]?>">
+   class="post-card post-card--slider group flex flex-col bg-white dark:bg-[#121216] overflow-hidden rounded-[24px] shadow-sm w-full min-h-[450px]">
 
-    <div class="h-[200px] md:h-[185px] overflow-hidden">
-        <picture class="block w-full h-full">
-            <img 
-                data-src="<?php echo esc_url($thumbnail); ?>" 
-                src="<?php echo esc_url($thumbnail); ?>" 
-                alt="<?php echo esc_attr($title); ?>" 
-                loading="lazy"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-        </picture>
-    </div>
-
-    <div class="p-6 md:p-6 flex flex-col flex-grow">
-
+    <div class="h-[200px] md:h-[185px] overflow-hidden relative">
         <?php if (!empty($category_name)) : ?>
-            <span class="
-                flex items-center gap-2 text-[14px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-4
-                <?php echo $has_custom_style ? '' : 'border border-black dark:border-white text-black dark:text-white'; ?>
-            "
+            <span class="top-4 left-4 z-10 absolute flex items-center gap-2 text-[12px] leading-[16px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-4
+                <?php echo $has_custom_style ? '' : 'border border-black dark:border-white text-black dark:text-white'; ?>"
             style="
                 <?php if (!empty($category_bg_color)) echo 'background-color:' . esc_attr($category_bg_color) . ';'; ?>
                 <?php if (!empty($category_text_color)) echo 'color:' . esc_attr($category_text_color) . ';'; ?>
@@ -68,24 +48,217 @@ $has_custom_style = !empty($category_bg_color) || !empty($category_text_color);
             </span>
         <?php endif; ?>
 
-        <?php if (!empty($title)) : ?>
-            <h4 class="text-black dark:text-white text-lg md:text-2xl xl:text-[24px] font-semibold leading-snug mb-3">
-                <?php echo esc_html(trim_text_chars($title, 36)); ?>
-            </h4>
-        <?php endif; ?>
 
-        <?php if (!empty($excerpt)) : ?>
-            <p class="text-[#373A39] dark:text-[#C4C4C4] text-sm lg:text-lg lg:leading-[29.3px] mb-4 line-clamp-3">
-                <?php echo esc_html(trim_text_chars($excerpt, 150)); ?>
-            </p>
-        <?php endif; ?>
+        <?php if ( $has_gallery ) : ?>
+            <div class="swiper slider overflow-hidden">
 
-        <?php if (!empty($date)) : ?>
-            <time class="text-black dark:text-white text-xs mt-auto font-bold">
-                <?php echo esc_html($date); ?>
-            </time>
-        <?php endif; ?>
+                <div class="swiper-wrapper">
 
+                    <div class="swiper-slide">
+                    <img src="https://picsum.photos/800/500?1" class="w-full h-full object-cover" />
+                    </div>
+
+                    <div class="swiper-slide">
+                    <img src="https://picsum.photos/800/500?2" class="w-full h-full object-cover" />
+                    </div>
+
+                    <div class="swiper-slide">
+                    <img src="https://picsum.photos/800/500?3" class="w-full h-full object-cover" />
+                    </div>
+
+                    <div class="swiper-slide">
+                    <img src="https://picsum.photos/800/500?4" class="w-full h-full object-cover" />
+                    </div>
+
+                </div>
+
+                <button type="button" class="slider__btn-prev absolute left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-out hover:scale-110 hover:bg-white hover:text-gray-900 hover:shadow-lg active:scale-95 opacity-0 group-hover:opacity-100 focus:outline-none cursor-default">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 truths rtl:rotate-180">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                    </svg>
+                </button>
+
+                <button type="button" class="slider__btn-next absolute right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/90 text-gray-600 flex items-center justify-center shadow-md transition-all duration-300 ease-out hover:scale-110 hover:bg-white hover:text-gray-900 hover:shadow-lg active:scale-95 opacity-0 group-hover:opacity-100 focus:outline-none cursor-default">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 rlt:rotate-180">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+
+                <div class="slider__pagination swiper-pagination absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex justify-center"></div>
+
+            </div>
+        <?php elseif ( $has_video ) : ?>
+            <video class="post-card__video w-full h-full object-cover" loop muted loading="lazy">
+                <source
+                    src="https://player.vimeo.com/external/139533374.mobile.mp4?s=4aa63626972ccc3d5f8a1dc2b49e6ed7&profile_id=116"
+                    type="video/mp4"
+                />
+            </video>
+            <div class="absolute inset-0 pointer-events-none">
+
+                <!-- loading -->
+                <div class="post-card__loading hidden absolute inset-0 z-20 flex items-center justify-center">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+
+                <!-- play icon -->
+                <div class="post-card__video-icon absolute inset-0 z-10 flex items-center justify-center">
+                    <span class="bg-black/60 flex items-center justify-center rounded-full border border-white text-white w-11 h-11">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
+                            <path d="M17.13 7.9799C20.96 10.1899 20.96 13.8099 17.13 16.0199L14.04 17.7999L10.95 19.5799C7.13 21.7899 4 19.9799 4 15.5599V11.9999V8.43989C4 4.01989 7.13 2.2099 10.96 4.4199L13.21 5.7199"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </div>
+
+            </div>
+        <?php else : ?>
+            <picture class="block w-full h-full">
+                <img 
+                    data-src="<?php echo esc_url($thumbnail); ?>" 
+                    src="<?php echo esc_url($thumbnail); ?>" 
+                    alt="<?php echo esc_attr($title); ?>" 
+                    loading="lazy"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+            </picture>
+        <?php endif; ?> 
     </div>
 
+    <div class="p-4 flex flex-col flex-grow justify-between">
+        <div class="flex flex-col">
+            <div class="flex items-center mb-4">
+                <?php if ( $avatar_url ) : ?>
+                    <div class="post__author-name-img mr-2">
+                        <picture class="block w-full h-full">
+                            <img 
+                                src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23cccccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" 
+                                data-src="<?php echo esc_url($avatar_url); ?>" 
+                                alt="<?php echo esc_attr($display_name); ?>" 
+                                width="28" 
+                                height="28" 
+                                loading="lazy" 
+                                decoding="async"
+                                class="lazy-img w-[28px] h-[28px] rounded-full object-cover bg-[#f5f5f5]"
+                            >
+                        </picture>
+                    </div>
+                <?php endif; ?>
+                <?php if ( $username ) : ?>
+                    <span class="block font-medium capitalize text-[12px] leading-[12px] text-[#404040] hover:text-black dark:text-[#d4d4d8] dark:hover:text-white">
+                        <?php echo esc_html( $username ); ?>
+                    </span>
+                <?php endif; ?>
+                <?php if (!empty($date)) : ?>
+                    <span class="mx-[6px] font-medium text-[#6C7280] dark:text-[#9DA3AF]">·</span>
+                    <time class="font-normal text-[12px] leading-[12px] text-[#6C7280] dark:text-[#9DA3AF]">
+                        <?php echo esc_html($date); ?>
+                    </time>
+                <?php endif; ?>
+            </div>
+            <?php if (!empty($title)) : ?>
+                <h4 style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" class="text-black font-semibold dark:text-white text-[16px] leading-[24px] mb-3">
+                    <?php echo esc_html($title); ?>
+                </h4>
+            <?php endif; ?>
+            <?php if (!empty($excerpt)) : ?>
+                <p style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"  class="text-[#373A39] dark:text-[#C4C4C4] text-sm leading-relaxed mb-4">
+                    <?php echo esc_html($excerpt); ?>
+                </p>
+            <?php endif; ?>
+        </div>
+            
+        <div class="flex justify-between items-center relative z-10 w-full">
+            <!-- like -->
+            <button class="group text-black dark:text-white flex items-center hover:text-blue-400 dark:hover:text-blue-400 transition-colors duration-200 cursor-default"
+                    onclick="
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        this.classList.toggle('is-active');
+
+                        this.querySelector('.icon-outline').classList.toggle('hidden');
+                        this.querySelector('.icon-filled').classList.toggle('hidden');
+                    ">
+                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg- rounded-full p-2 flex items-center justify-center w-9 h-9">
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        class="h-[18px] w-[18px] transition-colors"
+                        fill="none">
+                        <path
+                            d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                </div>
+
+                <span class="ms-2 text-[12px] leading-[12px] transition-colors duration-200">
+                    3
+                </span>
+            </button>
+            <!-- comment -->
+            <button class="group text-black dark:text-white flex items-center hover:text-blue-400 dark:hover:text-blue-400 transition-colors duration-200">
+                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg rounded-full p-2 flex items-center justify-center w-9 h-9">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" class="h-[18px] w-[18px]"><path d="M8 13.5H16M8 8.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.09881 19C4.7987 18.8721 3.82475 18.4816 3.17157 17.8284C2 16.6569 2 14.7712 2 11V10.5C2 6.72876 2 4.84315 3.17157 3.67157C4.34315 2.5 6.22876 2.5 10 2.5H14C17.7712 2.5 19.6569 2.5 20.8284 3.67157C22 4.84315 22 6.72876 22 10.5V11C22 14.7712 22 16.6569 20.8284 17.8284C19.6569 19 17.7712 19 14 19C13.4395 19.0125 12.9931 19.0551 12.5546 19.155C11.3562 19.4309 10.2465 20.0441 9.14987 20.5789C7.58729 21.3408 6.806 21.7218 6.31569 21.3651C5.37769 20.6665 6.29454 18.5019 6.5 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                </div>
+
+                <span class="ms-2 text-[12px] leading-[12px] transition-colors duration-200">
+                    3
+                </span>
+            </button>
+
+            <div class="flex items-center gap-2 relative">
+                <span class="text-[12px] leading-[16px] text-black dark:text-[#D1D5DB] font-normal">4 min read</span>
+                <!-- save -->
+                <button 
+                    class="group relative w-9 h-9 shrink-0 rounded-full bg-[#F6F5F8] hover:bg-blue-500 transition-colors duration-200 cursor-default"
+                    onclick="
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        this.classList.toggle('is-active');
+                        this.classList.toggle('bg-blue-500');
+
+                        this.querySelector('.icon-outline').classList.toggle('hidden');
+                        this.querySelector('.icon-filled').classList.toggle('hidden');
+                    "
+                >
+                    <div class="w-9 h-9 flex items-center justify-center">
+
+                        <!-- OUTLINE ICON -->
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            class="icon-outline h-[18px] w-[18px] text-black group-hover:text-white transition-colors duration-200"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M6 3h12a1 1 0 0 1 1 1v18l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
+                        </svg>
+
+                        <!-- FILLED ICON -->
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            class="icon-filled hidden h-[18px] w-[18px] text-white transition-colors duration-200"
+                            fill="currentColor"
+                        >
+                            <path d="M6 3h12a1 1 0 0 1 1 1v18l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
+                        </svg>
+
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
 </a>
