@@ -15,4 +15,4 @@ require PATH . '/inc/enqueues.php';
 require PATH . '/inc/helpers.php';
 require PATH . '/inc/ajax.php';
 require PATH . '/inc/gnews-api.php';
-// require PATH . '/inc/tumblr-api/.php';
+require PATH . '/inc/core/media.php';

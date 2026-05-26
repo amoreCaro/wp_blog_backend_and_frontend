@@ -21,11 +21,27 @@ function theme_register_styles()
         null
     );
 
+    // 🔥 SWIPER CSS
+    wp_enqueue_style(
+        'swiper-css',
+        'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+        [],
+        null
+    );
+
     // JS
+    wp_enqueue_script(
+        'swiper-js',
+        'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+        [],
+        null,
+        true
+    );
+
     wp_enqueue_script(
         'theme-script',
         PATH_URL . '/assets/dist/js/main.js',
-        [],
+        ['swiper-js'], // 🔥 важливо: залежність
         null,
         true
     );
@@ -43,13 +59,14 @@ function theme_register_styles()
 
 add_action('wp_enqueue_scripts', 'theme_register_styles');
 
+
 add_action('admin_enqueue_scripts', function ($hook) {
 
     if ($hook !== 'toplevel_page_api-sync') return;
 
     wp_enqueue_script(
         'api',
-        get_template_directory_uri() . '/assets/src/js/components/api.js',
+        get_template_directory_uri() . '/assets/src/js/components/api/index.js',
         [],
         null,
         true
@@ -60,6 +77,7 @@ add_action('admin_enqueue_scripts', function ($hook) {
         'nonce'    => wp_create_nonce('api_sync_nonce'),
     ]);
 });
+
 
 add_filter('script_loader_tag', function ($tag, $handle) {
 

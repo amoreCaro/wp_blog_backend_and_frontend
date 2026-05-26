@@ -263,17 +263,6 @@ if (!function_exists('theme_query_posts')) {
     }
 }
 
-
-if (!function_exists('trim_text_chars')) {
-    function trim_text_chars($title, $max = 50) {
-        if (mb_strlen($title) > $max) {
-            return mb_substr($title, 0, $max) . '...';
-        }
-        return $title;
-    }
-}
-
-
 if (!function_exists('remove_excerpt_more')) {
 function remove_excerpt_more($more) {
     return ''; // нічого не додає в кінці

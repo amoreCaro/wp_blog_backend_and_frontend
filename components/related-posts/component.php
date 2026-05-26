@@ -40,14 +40,13 @@ if (empty($related_posts)) return;
                     <a href="<?php echo esc_url(get_permalink()); ?>" class="relative h-52 overflow-hidden cursor-pointer border border-white/10">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-700 z-10"></div>
 
-                        <img
-                            src="<?php echo esc_url($placeholder); ?>"
-                            data-src="<?php echo esc_url($thumbnail_url); ?>"
-                            alt="<?php echo esc_attr(get_the_title()); ?>"
-                            class="lazy-img w-full h-full object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-105"
-                            loading="lazy"
-                            decoding="async"
-                        >
+                      <img
+    src="<?php echo esc_url($thumbnail_url); ?>"
+    alt="<?php echo esc_attr(get_the_title()); ?>"
+    class="w-full h-full object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-105"
+    loading="lazy"
+    decoding="async"
+/>
                     </a>
 
                     <div class="flex flex-col gap-2">

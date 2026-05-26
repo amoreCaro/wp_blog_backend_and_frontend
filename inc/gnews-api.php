@@ -49,7 +49,6 @@ function theme_create_api_response_table() {
 
 // use action after_switch_theme because theme_create_gnews_response_table is used only in this theme
 add_action('after_switch_theme', 'theme_create_api_response_table');
-
 // 2. Save GNews API articles into wp_gnews_response database table
 function theme_save_api_response_table( array $articles ) {
     // Get access to WordPress database
