@@ -185,8 +185,8 @@ $username = get_the_author_meta('display_name', $author_id);
                         this.querySelector('.icon-outline').classList.toggle('hidden');
                         this.querySelector('.icon-filled').classList.toggle('hidden');
                     ">
-                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg- rounded-full p-2 flex items-center justify-center w-9 h-9">
-                      <svg xmlns="http://www.w3.org/2000/svg"
+                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg-[#1E1E26] rounded-full p-2 flex items-center justify-center w-9 h-9">
+                    <svg xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         class="h-[18px] w-[18px] transition-colors"
                         fill="none">
@@ -205,8 +205,11 @@ $username = get_the_author_meta('display_name', $author_id);
             </button>
             <!-- comment -->
             <button class="group text-black dark:text-white flex items-center hover:text-blue-400 dark:hover:text-blue-400 transition-colors duration-200">
-                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg rounded-full p-2 flex items-center justify-center w-9 h-9">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" class="h-[18px] w-[18px]"><path d="M8 13.5H16M8 8.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.09881 19C4.7987 18.8721 3.82475 18.4816 3.17157 17.8284C2 16.6569 2 14.7712 2 11V10.5C2 6.72876 2 4.84315 3.17157 3.67157C4.34315 2.5 6.22876 2.5 10 2.5H14C17.7712 2.5 19.6569 2.5 20.8284 3.67157C22 4.84315 22 6.72876 22 10.5V11C22 14.7712 22 16.6569 20.8284 17.8284C19.6569 19 17.7712 19 14 19C13.4395 19.0125 12.9931 19.0551 12.5546 19.155C11.3562 19.4309 10.2465 20.0441 9.14987 20.5789C7.58729 21.3408 6.806 21.7218 6.31569 21.3651C5.37769 20.6665 6.29454 18.5019 6.5 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                <div style="width: 36px" class="bg-[#F6F5F8] dark:bg-[#1E1E26] rounded-full p-2 flex items-center justify-center w-9 h-9">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="currentColor" fill="none" class="h-[18px] w-[18px]">
+                    <path d="M8 13.5H16M8 8.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M6.09881 19C4.7987 18.8721 3.82475 18.4816 3.17157 17.8284C2 16.6569 2 14.7712 2 11V10.5C2 6.72876 2 4.84315 3.17157 3.67157C4.34315 2.5 6.22876 2.5 10 2.5H14C17.7712 2.5 19.6569 2.5 20.8284 3.67157C22 4.84315 22 6.72876 22 10.5V11C22 14.7712 22 16.6569 20.8284 17.8284C19.6569 19 17.7712 19 14 19C13.4395 19.0125 12.9931 19.0551 12.5546 19.155C11.3562 19.4309 10.2465 20.0441 9.14987 20.5789C7.58729 21.3408 6.806 21.7218 6.31569 21.3651C5.37769 20.6665 6.29454 18.5019 6.5 17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                </svg>
                 </div>
 
                 <span class="ms-2 text-[12px] leading-[12px] transition-colors duration-200">
@@ -216,27 +219,29 @@ $username = get_the_author_meta('display_name', $author_id);
 
             <div class="flex items-center gap-2 relative">
                 <span class="text-[12px] leading-[16px] text-black dark:text-[#D1D5DB] font-normal">4 min read</span>
-                <!-- save -->
+
                 <button 
-                    class="group relative w-9 h-9 shrink-0 rounded-full bg-[#F6F5F8] hover:bg-blue-500 transition-colors duration-200 cursor-default"
+                    class="group/btn relative w-9 h-9 shrink-0 rounded-full bg-[#F6F5F8] dark:bg-[#1E1E26] hover:bg-blue-500 dark:hover:bg-blue-500 transition-colors duration-200 cursor-default"
                     onclick="
                         event.preventDefault();
                         event.stopPropagation();
 
                         this.classList.toggle('is-active');
                         this.classList.toggle('bg-blue-500');
+                        /* Keeps the background blue when active in dark mode */
+                        this.classList.toggle('dark:bg-blue-500'); 
+                        this.classList.toggle('dark:bg-[#1E1E26]'); 
 
                         this.querySelector('.icon-outline').classList.toggle('hidden');
                         this.querySelector('.icon-filled').classList.toggle('hidden');
                     "
                 >
-                    <div class="w-9 h-9 flex items-center justify-center">
+                    <div class="w-9 h-9 flex items-center justify-center pointer-events-none">
 
-                        <!-- OUTLINE ICON -->
                         <svg 
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
-                            class="icon-outline h-[18px] w-[18px] text-black group-hover:text-white transition-colors duration-200"
+                            class="icon-outline h-[18px] w-[18px] text-black stroke-current dark:text-white group-hover/btn:stroke-white transition-colors duration-200"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="1.5"
@@ -246,7 +251,6 @@ $username = get_the_author_meta('display_name', $author_id);
                             <path d="M6 3h12a1 1 0 0 1 1 1v18l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
                         </svg>
 
-                        <!-- FILLED ICON -->
                         <svg 
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
