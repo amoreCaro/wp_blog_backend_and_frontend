@@ -13,10 +13,11 @@ get_header();
 ?>
 
 <div class="home-page bg-white dark:bg-black">
-    <div class=" lg:pb-[100px] pb-[50px]">
+    <div class="lg:pb-[100px] pb-[50px]">
     <?php 
         require PATH . "/components/hero/component.php";
         require PATH . "/components/banner/component.php";
+        require PATH . "/components/carousel/component.php";
         require PATH . "/components/magazine/component.php";
         require PATH . "/components/trending/component.php";
         require PATH . "/components/bento/component-new.php";

@@ -1,4 +1,4 @@
-import { slider } from "./components/slider.js";
+// import { slider } from "./components/slider.js";
 import { postVideo } from "./components/postVideo.js";
 import { estimateSinglePostReadTime } from "./components/estimateSinglePostReadTime.js";
 import { calculateTotalPages } from "./components/calculateTotalPages.js";
@@ -16,7 +16,7 @@ import { signInit } from './components/form/sign.js';
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  slider();
+  // slider();
   postVideo();
   lazyLoadImages();
   video();

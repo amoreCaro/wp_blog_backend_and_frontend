@@ -24,8 +24,7 @@ $username = get_the_author_meta('display_name', $author_id);
 ?>
 
 <a href="<?php echo esc_url($link); ?>" 
-   class="group lg:col-span-3 bg-white dark:bg-[#121216] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
-
+   class="group lg:col-span-3 bg-white dark:bg-[#18181f] rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col lg:flex-row lg:min-h-[280px]">
     <div class="h-[300px] sm:h-[350px] lg:h-auto lg:w-[55%] overflow-hidden relative">
         <?php if (!empty($category_name)) : ?>
             <span class="top-4 left-4 z-10 absolute flex items-center gap-2 text-[12px] leading-[16px] font-medium capitalize px-5 py-1 rounded-full w-fit mb-4
@@ -103,6 +102,7 @@ $username = get_the_author_meta('display_name', $author_id);
     <?php endif; ?>
 
     <div class="flex justify-between items-center relative z-10 w-full mt-auto">
+        <div class="flex gap-8">
         <button class="group text-black dark:text-white flex items-center hover:text-blue-400 dark:hover:text-blue-400 transition-colors duration-200 cursor-default"
                 onclick="
                     event.preventDefault();
@@ -143,6 +143,7 @@ $username = get_the_author_meta('display_name', $author_id);
                 3
             </span>
         </button>
+        </div>
 
         <div class="flex items-center gap-2 relative">
             <span class="text-[12px] leading-[16px] text-black dark:text-[#D1D5DB] font-normal">4 min read</span>

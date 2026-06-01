@@ -5,9 +5,9 @@ export function slider() {
   document.querySelectorAll('.slider').forEach((el) => {
     const parent = el.closest('.post-card');
 
-    const nextBtn = parent.querySelector('.slider__btn-next');
-    const prevBtn = parent.querySelector('.slider__btn-prev');
-    const pagination = parent.querySelector('.slider__pagination');
+    const nextBtn = parent.querySelector('.modal-cart__next');
+    const prevBtn = parent.querySelector('.modal-cart__prev');
+    const pagination = parent.querySelector('.modal-cart__pagination');
 
     const swiper = new Swiper(el, {
       modules: [Navigation, Pagination],
