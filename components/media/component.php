@@ -55,14 +55,14 @@ $main_media_class = "overflow-hidden h-[250px] md:h-[400px] lg:h-[642px]"
 
 ?>
 
-<div class="<?= esc_attr($container_class) ?>">
+<div class="<?php echo esc_attr($container_class) ?>">
 
     <!-- MAIN MEDIA (video or image) -->
     <?php if ($has_main_media) : ?>
-        <div class="<?= esc_attr("$main_media_class $main_media_wrapper_class") ?>">
+        <div class="<?php echo esc_attr("$main_media_class $main_media_wrapper_class") ?>">
             <?php if ($main_video) : ?>
                 <video class="w-full h-full object-cover" loop muted playsinline preload="metadata">
-                    <source src="<?= esc_url($main_video) ?>" type="video/mp4">
+                    <source src="<?php echo esc_url($main_video) ?>" type="video/mp4">
                 </video>
                 <button class="post__video-play-button absolute inset-1/2 -translate-x-1/2 -translate-y-1/2
                     w-20 h-20 bg-white rounded-full flex items-center justify-center
@@ -71,16 +71,20 @@ $main_media_class = "overflow-hidden h-[250px] md:h-[400px] lg:h-[642px]"
                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z"/>
                     </svg>
                 </button>
-            <?php elseif ($main_image_url) : ?>
-                <img data-src="<?= esc_url($main_image_url) ?>" src="<?= esc_url($main_image_url) ?>"
-                     alt="<?= esc_attr(get_the_title()) ?>" class="lazy-img w-full h-full object-cover" loading="lazy">
-            <?php endif; ?>
+<?php elseif ($main_image_url) : ?>
+    <img 
+        src="<?php echo esc_url($main_image_url); ?>" 
+        alt="<?php echo esc_attr(get_the_title()); ?>" 
+        class="w-full h-full object-cover"
+        loading="lazy"
+    >
+<?php endif; ?>
         </div>
     <?php endif; ?>
 
     <!-- GALLERY -->
     <?php if ($has_gallery) : ?>
-        <div class="<?= esc_attr($gallery_container_class) ?>">
+        <div class="<?php echo esc_attr($gallery_container_class) ?>">
 
             <?php
             // Grid class based on gallery count

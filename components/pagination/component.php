@@ -1,105 +1,71 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+if (!defined('ABSPATH')) exit;
+
+global $wp_query;
+
+$paged = max(1, get_query_var('paged'), get_query_var('page'));
+$total_pages = $wp_query->max_num_pages;
+
+if ($total_pages > 1) :
+
+    $links = paginate_links([
+        'current'   => $paged,
+        'total'     => $total_pages,
+        'prev_text' => '←',
+        'next_text' => '→',
+        'type'      => 'array',
+        'mid_size'  => 3,  
+        'end_size'  => 0,  
+    ]);
+
+if (is_array($links)) {
+    $filtered_links = [];
+
+    foreach ($links as $link) {
+        // Прибираємо "dots"
+        if (strpos($link, 'dots') !== false) continue;
+
+        // Отримуємо число з лінку
+        $num = (int) strip_tags($link);
+
+        // Прибираємо першу сторінку, якщо вона не в межах mid_size
+        if ($num === 1 && $paged - 3 > 1) continue;
+        if ($num === $total_pages && $paged + 3 < $total_pages) continue;
+
+        $filtered_links[] = $link;
+    }
+
+    $links = $filtered_links;
 }
-
-// Поточна сторінка
-$paged = max( 1, get_query_var( 'paged' ), get_query_var( 'page' ) );
-
-// Параметри запиту
-$args = [
-    'post_type'      => 'post',
-    'posts_per_page' => 12,
-    'paged'          => $paged,
-];
-
-if ( is_category() ) {
-    $category      = get_queried_object();
-    $args['cat']   = $category->term_id;
-}
-
-$query = new WP_Query( $args );
-
-if ( $query->have_posts() ) :
-
-    $total_pages = $query->max_num_pages;
-
-    if ( $total_pages > 1 ) :
-
-        $current_page = $paged;
 ?>
-<div class="pagination flex items-center justify-center bg-white">
-    <ul class="flex items-center gap-3">
+<div class="pagination flex items-center justify-center py-6">
+    <ul class="flex items-center gap-2">
+        <?php foreach ($links as $link) : 
+            $is_current = strpos($link, 'current') !== false;
 
-        <!-- Попередня сторінка -->
-        <?php if ( $current_page > 1 ) : ?>
-            <li>
-                <a
-                    href="<?php echo get_pagenum_link( $current_page - 1 ); ?>"
-                    class="pagination__btn flex items-center justify-center w-12 h-12 border border-[#9395ab] text-[#9395ab] hover:text-blue-600 hover:border-blue-600"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="24"
-                         height="24"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path d="m15 18-6-6 6-6"/>
-                    </svg>
-                </a>
-            </li>
-        <?php endif; ?>
-
-        <!-- Нумерація сторінок -->
-        <?php for ( $i = 1; $i <= $total_pages; $i++ ) : ?>
-            <li>
-                <?php if ( $i == $current_page ) : ?>
-                    <span class="flex items-center justify-center w-12 h-12 border-2 border-blue-600 text-blue-600 font-bold">
-                        <?php echo $i; ?>
-                    </span>
-                <?php else : ?>
-                    <a
-                        href="<?php echo get_pagenum_link( $i ); ?>"
-                        class="flex items-center justify-center w-12 h-12 border border-[#9395ab] text-[#9395ab] hover:text-blue-600 hover:border-blue-600"
-                    >
-                        <?php echo $i; ?>
-                    </a>
-                <?php endif; ?>
-            </li>
-        <?php endfor; ?>
-
-        <!-- Наступна сторінка -->
-        <?php if ( $current_page < $total_pages ) : ?>
-            <li>
-                <a
-                    href="<?php echo get_pagenum_link( $current_page + 1 ); ?>"
-                    class="pagination__btn flex items-center justify-center w-12 h-12 border border-[#9395ab] text-[#9395ab] hover:text-blue-600 hover:border-blue-600"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="24"
-                         height="24"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                </a>
-            </li>
-        <?php endif; ?>
-
+            if ($is_current) {
+                $link = str_replace(
+                    'current',
+                    'current flex items-center justify-center w-12 h-12 
+                    border-2 border-blue-600 text-blue-600 font-semibold rounded-lg
+                    dark:border-white dark:text-white',
+                    $link
+                );
+            } else {
+                $link = str_replace(
+                    'page-numbers',
+                    'page-numbers flex items-center justify-center w-12 h-12 
+                    border border-gray-300 text-gray-500 rounded-lg transition-all duration-200
+                    hover:border-blue-600 hover:text-blue-600
+                    dark:border-white/30 dark:text-white/70 
+                    dark:hover:border-white dark:hover:text-white',
+                    $link
+                );
+            }
+        ?>
+            <li><?php echo $link; ?></li>
+        <?php endforeach; ?>
     </ul>
-</div>
-
-<?php
-    endif;
-
-    wp_reset_postdata();
-
+</div><?php
 endif;
 ?>
